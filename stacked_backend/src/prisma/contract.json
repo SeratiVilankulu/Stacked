@@ -20,6 +20,10 @@
       "model": "Fine",
       "namespace": "public"
     },
+    "library": {
+      "model": "Library",
+      "namespace": "public"
+    },
     "loanedbooks": {
       "model": "LoanedBook",
       "namespace": "public"
@@ -89,6 +93,27 @@
               {
                 "name": "OVERDUE",
                 "value": "OVERDUE"
+              }
+            ]
+          },
+          "ReadingStatus": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "WANT_TO_READ",
+                "value": "WANT_TO_READ"
+              },
+              {
+                "name": "READING",
+                "value": "READING"
+              },
+              {
+                "name": "COMPLETED",
+                "value": "COMPLETED"
+              },
+              {
+                "name": "ABANDONED",
+                "value": "ABANDONED"
               }
             ]
           },
@@ -299,6 +324,21 @@
                 },
                 "to": {
                   "model": "BookCopy",
+                  "namespace": "public"
+                }
+              },
+              "libraryEntries": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "bookId"
+                  ]
+                },
+                "to": {
+                  "model": "Library",
                   "namespace": "public"
                 }
               },
@@ -582,6 +622,106 @@
               },
               "namespaceId": "public",
               "table": "fines"
+            }
+          },
+          "Library": {
+            "fields": {
+              "addedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "bookId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "ReadingStatus",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "book": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "bookId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Book",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "addedAt": {
+                  "column": "AddedAt"
+                },
+                "bookId": {
+                  "column": "Book_Id"
+                },
+                "id": {
+                  "column": "Id"
+                },
+                "status": {
+                  "column": "Status"
+                },
+                "userId": {
+                  "column": "User_Id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "library"
             }
           },
           "LoanedBook": {
@@ -927,6 +1067,21 @@
                 },
                 "to": {
                   "model": "Fine",
+                  "namespace": "public"
+                }
+              },
+              "library": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "Library",
                   "namespace": "public"
                 }
               },
@@ -1349,6 +1504,119 @@
               },
               "uniques": []
             },
+            "library": {
+              "checks": [
+                {
+                  "expression": "\"Status\" IN ('WANT_TO_READ', 'READING', 'COMPLETED', 'ABANDONED')",
+                  "name": "library_Status_check_79751747",
+                  "prefix": "library_Status_check"
+                }
+              ],
+              "columns": {
+                "AddedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "Book_Id": {
+                  "codecId": "pg/uuid@1",
+                  "nativeType": "uuid",
+                  "nullable": false
+                },
+                "Id": {
+                  "codecId": "pg/uuid@1",
+                  "nativeType": "uuid",
+                  "nullable": false
+                },
+                "Status": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "ReadingStatus",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "User_Id": {
+                  "codecId": "pg/uuid@1",
+                  "nativeType": "uuid",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "User_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "library"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "Book_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "library"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "books"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "Book_Id"
+                  ],
+                  "name": "library_Book_Id_idx_f7bddef2",
+                  "prefix": "library_Book_Id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "User_Id"
+                  ],
+                  "name": "library_User_Id_idx_99d17088",
+                  "prefix": "library_User_Id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "Id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "User_Id",
+                    "Book_Id"
+                  ]
+                }
+              ]
+            },
             "loanedbooks": {
               "checks": [
                 {
@@ -1667,6 +1935,15 @@
                 "OVERDUE"
               ]
             },
+            "ReadingStatus": {
+              "kind": "valueSet",
+              "values": [
+                "WANT_TO_READ",
+                "READING",
+                "COMPLETED",
+                "ABANDONED"
+              ]
+            },
             "ReservationStatus": {
               "kind": "valueSet",
               "values": [
@@ -1689,10 +1966,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "33b617cae0180f84f86048ae8fd3c704b2321bdc2b12b49eeaf18d70c778691b"
+    "storageHash": "bac5e0c2444ee73acd912386a9bcf806fe8795acc55912aab19c2727c801e729"
   },
   "execution": {
-    "executionHash": "c086a7597d693fbc34742f8b5d61bd545c802d64b8816a803f1c2a3f8e615d28",
+    "executionHash": "e86f6d0edeace6f78f0b9979b83eb6b0afbf936a0733778023a205456221a3d4",
     "mutations": {
       "defaults": [
         {
@@ -1737,6 +2014,17 @@
             "column": "Id",
             "namespace": "public",
             "table": "fines"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "Id",
+            "namespace": "public",
+            "table": "library"
           }
         },
         {

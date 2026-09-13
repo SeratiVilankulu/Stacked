@@ -15,6 +15,7 @@ model User {
   fines        Fine[]
   loanedBooks  LoanedBook[]
   reservations Reservation[]
+  library      Library[]
 
   @@map("users")
 }
@@ -33,6 +34,7 @@ model Book {
   bookCopies   BookCopy[]
   loanedBooks  LoanedBook[]
   reservations Reservation[]
+  libraryEntries Library[]
 
   @@map("books")
 }
@@ -104,6 +106,27 @@ model Reservation {
   book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
   @@map("reservations")
+}
+
+model Library {
+  id      Uuid              @id @default(uuid()) @map("Id")
+  userId  Uuid              @map("User_Id")
+  bookId  Uuid              @map("Book_Id")
+  status  ReadingStatus     @map("Status")
+  addedAt TimestamptzString @default(now()) @map("AddedAt")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId])
+  @@map("library")
+}
+
+enum ReadingStatus {
+  WANT_TO_READ
+  READING
+  COMPLETED
+  ABANDONED
 }
 
 // Define enums for select fields
