@@ -36,6 +36,97 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "BookAvailability": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "AVAILABLE",
+                "value": "AVAILABLE"
+              },
+              {
+                "name": "LOANED",
+                "value": "LOANED"
+              },
+              {
+                "name": "RESERVED",
+                "value": "RESERVED"
+              }
+            ]
+          },
+          "BookCondition": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "NEW",
+                "value": "NEW"
+              },
+              {
+                "name": "GOOD",
+                "value": "GOOD"
+              },
+              {
+                "name": "FAIR",
+                "value": "FAIR"
+              },
+              {
+                "name": "POOR",
+                "value": "POOR"
+              }
+            ]
+          },
+          "LoanStatus": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "LOANED",
+                "value": "LOANED"
+              },
+              {
+                "name": "RETURNED",
+                "value": "RETURNED"
+              },
+              {
+                "name": "OVERDUE",
+                "value": "OVERDUE"
+              }
+            ]
+          },
+          "ReservationStatus": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PENDING",
+                "value": "PENDING"
+              },
+              {
+                "name": "FULFILLED",
+                "value": "FULFILLED"
+              },
+              {
+                "name": "CANCELLED",
+                "value": "CANCELLED"
+              },
+              {
+                "name": "EXPIRED",
+                "value": "EXPIRED"
+              }
+            ]
+          },
+          "UserRole": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "ADMIN",
+                "value": "ADMIN"
+              },
+              {
+                "name": "USER",
+                "value": "USER"
+              }
+            ]
+          }
+        },
         "models": {
           "Admin": {
             "fields": {
@@ -287,6 +378,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "BookCondition",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "id": {
@@ -308,6 +405,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "BookAvailability",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "userId": {
@@ -516,6 +619,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "LoanStatus",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "userId": {
@@ -628,6 +737,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "ReservationStatus",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "userId": {
@@ -736,6 +851,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "UserRole",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "surname": {
@@ -953,6 +1074,18 @@
               "uniques": []
             },
             "bookcopies": {
+              "checks": [
+                {
+                  "expression": "\"Condition\" IN ('NEW', 'GOOD', 'FAIR', 'POOR')",
+                  "name": "bookcopies_Condition_check_fe648d44",
+                  "prefix": "bookcopies_Condition_check"
+                },
+                {
+                  "expression": "\"Status\" IN ('AVAILABLE', 'LOANED', 'RESERVED')",
+                  "name": "bookcopies_Status_check_532b3f1c",
+                  "prefix": "bookcopies_Status_check"
+                }
+              ],
               "columns": {
                 "Book_Id": {
                   "codecId": "pg/uuid@1",
@@ -962,7 +1095,13 @@
                 "Condition": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "BookCondition",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "Id": {
                   "codecId": "pg/uuid@1",
@@ -977,7 +1116,13 @@
                 "Status": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "BookAvailability",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "User_Id": {
                   "codecId": "pg/uuid@1",
@@ -1189,6 +1334,13 @@
               "uniques": []
             },
             "loanedbooks": {
+              "checks": [
+                {
+                  "expression": "\"Status\" IN ('LOANED', 'RETURNED', 'OVERDUE')",
+                  "name": "loanedbooks_Status_check_ce4b4bd4",
+                  "prefix": "loanedbooks_Status_check"
+                }
+              ],
               "columns": {
                 "Book_id": {
                   "codecId": "pg/uuid@1",
@@ -1213,7 +1365,13 @@
                 "Status": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "LoanStatus",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "User_id": {
                   "codecId": "pg/uuid@1",
@@ -1281,6 +1439,13 @@
               "uniques": []
             },
             "reservations": {
+              "checks": [
+                {
+                  "expression": "\"Status\" IN ('PENDING', 'FULFILLED', 'CANCELLED', 'EXPIRED')",
+                  "name": "reservations_Status_check_f234224a",
+                  "prefix": "reservations_Status_check"
+                }
+              ],
               "columns": {
                 "Book_Id": {
                   "codecId": "pg/uuid@1",
@@ -1300,7 +1465,13 @@
                 "Status": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "ReservationStatus",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "User_Id": {
                   "codecId": "pg/uuid@1",
@@ -1368,6 +1539,13 @@
               "uniques": []
             },
             "users": {
+              "checks": [
+                {
+                  "expression": "\"Role\" IN ('ADMIN', 'USER')",
+                  "name": "users_Role_check_6f31994e",
+                  "prefix": "users_Role_check"
+                }
+              ],
               "columns": {
                 "CreatedAt": {
                   "codecId": "pg/date-string@1",
@@ -1397,7 +1575,13 @@
                 "Role": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "UserRole",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "Surname": {
                   "codecId": "pg/text@1",
@@ -1419,13 +1603,56 @@
               },
               "uniques": []
             }
+          },
+          "valueSet": {
+            "BookAvailability": {
+              "kind": "valueSet",
+              "values": [
+                "AVAILABLE",
+                "LOANED",
+                "RESERVED"
+              ]
+            },
+            "BookCondition": {
+              "kind": "valueSet",
+              "values": [
+                "NEW",
+                "GOOD",
+                "FAIR",
+                "POOR"
+              ]
+            },
+            "LoanStatus": {
+              "kind": "valueSet",
+              "values": [
+                "LOANED",
+                "RETURNED",
+                "OVERDUE"
+              ]
+            },
+            "ReservationStatus": {
+              "kind": "valueSet",
+              "values": [
+                "PENDING",
+                "FULFILLED",
+                "CANCELLED",
+                "EXPIRED"
+              ]
+            },
+            "UserRole": {
+              "kind": "valueSet",
+              "values": [
+                "ADMIN",
+                "USER"
+              ]
+            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "09b360fb787c4dbb97f73f701a5cec5ad44f3a93087431533f013fcb3de7fa12"
+    "storageHash": "ca3cc1ebdef15de7baaa636e52adcab7898fc8a21dc018865dab962cb6349e87"
   },
   "execution": {
     "executionHash": "c086a7597d693fbc34742f8b5d61bd545c802d64b8816a803f1c2a3f8e615d28",

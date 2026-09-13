@@ -7,7 +7,7 @@ model User {
   username  String     @map("Username")
   email     String     @map("Email")
   password  String     @map("Password")
-  role      String     @map("Role")
+  role      UserRole   @map("Role")
   createdAt DateString @map("CreatedAt")
 
   admins       Admin[]
@@ -54,8 +54,8 @@ model BookCopy {
   bookId    Uuid    @map("Book_Id")
   userId    Uuid    @map("User_Id")
   name      String? @map("Name")
-  condition String? @map("Condition")
-  status    String  @map("Status")
+  condition BookCondition? @map("Condition")
+  status    BookAvailability  @map("Status")
 
   book Book @relation(fields: [bookId], references: [id])
   user User @relation(fields: [userId], references: [id])
@@ -69,7 +69,7 @@ model LoanedBook {
   userId     Uuid       @map("User_id")
   loanDate   DateString @map("LoanDate")
   returnDate DateString @map("ReturnDate")
-  status     String     @map("Status")
+  status     LoanStatus     @map("Status")
 
   book  Book   @relation(fields: [bookId], references: [id])
   user  User   @relation(fields: [userId], references: [id])
@@ -97,10 +97,42 @@ model Reservation {
   userId          Uuid       @map("User_Id")
   bookId          Uuid       @map("Book_Id")
   reservationDate DateString @map("ReservationDate")
-  status          String?    @map("Status")
+  status          ReservationStatus?    @map("Status")
 
   user User @relation(fields: [userId], references: [id])
   book Book @relation(fields: [bookId], references: [id])
 
   @@map("reservations")
+}
+
+// Define enums for select fields
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum BookCondition {
+  NEW
+  GOOD
+  FAIR
+  POOR
+}
+
+enum BookAvailability {
+  AVAILABLE
+  LOANED
+  RESERVED
+}
+
+enum LoanStatus {
+  LOANED
+  RETURNED
+  OVERDUE
+}
+
+enum ReservationStatus {
+  PENDING
+  FULFILLED
+  CANCELLED
+  EXPIRED
 }

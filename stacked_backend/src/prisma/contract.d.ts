@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'09b360fb787c4dbb97f73f701a5cec5ad44f3a93087431533f013fcb3de7fa12'>;
+  StorageHashBase<'ca3cc1ebdef15de7baaa636e52adcab7898fc8a21dc018865dab962cb6349e87'>;
 export type ExecutionHash =
   ExecutionHashBase<'c086a7597d693fbc34742f8b5d61bd545c802d64b8816a803f1c2a3f8e615d28'>;
 export type ProfileHash =
@@ -263,8 +263,8 @@ export type FieldOutputTypes = {
       readonly bookId: CodecTypes['pg/uuid@1']['output'];
       readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'] | null;
-      readonly condition: CodecTypes['pg/text@1']['output'] | null;
-      readonly status: CodecTypes['pg/text@1']['output'];
+      readonly condition: 'NEW' | 'GOOD' | 'FAIR' | 'POOR' | null;
+      readonly status: 'AVAILABLE' | 'LOANED' | 'RESERVED';
     };
     readonly Fine: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
@@ -280,14 +280,14 @@ export type FieldOutputTypes = {
       readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly loanDate: CodecTypes['pg/date-string@1']['output'];
       readonly returnDate: CodecTypes['pg/date-string@1']['output'];
-      readonly status: CodecTypes['pg/text@1']['output'];
+      readonly status: 'LOANED' | 'RETURNED' | 'OVERDUE';
     };
     readonly Reservation: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly bookId: CodecTypes['pg/uuid@1']['output'];
       readonly reservationDate: CodecTypes['pg/date-string@1']['output'];
-      readonly status: CodecTypes['pg/text@1']['output'] | null;
+      readonly status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     };
     readonly User: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
@@ -296,7 +296,7 @@ export type FieldOutputTypes = {
       readonly username: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
-      readonly role: CodecTypes['pg/text@1']['output'];
+      readonly role: 'ADMIN' | 'USER';
       readonly createdAt: CodecTypes['pg/date-string@1']['output'];
     };
   };
@@ -324,8 +324,8 @@ export type FieldInputTypes = {
       readonly bookId: CodecTypes['pg/uuid@1']['input'];
       readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'] | null;
-      readonly condition: CodecTypes['pg/text@1']['input'] | null;
-      readonly status: CodecTypes['pg/text@1']['input'];
+      readonly condition: 'NEW' | 'GOOD' | 'FAIR' | 'POOR' | null;
+      readonly status: 'AVAILABLE' | 'LOANED' | 'RESERVED';
     };
     readonly Fine: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
@@ -341,14 +341,14 @@ export type FieldInputTypes = {
       readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly loanDate: CodecTypes['pg/date-string@1']['input'];
       readonly returnDate: CodecTypes['pg/date-string@1']['input'];
-      readonly status: CodecTypes['pg/text@1']['input'];
+      readonly status: 'LOANED' | 'RETURNED' | 'OVERDUE';
     };
     readonly Reservation: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly bookId: CodecTypes['pg/uuid@1']['input'];
       readonly reservationDate: CodecTypes['pg/date-string@1']['input'];
-      readonly status: CodecTypes['pg/text@1']['input'] | null;
+      readonly status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     };
     readonly User: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
@@ -357,7 +357,7 @@ export type FieldInputTypes = {
       readonly username: CodecTypes['pg/text@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
-      readonly role: CodecTypes['pg/text@1']['input'];
+      readonly role: 'ADMIN' | 'USER';
       readonly createdAt: CodecTypes['pg/date-string@1']['input'];
     };
   };
@@ -372,10 +372,10 @@ export type StorageColumnTypes = {
     };
     readonly bookcopies: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['output'];
-      readonly Condition: CodecTypes['pg/text@1']['output'] | null;
+      readonly Condition: 'NEW' | 'GOOD' | 'FAIR' | 'POOR' | null;
       readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly Name: CodecTypes['pg/text@1']['output'] | null;
-      readonly Status: CodecTypes['pg/text@1']['output'];
+      readonly Status: 'AVAILABLE' | 'LOANED' | 'RESERVED';
       readonly User_Id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly books: {
@@ -401,14 +401,14 @@ export type StorageColumnTypes = {
       readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly LoanDate: CodecTypes['pg/date-string@1']['output'];
       readonly ReturnDate: CodecTypes['pg/date-string@1']['output'];
-      readonly Status: CodecTypes['pg/text@1']['output'];
+      readonly Status: 'LOANED' | 'RETURNED' | 'OVERDUE';
       readonly User_id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly reservations: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['output'];
       readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly ReservationDate: CodecTypes['pg/date-string@1']['output'];
-      readonly Status: CodecTypes['pg/text@1']['output'] | null;
+      readonly Status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
       readonly User_Id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly users: {
@@ -417,7 +417,7 @@ export type StorageColumnTypes = {
       readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly Name: CodecTypes['pg/text@1']['output'];
       readonly Password: CodecTypes['pg/text@1']['output'];
-      readonly Role: CodecTypes['pg/text@1']['output'];
+      readonly Role: 'ADMIN' | 'USER';
       readonly Surname: CodecTypes['pg/text@1']['output'];
       readonly Username: CodecTypes['pg/text@1']['output'];
     };
@@ -433,10 +433,10 @@ export type StorageColumnInputTypes = {
     };
     readonly bookcopies: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['input'];
-      readonly Condition: CodecTypes['pg/text@1']['input'] | null;
+      readonly Condition: 'NEW' | 'GOOD' | 'FAIR' | 'POOR' | null;
       readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly Name: CodecTypes['pg/text@1']['input'] | null;
-      readonly Status: CodecTypes['pg/text@1']['input'];
+      readonly Status: 'AVAILABLE' | 'LOANED' | 'RESERVED';
       readonly User_Id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly books: {
@@ -462,14 +462,14 @@ export type StorageColumnInputTypes = {
       readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly LoanDate: CodecTypes['pg/date-string@1']['input'];
       readonly ReturnDate: CodecTypes['pg/date-string@1']['input'];
-      readonly Status: CodecTypes['pg/text@1']['input'];
+      readonly Status: 'LOANED' | 'RETURNED' | 'OVERDUE';
       readonly User_id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly reservations: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['input'];
       readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly ReservationDate: CodecTypes['pg/date-string@1']['input'];
-      readonly Status: CodecTypes['pg/text@1']['input'] | null;
+      readonly Status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
       readonly User_Id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly users: {
@@ -478,7 +478,7 @@ export type StorageColumnInputTypes = {
       readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly Name: CodecTypes['pg/text@1']['input'];
       readonly Password: CodecTypes['pg/text@1']['input'];
-      readonly Role: CodecTypes['pg/text@1']['input'];
+      readonly Role: 'ADMIN' | 'USER';
       readonly Surname: CodecTypes['pg/text@1']['input'];
       readonly Username: CodecTypes['pg/text@1']['input'];
     };
@@ -493,7 +493,7 @@ export namespace Models {
     username: CodecTypes['pg/text@1']['output'];
     email: CodecTypes['pg/text@1']['output'];
     password: CodecTypes['pg/text@1']['output'];
-    role: CodecTypes['pg/text@1']['output'];
+    role: 'ADMIN' | 'USER';
     createdAt: CodecTypes['pg/date-string@1']['output'];
     admins: public_Admin[];
     bookCopies: public_BookCopy[];
@@ -531,8 +531,8 @@ export namespace Models {
     bookId: CodecTypes['pg/uuid@1']['output'];
     userId: CodecTypes['pg/uuid@1']['output'];
     name: CodecTypes['pg/text@1']['output'] | null;
-    condition: CodecTypes['pg/text@1']['output'] | null;
-    status: CodecTypes['pg/text@1']['output'];
+    condition: 'NEW' | 'GOOD' | 'FAIR' | 'POOR' | null;
+    status: 'AVAILABLE' | 'LOANED' | 'RESERVED';
     book: public_Book;
     user: public_User;
     readonly [RelationKeys]?: 'book' | 'user';
@@ -543,7 +543,7 @@ export namespace Models {
     userId: CodecTypes['pg/uuid@1']['output'];
     loanDate: CodecTypes['pg/date-string@1']['output'];
     returnDate: CodecTypes['pg/date-string@1']['output'];
-    status: CodecTypes['pg/text@1']['output'];
+    status: 'LOANED' | 'RETURNED' | 'OVERDUE';
     book: public_Book;
     fines: public_Fine[];
     user: public_User;
@@ -565,7 +565,7 @@ export namespace Models {
     userId: CodecTypes['pg/uuid@1']['output'];
     bookId: CodecTypes['pg/uuid@1']['output'];
     reservationDate: CodecTypes['pg/date-string@1']['output'];
-    status: CodecTypes['pg/text@1']['output'] | null;
+    status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     book: public_Book;
     user: public_User;
     readonly [RelationKeys]?: 'book' | 'user';
@@ -1062,6 +1062,28 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+          };
+          readonly valueSet: {
+            readonly BookAvailability: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['AVAILABLE', 'LOANED', 'RESERVED'];
+            };
+            readonly BookCondition: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['NEW', 'GOOD', 'FAIR', 'POOR'];
+            };
+            readonly LoanStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['LOANED', 'RETURNED', 'OVERDUE'];
+            };
+            readonly ReservationStatus: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['PENDING', 'FULFILLED', 'CANCELLED', 'EXPIRED'];
+            };
+            readonly UserRole: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['ADMIN', 'USER'];
             };
           };
         };
@@ -1587,6 +1609,49 @@ type ContractBase = Omit<
                 readonly createdAt: { readonly column: 'CreatedAt' };
               };
             };
+          };
+        };
+        readonly enum: {
+          readonly UserRole: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'ADMIN'; readonly value: 'ADMIN' },
+              { readonly name: 'USER'; readonly value: 'USER' },
+            ];
+          };
+          readonly BookCondition: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'NEW'; readonly value: 'NEW' },
+              { readonly name: 'GOOD'; readonly value: 'GOOD' },
+              { readonly name: 'FAIR'; readonly value: 'FAIR' },
+              { readonly name: 'POOR'; readonly value: 'POOR' },
+            ];
+          };
+          readonly BookAvailability: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'AVAILABLE'; readonly value: 'AVAILABLE' },
+              { readonly name: 'LOANED'; readonly value: 'LOANED' },
+              { readonly name: 'RESERVED'; readonly value: 'RESERVED' },
+            ];
+          };
+          readonly LoanStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'LOANED'; readonly value: 'LOANED' },
+              { readonly name: 'RETURNED'; readonly value: 'RETURNED' },
+              { readonly name: 'OVERDUE'; readonly value: 'OVERDUE' },
+            ];
+          };
+          readonly ReservationStatus: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'PENDING'; readonly value: 'PENDING' },
+              { readonly name: 'FULFILLED'; readonly value: 'FULFILLED' },
+              { readonly name: 'CANCELLED'; readonly value: 'CANCELLED' },
+              { readonly name: 'EXPIRED'; readonly value: 'EXPIRED' },
+            ];
           };
         };
       };
