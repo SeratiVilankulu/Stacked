@@ -1,7 +1,7 @@
 // use prisma-8
 
 model User {
-  id        Int        @id @default(autoincrement()) @map("Id")
+  id        Uuid       @id @default(uuid()) @map("Id")
   name      String     @map("Name")
   surname   String     @map("Surname")
   username  String     @map("Username")
@@ -20,7 +20,7 @@ model User {
 }
 
 model Book {
-  id              Int     @id @default(autoincrement()) @map("Id")
+  id              Uuid    @id @default(uuid()) @map("Id")
   title           String  @map("Title")
   description     String? @map("Description")
   genre           String  @map("Genre")
@@ -38,9 +38,9 @@ model Book {
 }
 
 model Admin {
-  id     Int    @id @default(autoincrement()) @map("Id")
-  userId Int    @map("User_Id")
-  bookId Int    @map("Book_Id")
+  id     Uuid   @id @default(uuid()) @map("Id")
+  userId Uuid   @map("User_Id")
+  bookId Uuid   @map("Book_Id")
   name   String @map("Name")
 
   user User @relation(fields: [userId], references: [id])
@@ -50,9 +50,9 @@ model Admin {
 }
 
 model BookCopy {
-  id        Int     @id @default(autoincrement()) @map("Id")
-  bookId    Int     @map("Book_Id")
-  userId    Int     @map("User_Id")
+  id        Uuid    @id @default(uuid()) @map("Id")
+  bookId    Uuid    @map("Book_Id")
+  userId    Uuid    @map("User_Id")
   name      String? @map("Name")
   condition String? @map("Condition")
   status    String  @map("Status")
@@ -64,9 +64,9 @@ model BookCopy {
 }
 
 model LoanedBook {
-  id         Int        @id @default(autoincrement()) @map("Id")
-  bookId     Int        @map("Book_id")
-  userId     Int        @map("User_id")
+  id         Uuid       @id @default(uuid()) @map("Id")
+  bookId     Uuid       @map("Book_id")
+  userId     Uuid       @map("User_id")
   loanDate   DateString @map("LoanDate")
   returnDate DateString @map("ReturnDate")
   status     String     @map("Status")
@@ -79,11 +79,11 @@ model LoanedBook {
 }
 
 model Fine {
-  id          Int        @id @default(autoincrement()) @map("Id")
-  loanId      Int        @map("Loan_Id")
-  userId      Int        @map("User_Id")
-  daysOverDue Int        @map("DaysOverDue")
-  amountOwed  Decimal    @map("AmountOwed")
+  id          Uuid        @id @default(uuid()) @map("Id")
+  loanId      Uuid        @map("Loan_Id")
+  userId      Uuid        @map("User_Id")
+  daysOverDue Int         @map("DaysOverDue")
+  amountOwed  Decimal     @map("AmountOwed")
   datePaid    DateString? @map("DatePaid")
 
   loan LoanedBook @relation(fields: [loanId], references: [id])
@@ -93,9 +93,9 @@ model Fine {
 }
 
 model Reservation {
-  id              Int        @id @default(autoincrement()) @map("Id")
-  userId          Int        @map("User_Id")
-  bookId          Int        @map("Book_Id")
+  id              Uuid       @id @default(uuid()) @map("Id")
+  userId          Uuid       @map("User_Id")
+  bookId          Uuid       @map("Book_Id")
   reservationDate DateString @map("ReservationDate")
   status          String?    @map("Status")
 

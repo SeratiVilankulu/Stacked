@@ -34,8 +34,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'dc7bfdf3805d88df10d21e8e7ca6c438ef2259f4f6557d13e09f769a5677db12'>;
-export type ExecutionHash = ExecutionHashBase<string>;
+  StorageHashBase<'09b360fb787c4dbb97f73f701a5cec5ad44f3a93087431533f013fcb3de7fa12'>;
+export type ExecutionHash =
+  ExecutionHashBase<'c086a7597d693fbc34742f8b5d61bd545c802d64b8816a803f1c2a3f8e615d28'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -242,13 +243,13 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
 export type FieldOutputTypes = {
   readonly public: {
     readonly Admin: {
-      readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly userId: CodecTypes['pg/int4@1']['output'];
-      readonly bookId: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/uuid@1']['output'];
+      readonly userId: CodecTypes['pg/uuid@1']['output'];
+      readonly bookId: CodecTypes['pg/uuid@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
     };
     readonly Book: {
-      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly title: CodecTypes['pg/text@1']['output'];
       readonly description: CodecTypes['pg/text@1']['output'] | null;
       readonly genre: CodecTypes['pg/text@1']['output'];
@@ -258,38 +259,38 @@ export type FieldOutputTypes = {
       readonly copiesAvailable: CodecTypes['pg/int4@1']['output'];
     };
     readonly BookCopy: {
-      readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly bookId: CodecTypes['pg/int4@1']['output'];
-      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/uuid@1']['output'];
+      readonly bookId: CodecTypes['pg/uuid@1']['output'];
+      readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'] | null;
       readonly condition: CodecTypes['pg/text@1']['output'] | null;
       readonly status: CodecTypes['pg/text@1']['output'];
     };
     readonly Fine: {
-      readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly loanId: CodecTypes['pg/int4@1']['output'];
-      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/uuid@1']['output'];
+      readonly loanId: CodecTypes['pg/uuid@1']['output'];
+      readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly daysOverDue: CodecTypes['pg/int4@1']['output'];
       readonly amountOwed: CodecTypes['pg/numeric@1']['output'];
       readonly datePaid: CodecTypes['pg/date-string@1']['output'] | null;
     };
     readonly LoanedBook: {
-      readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly bookId: CodecTypes['pg/int4@1']['output'];
-      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/uuid@1']['output'];
+      readonly bookId: CodecTypes['pg/uuid@1']['output'];
+      readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly loanDate: CodecTypes['pg/date-string@1']['output'];
       readonly returnDate: CodecTypes['pg/date-string@1']['output'];
       readonly status: CodecTypes['pg/text@1']['output'];
     };
     readonly Reservation: {
-      readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly userId: CodecTypes['pg/int4@1']['output'];
-      readonly bookId: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/uuid@1']['output'];
+      readonly userId: CodecTypes['pg/uuid@1']['output'];
+      readonly bookId: CodecTypes['pg/uuid@1']['output'];
       readonly reservationDate: CodecTypes['pg/date-string@1']['output'];
       readonly status: CodecTypes['pg/text@1']['output'] | null;
     };
     readonly User: {
-      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly surname: CodecTypes['pg/text@1']['output'];
       readonly username: CodecTypes['pg/text@1']['output'];
@@ -303,13 +304,13 @@ export type FieldOutputTypes = {
 export type FieldInputTypes = {
   readonly public: {
     readonly Admin: {
-      readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly userId: CodecTypes['pg/int4@1']['input'];
-      readonly bookId: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/uuid@1']['input'];
+      readonly userId: CodecTypes['pg/uuid@1']['input'];
+      readonly bookId: CodecTypes['pg/uuid@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
     };
     readonly Book: {
-      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly title: CodecTypes['pg/text@1']['input'];
       readonly description: CodecTypes['pg/text@1']['input'] | null;
       readonly genre: CodecTypes['pg/text@1']['input'];
@@ -319,38 +320,38 @@ export type FieldInputTypes = {
       readonly copiesAvailable: CodecTypes['pg/int4@1']['input'];
     };
     readonly BookCopy: {
-      readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly bookId: CodecTypes['pg/int4@1']['input'];
-      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/uuid@1']['input'];
+      readonly bookId: CodecTypes['pg/uuid@1']['input'];
+      readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'] | null;
       readonly condition: CodecTypes['pg/text@1']['input'] | null;
       readonly status: CodecTypes['pg/text@1']['input'];
     };
     readonly Fine: {
-      readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly loanId: CodecTypes['pg/int4@1']['input'];
-      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/uuid@1']['input'];
+      readonly loanId: CodecTypes['pg/uuid@1']['input'];
+      readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly daysOverDue: CodecTypes['pg/int4@1']['input'];
       readonly amountOwed: CodecTypes['pg/numeric@1']['input'];
       readonly datePaid: CodecTypes['pg/date-string@1']['input'] | null;
     };
     readonly LoanedBook: {
-      readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly bookId: CodecTypes['pg/int4@1']['input'];
-      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/uuid@1']['input'];
+      readonly bookId: CodecTypes['pg/uuid@1']['input'];
+      readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly loanDate: CodecTypes['pg/date-string@1']['input'];
       readonly returnDate: CodecTypes['pg/date-string@1']['input'];
       readonly status: CodecTypes['pg/text@1']['input'];
     };
     readonly Reservation: {
-      readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly userId: CodecTypes['pg/int4@1']['input'];
-      readonly bookId: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/uuid@1']['input'];
+      readonly userId: CodecTypes['pg/uuid@1']['input'];
+      readonly bookId: CodecTypes['pg/uuid@1']['input'];
       readonly reservationDate: CodecTypes['pg/date-string@1']['input'];
       readonly status: CodecTypes['pg/text@1']['input'] | null;
     };
     readonly User: {
-      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly surname: CodecTypes['pg/text@1']['input'];
       readonly username: CodecTypes['pg/text@1']['input'];
@@ -364,18 +365,18 @@ export type FieldInputTypes = {
 export type StorageColumnTypes = {
   readonly public: {
     readonly admin: {
-      readonly Book_Id: CodecTypes['pg/int4@1']['output'];
-      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Book_Id: CodecTypes['pg/uuid@1']['output'];
+      readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly Name: CodecTypes['pg/text@1']['output'];
-      readonly User_Id: CodecTypes['pg/int4@1']['output'];
+      readonly User_Id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly bookcopies: {
-      readonly Book_Id: CodecTypes['pg/int4@1']['output'];
+      readonly Book_Id: CodecTypes['pg/uuid@1']['output'];
       readonly Condition: CodecTypes['pg/text@1']['output'] | null;
-      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly Name: CodecTypes['pg/text@1']['output'] | null;
       readonly Status: CodecTypes['pg/text@1']['output'];
-      readonly User_Id: CodecTypes['pg/int4@1']['output'];
+      readonly User_Id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly books: {
       readonly Author: CodecTypes['pg/text@1']['output'];
@@ -383,7 +384,7 @@ export type StorageColumnTypes = {
       readonly CoverImageURL: CodecTypes['pg/text@1']['output'] | null;
       readonly Description: CodecTypes['pg/text@1']['output'] | null;
       readonly Genre: CodecTypes['pg/text@1']['output'];
-      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly ISBN: CodecTypes['pg/int4@1']['output'] | null;
       readonly Title: CodecTypes['pg/text@1']['output'];
     };
@@ -391,29 +392,29 @@ export type StorageColumnTypes = {
       readonly AmountOwed: CodecTypes['pg/numeric@1']['output'];
       readonly DatePaid: CodecTypes['pg/date-string@1']['output'] | null;
       readonly DaysOverDue: CodecTypes['pg/int4@1']['output'];
-      readonly Id: CodecTypes['pg/int4@1']['output'];
-      readonly Loan_Id: CodecTypes['pg/int4@1']['output'];
-      readonly User_Id: CodecTypes['pg/int4@1']['output'];
+      readonly Id: CodecTypes['pg/uuid@1']['output'];
+      readonly Loan_Id: CodecTypes['pg/uuid@1']['output'];
+      readonly User_Id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly loanedbooks: {
-      readonly Book_id: CodecTypes['pg/int4@1']['output'];
-      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Book_id: CodecTypes['pg/uuid@1']['output'];
+      readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly LoanDate: CodecTypes['pg/date-string@1']['output'];
       readonly ReturnDate: CodecTypes['pg/date-string@1']['output'];
       readonly Status: CodecTypes['pg/text@1']['output'];
-      readonly User_id: CodecTypes['pg/int4@1']['output'];
+      readonly User_id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly reservations: {
-      readonly Book_Id: CodecTypes['pg/int4@1']['output'];
-      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Book_Id: CodecTypes['pg/uuid@1']['output'];
+      readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly ReservationDate: CodecTypes['pg/date-string@1']['output'];
       readonly Status: CodecTypes['pg/text@1']['output'] | null;
-      readonly User_Id: CodecTypes['pg/int4@1']['output'];
+      readonly User_Id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly users: {
       readonly CreatedAt: CodecTypes['pg/date-string@1']['output'];
       readonly Email: CodecTypes['pg/text@1']['output'];
-      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly Name: CodecTypes['pg/text@1']['output'];
       readonly Password: CodecTypes['pg/text@1']['output'];
       readonly Role: CodecTypes['pg/text@1']['output'];
@@ -425,18 +426,18 @@ export type StorageColumnTypes = {
 export type StorageColumnInputTypes = {
   readonly public: {
     readonly admin: {
-      readonly Book_Id: CodecTypes['pg/int4@1']['input'];
-      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Book_Id: CodecTypes['pg/uuid@1']['input'];
+      readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly Name: CodecTypes['pg/text@1']['input'];
-      readonly User_Id: CodecTypes['pg/int4@1']['input'];
+      readonly User_Id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly bookcopies: {
-      readonly Book_Id: CodecTypes['pg/int4@1']['input'];
+      readonly Book_Id: CodecTypes['pg/uuid@1']['input'];
       readonly Condition: CodecTypes['pg/text@1']['input'] | null;
-      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly Name: CodecTypes['pg/text@1']['input'] | null;
       readonly Status: CodecTypes['pg/text@1']['input'];
-      readonly User_Id: CodecTypes['pg/int4@1']['input'];
+      readonly User_Id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly books: {
       readonly Author: CodecTypes['pg/text@1']['input'];
@@ -444,7 +445,7 @@ export type StorageColumnInputTypes = {
       readonly CoverImageURL: CodecTypes['pg/text@1']['input'] | null;
       readonly Description: CodecTypes['pg/text@1']['input'] | null;
       readonly Genre: CodecTypes['pg/text@1']['input'];
-      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly ISBN: CodecTypes['pg/int4@1']['input'] | null;
       readonly Title: CodecTypes['pg/text@1']['input'];
     };
@@ -452,29 +453,29 @@ export type StorageColumnInputTypes = {
       readonly AmountOwed: CodecTypes['pg/numeric@1']['input'];
       readonly DatePaid: CodecTypes['pg/date-string@1']['input'] | null;
       readonly DaysOverDue: CodecTypes['pg/int4@1']['input'];
-      readonly Id: CodecTypes['pg/int4@1']['input'];
-      readonly Loan_Id: CodecTypes['pg/int4@1']['input'];
-      readonly User_Id: CodecTypes['pg/int4@1']['input'];
+      readonly Id: CodecTypes['pg/uuid@1']['input'];
+      readonly Loan_Id: CodecTypes['pg/uuid@1']['input'];
+      readonly User_Id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly loanedbooks: {
-      readonly Book_id: CodecTypes['pg/int4@1']['input'];
-      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Book_id: CodecTypes['pg/uuid@1']['input'];
+      readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly LoanDate: CodecTypes['pg/date-string@1']['input'];
       readonly ReturnDate: CodecTypes['pg/date-string@1']['input'];
       readonly Status: CodecTypes['pg/text@1']['input'];
-      readonly User_id: CodecTypes['pg/int4@1']['input'];
+      readonly User_id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly reservations: {
-      readonly Book_Id: CodecTypes['pg/int4@1']['input'];
-      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Book_Id: CodecTypes['pg/uuid@1']['input'];
+      readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly ReservationDate: CodecTypes['pg/date-string@1']['input'];
       readonly Status: CodecTypes['pg/text@1']['input'] | null;
-      readonly User_Id: CodecTypes['pg/int4@1']['input'];
+      readonly User_Id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly users: {
       readonly CreatedAt: CodecTypes['pg/date-string@1']['input'];
       readonly Email: CodecTypes['pg/text@1']['input'];
-      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly Name: CodecTypes['pg/text@1']['input'];
       readonly Password: CodecTypes['pg/text@1']['input'];
       readonly Role: CodecTypes['pg/text@1']['input'];
@@ -486,7 +487,7 @@ export type StorageColumnInputTypes = {
 
 export namespace Models {
   export type public_User = {
-    id: CodecTypes['pg/int4@1']['output'];
+    id: CodecTypes['pg/uuid@1']['output'];
     name: CodecTypes['pg/text@1']['output'];
     surname: CodecTypes['pg/text@1']['output'];
     username: CodecTypes['pg/text@1']['output'];
@@ -502,7 +503,7 @@ export namespace Models {
     readonly [RelationKeys]?: 'admins' | 'bookCopies' | 'fines' | 'loanedBooks' | 'reservations';
   };
   export type public_Book = {
-    id: CodecTypes['pg/int4@1']['output'];
+    id: CodecTypes['pg/uuid@1']['output'];
     title: CodecTypes['pg/text@1']['output'];
     description: CodecTypes['pg/text@1']['output'] | null;
     genre: CodecTypes['pg/text@1']['output'];
@@ -517,18 +518,18 @@ export namespace Models {
     readonly [RelationKeys]?: 'admins' | 'bookCopies' | 'loanedBooks' | 'reservations';
   };
   export type public_Admin = {
-    id: CodecTypes['pg/int4@1']['output'];
-    userId: CodecTypes['pg/int4@1']['output'];
-    bookId: CodecTypes['pg/int4@1']['output'];
+    id: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'];
+    bookId: CodecTypes['pg/uuid@1']['output'];
     name: CodecTypes['pg/text@1']['output'];
     book: public_Book;
     user: public_User;
     readonly [RelationKeys]?: 'book' | 'user';
   };
   export type public_BookCopy = {
-    id: CodecTypes['pg/int4@1']['output'];
-    bookId: CodecTypes['pg/int4@1']['output'];
-    userId: CodecTypes['pg/int4@1']['output'];
+    id: CodecTypes['pg/uuid@1']['output'];
+    bookId: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'];
     name: CodecTypes['pg/text@1']['output'] | null;
     condition: CodecTypes['pg/text@1']['output'] | null;
     status: CodecTypes['pg/text@1']['output'];
@@ -537,9 +538,9 @@ export namespace Models {
     readonly [RelationKeys]?: 'book' | 'user';
   };
   export type public_LoanedBook = {
-    id: CodecTypes['pg/int4@1']['output'];
-    bookId: CodecTypes['pg/int4@1']['output'];
-    userId: CodecTypes['pg/int4@1']['output'];
+    id: CodecTypes['pg/uuid@1']['output'];
+    bookId: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'];
     loanDate: CodecTypes['pg/date-string@1']['output'];
     returnDate: CodecTypes['pg/date-string@1']['output'];
     status: CodecTypes['pg/text@1']['output'];
@@ -549,9 +550,9 @@ export namespace Models {
     readonly [RelationKeys]?: 'book' | 'fines' | 'user';
   };
   export type public_Fine = {
-    id: CodecTypes['pg/int4@1']['output'];
-    loanId: CodecTypes['pg/int4@1']['output'];
-    userId: CodecTypes['pg/int4@1']['output'];
+    id: CodecTypes['pg/uuid@1']['output'];
+    loanId: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'];
     daysOverDue: CodecTypes['pg/int4@1']['output'];
     amountOwed: CodecTypes['pg/numeric@1']['output'];
     datePaid: CodecTypes['pg/date-string@1']['output'] | null;
@@ -560,9 +561,9 @@ export namespace Models {
     readonly [RelationKeys]?: 'loan' | 'user';
   };
   export type public_Reservation = {
-    id: CodecTypes['pg/int4@1']['output'];
-    userId: CodecTypes['pg/int4@1']['output'];
-    bookId: CodecTypes['pg/int4@1']['output'];
+    id: CodecTypes['pg/uuid@1']['output'];
+    userId: CodecTypes['pg/uuid@1']['output'];
+    bookId: CodecTypes['pg/uuid@1']['output'];
     reservationDate: CodecTypes['pg/date-string@1']['output'];
     status: CodecTypes['pg/text@1']['output'] | null;
     book: public_Book;
@@ -604,22 +605,18 @@ type ContractBase = Omit<
             readonly admin: {
               columns: {
                 readonly Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
                 };
                 readonly User_Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly Book_Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly Name: {
@@ -674,22 +671,18 @@ type ContractBase = Omit<
             readonly bookcopies: {
               columns: {
                 readonly Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
                 };
                 readonly Book_Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly User_Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly Name: {
@@ -754,13 +747,9 @@ type ContractBase = Omit<
             readonly books: {
               columns: {
                 readonly Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
                 };
                 readonly Title: {
                   readonly nativeType: 'text';
@@ -806,22 +795,18 @@ type ContractBase = Omit<
             readonly fines: {
               columns: {
                 readonly Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
                 };
                 readonly Loan_Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly User_Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly DaysOverDue: {
@@ -886,22 +871,18 @@ type ContractBase = Omit<
             readonly loanedbooks: {
               columns: {
                 readonly Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
                 };
                 readonly Book_id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly User_id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly LoanDate: {
@@ -966,22 +947,18 @@ type ContractBase = Omit<
             readonly reservations: {
               columns: {
                 readonly Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
                 };
                 readonly User_Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly Book_Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
                 };
                 readonly ReservationDate: {
@@ -1041,13 +1018,9 @@ type ContractBase = Omit<
             readonly users: {
               columns: {
                 readonly Id: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
                 };
                 readonly Name: {
                   readonly nativeType: 'text';
@@ -1123,15 +1096,15 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly userId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly bookId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly name: {
                 readonly nullable: false;
@@ -1173,7 +1146,7 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly title: {
                 readonly nullable: false;
@@ -1269,15 +1242,15 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly bookId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly userId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly name: {
                 readonly nullable: true;
@@ -1329,15 +1302,15 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly loanId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly userId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly daysOverDue: {
                 readonly nullable: false;
@@ -1392,15 +1365,15 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly bookId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly userId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly loanDate: {
                 readonly nullable: false;
@@ -1460,15 +1433,15 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly userId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly bookId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly reservationDate: {
                 readonly nullable: false;
@@ -1515,7 +1488,7 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly name: {
                 readonly nullable: false;
@@ -1638,6 +1611,69 @@ type ContractBase = Omit<
     };
   };
   readonly extensions: {};
+  readonly execution: {
+    readonly executionHash: ExecutionHash;
+    readonly mutations: {
+      readonly defaults: readonly [
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'admin';
+            readonly column: 'Id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'bookcopies';
+            readonly column: 'Id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'books';
+            readonly column: 'Id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'fines';
+            readonly column: 'Id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'loanedbooks';
+            readonly column: 'Id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'reservations';
+            readonly column: 'Id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'users';
+            readonly column: 'Id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+      ];
+    };
+  };
   readonly meta: {};
 
   readonly profileHash: ProfileHash;
