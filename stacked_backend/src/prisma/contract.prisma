@@ -1,14 +1,14 @@
 // use prisma-8
 
 model User {
-  id        Uuid       @id @default(uuid()) @map("Id")
-  name      String     @map("Name")
-  surname   String     @map("Surname")
-  username  String     @map("Username")
-  email     String     @map("Email")
-  password  String     @map("Password")
-  role      UserRole   @map("Role")
-  createdAt DateString @map("CreatedAt")
+  id        Uuid              @id @default(uuid()) @map("Id")
+  name      String            @map("Name")
+  surname   String            @map("Surname")
+  username  String            @map("Username")
+  email     String            @map("Email")
+  password  String            @map("Password")
+  role      UserRole          @map("Role")
+  createdAt TimestamptzString @default(now()) @map("CreatedAt")
 
   admins       Admin[]
   bookCopies   BookCopy[]
@@ -55,7 +55,7 @@ model BookCopy {
   userId    Uuid    @map("User_Id")
   name      String? @map("Name")
   condition BookCondition? @map("Condition")
-  status    BookAvailability  @map("Status")
+  status    BookAvailability @map("Status")
 
   book Book @relation(fields: [bookId], references: [id])
   user User @relation(fields: [userId], references: [id])
@@ -64,12 +64,13 @@ model BookCopy {
 }
 
 model LoanedBook {
-  id         Uuid       @id @default(uuid()) @map("Id")
-  bookId     Uuid       @map("Book_id")
-  userId     Uuid       @map("User_id")
-  loanDate   DateString @map("LoanDate")
-  returnDate DateString @map("ReturnDate")
-  status     LoanStatus     @map("Status")
+  id         Uuid               @id @default(uuid()) @map("Id")
+  bookId     Uuid               @map("Book_id")
+  userId     Uuid               @map("User_id")
+  loanDate   TimestamptzString  @default(now()) @map("LoanDate")
+  dueDate    DateString         @map("ReturnDate")
+  returnedAt TimestamptzString? @map("ReturnedAt")
+  status     LoanStatus         @map("Status")
 
   book  Book   @relation(fields: [bookId], references: [id])
   user  User   @relation(fields: [userId], references: [id])
@@ -79,12 +80,12 @@ model LoanedBook {
 }
 
 model Fine {
-  id          Uuid        @id @default(uuid()) @map("Id")
-  loanId      Uuid        @map("Loan_Id")
-  userId      Uuid        @map("User_Id")
-  daysOverDue Int         @map("DaysOverDue")
-  amountOwed  Decimal     @map("AmountOwed")
-  datePaid    DateString? @map("DatePaid")
+  id          Uuid               @id @default(uuid()) @map("Id")
+  loanId      Uuid               @map("Loan_Id")
+  userId      Uuid               @map("User_Id")
+  daysOverDue Int                @map("DaysOverDue")
+  amountOwed  Decimal            @map("AmountOwed")
+  datePaid    TimestamptzString? @map("DatePaid")
 
   loan LoanedBook @relation(fields: [loanId], references: [id])
   user User       @relation(fields: [userId], references: [id])
@@ -93,11 +94,11 @@ model Fine {
 }
 
 model Reservation {
-  id              Uuid       @id @default(uuid()) @map("Id")
-  userId          Uuid       @map("User_Id")
-  bookId          Uuid       @map("Book_Id")
-  reservationDate DateString @map("ReservationDate")
-  status          ReservationStatus?    @map("Status")
+  id              Uuid               @id @default(uuid()) @map("Id")
+  userId          Uuid               @map("User_Id")
+  bookId          Uuid               @map("Book_Id")
+  reservationDate TimestamptzString  @default(now()) @map("ReservationDate")
+  status          ReservationStatus? @map("Status")
 
   user User @relation(fields: [userId], references: [id])
   book Book @relation(fields: [bookId], references: [id])

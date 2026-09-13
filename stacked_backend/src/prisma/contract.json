@@ -492,7 +492,7 @@
               "datePaid": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/date-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -593,6 +593,13 @@
                   "kind": "scalar"
                 }
               },
+              "dueDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -603,14 +610,14 @@
               "loanDate": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/date-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
-              "returnDate": {
-                "nullable": false,
+              "returnedAt": {
+                "nullable": true,
                 "type": {
-                  "codecId": "pg/date-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -689,14 +696,17 @@
                 "bookId": {
                   "column": "Book_id"
                 },
+                "dueDate": {
+                  "column": "ReturnDate"
+                },
                 "id": {
                   "column": "Id"
                 },
                 "loanDate": {
                   "column": "LoanDate"
                 },
-                "returnDate": {
-                  "column": "ReturnDate"
+                "returnedAt": {
+                  "column": "ReturnedAt"
                 },
                 "status": {
                   "column": "Status"
@@ -728,7 +738,7 @@
               "reservationDate": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/date-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -814,7 +824,7 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/date-string@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -1249,8 +1259,8 @@
                   "nullable": false
                 },
                 "DatePaid": {
-                  "codecId": "pg/date-string@1",
-                  "nativeType": "date",
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
                   "nullable": true
                 },
                 "DaysOverDue": {
@@ -1353,14 +1363,23 @@
                   "nullable": false
                 },
                 "LoanDate": {
-                  "codecId": "pg/date-string@1",
-                  "nativeType": "date",
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
                   "nullable": false
                 },
                 "ReturnDate": {
                   "codecId": "pg/date-string@1",
                   "nativeType": "date",
                   "nullable": false
+                },
+                "ReturnedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
                 },
                 "Status": {
                   "codecId": "pg/text@1",
@@ -1458,8 +1477,12 @@
                   "nullable": false
                 },
                 "ReservationDate": {
-                  "codecId": "pg/date-string@1",
-                  "nativeType": "date",
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
                   "nullable": false
                 },
                 "Status": {
@@ -1548,8 +1571,12 @@
               ],
               "columns": {
                 "CreatedAt": {
-                  "codecId": "pg/date-string@1",
-                  "nativeType": "date",
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
                   "nullable": false
                 },
                 "Email": {
@@ -1652,7 +1679,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "ca3cc1ebdef15de7baaa636e52adcab7898fc8a21dc018865dab962cb6349e87"
+    "storageHash": "9e2a993a329085000d96f523c205718c1ae9e300c3221f653d9fa94a9d1f3aa7"
   },
   "execution": {
     "executionHash": "c086a7597d693fbc34742f8b5d61bd545c802d64b8816a803f1c2a3f8e615d28",

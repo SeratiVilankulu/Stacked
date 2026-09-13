@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'9e2a993a329085000d96f523c205718c1ae9e300c3221f653d9fa94a9d1f3aa7'>;
+  StorageHashBase<'ca3cc1ebdef15de7baaa636e52adcab7898fc8a21dc018865dab962cb6349e87'>;
 export type ExecutionHash =
   ExecutionHashBase<'c086a7597d693fbc34742f8b5d61bd545c802d64b8816a803f1c2a3f8e615d28'>;
 export type ProfileHash =
@@ -272,22 +272,21 @@ export type FieldOutputTypes = {
       readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly daysOverDue: CodecTypes['pg/int4@1']['output'];
       readonly amountOwed: CodecTypes['pg/numeric@1']['output'];
-      readonly datePaid: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly datePaid: CodecTypes['pg/date-string@1']['output'] | null;
     };
     readonly LoanedBook: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly bookId: CodecTypes['pg/uuid@1']['output'];
       readonly userId: CodecTypes['pg/uuid@1']['output'];
-      readonly loanDate: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly dueDate: CodecTypes['pg/date-string@1']['output'];
-      readonly returnedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly loanDate: CodecTypes['pg/date-string@1']['output'];
+      readonly returnDate: CodecTypes['pg/date-string@1']['output'];
       readonly status: 'LOANED' | 'RETURNED' | 'OVERDUE';
     };
     readonly Reservation: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly bookId: CodecTypes['pg/uuid@1']['output'];
-      readonly reservationDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly reservationDate: CodecTypes['pg/date-string@1']['output'];
       readonly status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     };
     readonly User: {
@@ -298,7 +297,7 @@ export type FieldOutputTypes = {
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
       readonly role: 'ADMIN' | 'USER';
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly createdAt: CodecTypes['pg/date-string@1']['output'];
     };
   };
 };
@@ -334,22 +333,21 @@ export type FieldInputTypes = {
       readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly daysOverDue: CodecTypes['pg/int4@1']['input'];
       readonly amountOwed: CodecTypes['pg/numeric@1']['input'];
-      readonly datePaid: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly datePaid: CodecTypes['pg/date-string@1']['input'] | null;
     };
     readonly LoanedBook: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly bookId: CodecTypes['pg/uuid@1']['input'];
       readonly userId: CodecTypes['pg/uuid@1']['input'];
-      readonly loanDate: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly dueDate: CodecTypes['pg/date-string@1']['input'];
-      readonly returnedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly loanDate: CodecTypes['pg/date-string@1']['input'];
+      readonly returnDate: CodecTypes['pg/date-string@1']['input'];
       readonly status: 'LOANED' | 'RETURNED' | 'OVERDUE';
     };
     readonly Reservation: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly bookId: CodecTypes['pg/uuid@1']['input'];
-      readonly reservationDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly reservationDate: CodecTypes['pg/date-string@1']['input'];
       readonly status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     };
     readonly User: {
@@ -360,7 +358,7 @@ export type FieldInputTypes = {
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
       readonly role: 'ADMIN' | 'USER';
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly createdAt: CodecTypes['pg/date-string@1']['input'];
     };
   };
 };
@@ -392,7 +390,7 @@ export type StorageColumnTypes = {
     };
     readonly fines: {
       readonly AmountOwed: CodecTypes['pg/numeric@1']['output'];
-      readonly DatePaid: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly DatePaid: CodecTypes['pg/date-string@1']['output'] | null;
       readonly DaysOverDue: CodecTypes['pg/int4@1']['output'];
       readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly Loan_Id: CodecTypes['pg/uuid@1']['output'];
@@ -401,21 +399,20 @@ export type StorageColumnTypes = {
     readonly loanedbooks: {
       readonly Book_id: CodecTypes['pg/uuid@1']['output'];
       readonly Id: CodecTypes['pg/uuid@1']['output'];
-      readonly LoanDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly LoanDate: CodecTypes['pg/date-string@1']['output'];
       readonly ReturnDate: CodecTypes['pg/date-string@1']['output'];
-      readonly ReturnedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly Status: 'LOANED' | 'RETURNED' | 'OVERDUE';
       readonly User_id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly reservations: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['output'];
       readonly Id: CodecTypes['pg/uuid@1']['output'];
-      readonly ReservationDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly ReservationDate: CodecTypes['pg/date-string@1']['output'];
       readonly Status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
       readonly User_Id: CodecTypes['pg/uuid@1']['output'];
     };
     readonly users: {
-      readonly CreatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly CreatedAt: CodecTypes['pg/date-string@1']['output'];
       readonly Email: CodecTypes['pg/text@1']['output'];
       readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly Name: CodecTypes['pg/text@1']['output'];
@@ -454,7 +451,7 @@ export type StorageColumnInputTypes = {
     };
     readonly fines: {
       readonly AmountOwed: CodecTypes['pg/numeric@1']['input'];
-      readonly DatePaid: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly DatePaid: CodecTypes['pg/date-string@1']['input'] | null;
       readonly DaysOverDue: CodecTypes['pg/int4@1']['input'];
       readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly Loan_Id: CodecTypes['pg/uuid@1']['input'];
@@ -463,21 +460,20 @@ export type StorageColumnInputTypes = {
     readonly loanedbooks: {
       readonly Book_id: CodecTypes['pg/uuid@1']['input'];
       readonly Id: CodecTypes['pg/uuid@1']['input'];
-      readonly LoanDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly LoanDate: CodecTypes['pg/date-string@1']['input'];
       readonly ReturnDate: CodecTypes['pg/date-string@1']['input'];
-      readonly ReturnedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly Status: 'LOANED' | 'RETURNED' | 'OVERDUE';
       readonly User_id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly reservations: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['input'];
       readonly Id: CodecTypes['pg/uuid@1']['input'];
-      readonly ReservationDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly ReservationDate: CodecTypes['pg/date-string@1']['input'];
       readonly Status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
       readonly User_Id: CodecTypes['pg/uuid@1']['input'];
     };
     readonly users: {
-      readonly CreatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly CreatedAt: CodecTypes['pg/date-string@1']['input'];
       readonly Email: CodecTypes['pg/text@1']['input'];
       readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly Name: CodecTypes['pg/text@1']['input'];
@@ -498,7 +494,7 @@ export namespace Models {
     email: CodecTypes['pg/text@1']['output'];
     password: CodecTypes['pg/text@1']['output'];
     role: 'ADMIN' | 'USER';
-    createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    createdAt: CodecTypes['pg/date-string@1']['output'];
     admins: public_Admin[];
     bookCopies: public_BookCopy[];
     fines: public_Fine[];
@@ -545,9 +541,8 @@ export namespace Models {
     id: CodecTypes['pg/uuid@1']['output'];
     bookId: CodecTypes['pg/uuid@1']['output'];
     userId: CodecTypes['pg/uuid@1']['output'];
-    loanDate: CodecTypes['pg/timestamptz-string@1']['output'];
-    dueDate: CodecTypes['pg/date-string@1']['output'];
-    returnedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+    loanDate: CodecTypes['pg/date-string@1']['output'];
+    returnDate: CodecTypes['pg/date-string@1']['output'];
     status: 'LOANED' | 'RETURNED' | 'OVERDUE';
     book: public_Book;
     fines: public_Fine[];
@@ -560,7 +555,7 @@ export namespace Models {
     userId: CodecTypes['pg/uuid@1']['output'];
     daysOverDue: CodecTypes['pg/int4@1']['output'];
     amountOwed: CodecTypes['pg/numeric@1']['output'];
-    datePaid: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+    datePaid: CodecTypes['pg/date-string@1']['output'] | null;
     loan: public_LoanedBook;
     user: public_User;
     readonly [RelationKeys]?: 'loan' | 'user';
@@ -569,7 +564,7 @@ export namespace Models {
     id: CodecTypes['pg/uuid@1']['output'];
     userId: CodecTypes['pg/uuid@1']['output'];
     bookId: CodecTypes['pg/uuid@1']['output'];
-    reservationDate: CodecTypes['pg/timestamptz-string@1']['output'];
+    reservationDate: CodecTypes['pg/date-string@1']['output'];
     status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     book: public_Book;
     user: public_User;
@@ -825,8 +820,8 @@ type ContractBase = Omit<
                   readonly nullable: false;
                 };
                 readonly DatePaid: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
                   readonly nullable: true;
                 };
               };
@@ -891,20 +886,14 @@ type ContractBase = Omit<
                   readonly nullable: false;
                 };
                 readonly LoanDate: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
                 readonly ReturnDate: {
                   readonly nativeType: 'date';
                   readonly codecId: 'pg/date-string@1';
                   readonly nullable: false;
-                };
-                readonly ReturnedAt: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                  readonly nullable: true;
                 };
                 readonly Status: {
                   readonly nativeType: 'text';
@@ -973,10 +962,9 @@ type ContractBase = Omit<
                   readonly nullable: false;
                 };
                 readonly ReservationDate: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
                 readonly Status: {
                   readonly nativeType: 'text';
@@ -1065,10 +1053,9 @@ type ContractBase = Omit<
                   readonly nullable: false;
                 };
                 readonly CreatedAt: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
                   readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
               };
               primaryKey: { readonly columns: readonly ['Id'] };
@@ -1357,10 +1344,7 @@ type ContractBase = Omit<
               };
               readonly datePaid: {
                 readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
               };
             };
             readonly relations: {
@@ -1415,21 +1399,11 @@ type ContractBase = Omit<
               };
               readonly loanDate: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
-              readonly dueDate: {
-                readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
               };
-              readonly returnedAt: {
-                readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
+              readonly returnDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
               };
               readonly status: {
                 readonly nullable: false;
@@ -1472,8 +1446,7 @@ type ContractBase = Omit<
                 readonly bookId: { readonly column: 'Book_id' };
                 readonly userId: { readonly column: 'User_id' };
                 readonly loanDate: { readonly column: 'LoanDate' };
-                readonly dueDate: { readonly column: 'ReturnDate' };
-                readonly returnedAt: { readonly column: 'ReturnedAt' };
+                readonly returnDate: { readonly column: 'ReturnDate' };
                 readonly status: { readonly column: 'Status' };
               };
             };
@@ -1494,10 +1467,7 @@ type ContractBase = Omit<
               };
               readonly reservationDate: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
               };
               readonly status: {
                 readonly nullable: true;
@@ -1568,10 +1538,7 @@ type ContractBase = Omit<
               };
               readonly createdAt: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
               };
             };
             readonly relations: {
