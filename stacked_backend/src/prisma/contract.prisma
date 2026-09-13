@@ -1,0 +1,27 @@
+// use prisma-8
+
+model User {
+  id        Int        @id @default(autoincrement()) @map("Id")
+  name      String     @map("Name")
+  surname   String     @map("Surname")
+  username  String     @map("Username")
+  email     String     @map("Email")
+  password  String     @map("Password")
+  role      String     @map("Role")
+  createdAt DateString @map("CreatedAt")
+
+  @@map("users")
+}
+
+model Book {
+  id              Int     @id @default(autoincrement()) @map("Id")
+  title           String  @map("Title")
+  description     String? @map("Description")
+  genre           String  @map("Genre")
+  author          String  @map("Author")
+  isbn            Int?    @map("ISBN")
+  coverImageUrl   String? @map("CoverImageURL")
+  copiesAvailable Int     @map("CopiesAvailable")
+
+  @@map("books")
+}
