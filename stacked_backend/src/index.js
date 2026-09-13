@@ -11,6 +11,9 @@ import bookRoutes from "./routes/bookRoute.js";
 
 const app = express(); // create an instance of the express application
 
+// Parse JSON request bodies into req.body (must run before the routes)
+app.use(express.json());
+
 // API Routes
 app.use("/users", userRoutes);
 app.use("/books", bookRoutes);
