@@ -10,6 +10,12 @@ model User {
   role      String     @map("Role")
   createdAt DateString @map("CreatedAt")
 
+  admins       Admin[]
+  bookCopies   BookCopy[]
+  fines        Fine[]
+  loanedBooks  LoanedBook[]
+  reservations Reservation[]
+
   @@map("users")
 }
 
@@ -23,5 +29,78 @@ model Book {
   coverImageUrl   String? @map("CoverImageURL")
   copiesAvailable Int     @map("CopiesAvailable")
 
+  admins       Admin[]
+  bookCopies   BookCopy[]
+  loanedBooks  LoanedBook[]
+  reservations Reservation[]
+
   @@map("books")
+}
+
+model Admin {
+  id     Int    @id @default(autoincrement()) @map("Id")
+  userId Int    @map("User_Id")
+  bookId Int    @map("Book_Id")
+  name   String @map("Name")
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  @@map("admin")
+}
+
+model BookCopy {
+  id        Int     @id @default(autoincrement()) @map("Id")
+  bookId    Int     @map("Book_Id")
+  userId    Int     @map("User_Id")
+  name      String? @map("Name")
+  condition String? @map("Condition")
+  status    String  @map("Status")
+
+  book Book @relation(fields: [bookId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("bookcopies")
+}
+
+model LoanedBook {
+  id         Int        @id @default(autoincrement()) @map("Id")
+  bookId     Int        @map("Book_id")
+  userId     Int        @map("User_id")
+  loanDate   DateString @map("LoanDate")
+  returnDate DateString @map("ReturnDate")
+  status     String     @map("Status")
+
+  book  Book   @relation(fields: [bookId], references: [id])
+  user  User   @relation(fields: [userId], references: [id])
+  fines Fine[]
+
+  @@map("loanedbooks")
+}
+
+model Fine {
+  id          Int        @id @default(autoincrement()) @map("Id")
+  loanId      Int        @map("Loan_Id")
+  userId      Int        @map("User_Id")
+  daysOverDue Int        @map("DaysOverDue")
+  amountOwed  Decimal    @map("AmountOwed")
+  datePaid    DateString? @map("DatePaid")
+
+  loan LoanedBook @relation(fields: [loanId], references: [id])
+  user User       @relation(fields: [userId], references: [id])
+
+  @@map("fines")
+}
+
+model Reservation {
+  id              Int        @id @default(autoincrement()) @map("Id")
+  userId          Int        @map("User_Id")
+  bookId          Int        @map("Book_Id")
+  reservationDate DateString @map("ReservationDate")
+  status          String?    @map("Status")
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  @@map("reservations")
 }

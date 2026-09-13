@@ -4,8 +4,28 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "admin": {
+      "model": "Admin",
+      "namespace": "public"
+    },
+    "bookcopies": {
+      "model": "BookCopy",
+      "namespace": "public"
+    },
     "books": {
       "model": "Book",
+      "namespace": "public"
+    },
+    "fines": {
+      "model": "Fine",
+      "namespace": "public"
+    },
+    "loanedbooks": {
+      "model": "LoanedBook",
+      "namespace": "public"
+    },
+    "reservations": {
+      "model": "Reservation",
       "namespace": "public"
     },
     "users": {
@@ -17,6 +37,90 @@
     "namespaces": {
       "public": {
         "models": {
+          "Admin": {
+            "fields": {
+              "bookId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "book": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "bookId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Book",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "bookId": {
+                  "column": "Book_Id"
+                },
+                "id": {
+                  "column": "Id"
+                },
+                "name": {
+                  "column": "Name"
+                },
+                "userId": {
+                  "column": "User_Id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "admin"
+            }
+          },
           "Book": {
             "fields": {
               "author": {
@@ -76,7 +180,68 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "admins": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "bookId"
+                  ]
+                },
+                "to": {
+                  "model": "Admin",
+                  "namespace": "public"
+                }
+              },
+              "bookCopies": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "bookId"
+                  ]
+                },
+                "to": {
+                  "model": "BookCopy",
+                  "namespace": "public"
+                }
+              },
+              "loanedBooks": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "bookId"
+                  ]
+                },
+                "to": {
+                  "model": "LoanedBook",
+                  "namespace": "public"
+                }
+              },
+              "reservations": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "bookId"
+                  ]
+                },
+                "to": {
+                  "model": "Reservation",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "author": {
@@ -106,6 +271,427 @@
               },
               "namespaceId": "public",
               "table": "books"
+            }
+          },
+          "BookCopy": {
+            "fields": {
+              "bookId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "condition": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "book": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "bookId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Book",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "bookId": {
+                  "column": "Book_Id"
+                },
+                "condition": {
+                  "column": "Condition"
+                },
+                "id": {
+                  "column": "Id"
+                },
+                "name": {
+                  "column": "Name"
+                },
+                "status": {
+                  "column": "Status"
+                },
+                "userId": {
+                  "column": "User_Id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "bookcopies"
+            }
+          },
+          "Fine": {
+            "fields": {
+              "amountOwed": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "datePaid": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "daysOverDue": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "loanId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "loan": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "loanId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "LoanedBook",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "amountOwed": {
+                  "column": "AmountOwed"
+                },
+                "datePaid": {
+                  "column": "DatePaid"
+                },
+                "daysOverDue": {
+                  "column": "DaysOverDue"
+                },
+                "id": {
+                  "column": "Id"
+                },
+                "loanId": {
+                  "column": "Loan_Id"
+                },
+                "userId": {
+                  "column": "User_Id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "fines"
+            }
+          },
+          "LoanedBook": {
+            "fields": {
+              "bookId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "loanDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "returnDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "book": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "bookId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Book",
+                  "namespace": "public"
+                }
+              },
+              "fines": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "loanId"
+                  ]
+                },
+                "to": {
+                  "model": "Fine",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "bookId": {
+                  "column": "Book_id"
+                },
+                "id": {
+                  "column": "Id"
+                },
+                "loanDate": {
+                  "column": "LoanDate"
+                },
+                "returnDate": {
+                  "column": "ReturnDate"
+                },
+                "status": {
+                  "column": "Status"
+                },
+                "userId": {
+                  "column": "User_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "loanedbooks"
+            }
+          },
+          "Reservation": {
+            "fields": {
+              "bookId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "reservationDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "book": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "bookId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Book",
+                  "namespace": "public"
+                }
+              },
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "bookId": {
+                  "column": "Book_Id"
+                },
+                "id": {
+                  "column": "Id"
+                },
+                "reservationDate": {
+                  "column": "ReservationDate"
+                },
+                "status": {
+                  "column": "Status"
+                },
+                "userId": {
+                  "column": "User_Id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "reservations"
             }
           },
           "User": {
@@ -167,7 +753,83 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "admins": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "Admin",
+                  "namespace": "public"
+                }
+              },
+              "bookCopies": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "BookCopy",
+                  "namespace": "public"
+                }
+              },
+              "fines": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "Fine",
+                  "namespace": "public"
+                }
+              },
+              "loanedBooks": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "LoanedBook",
+                  "namespace": "public"
+                }
+              },
+              "reservations": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "Reservation",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "createdAt": {
@@ -208,6 +870,188 @@
       "public": {
         "entries": {
           "table": {
+            "admin": {
+              "columns": {
+                "Book_Id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "Id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "Name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "User_Id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "User_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "admin"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "Book_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "admin"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "books"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "Book_Id"
+                  ],
+                  "name": "admin_Book_Id_idx_f7bddef2",
+                  "prefix": "admin_Book_Id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "User_Id"
+                  ],
+                  "name": "admin_User_Id_idx_99d17088",
+                  "prefix": "admin_User_Id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "Id"
+                ]
+              },
+              "uniques": []
+            },
+            "bookcopies": {
+              "columns": {
+                "Book_Id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "Condition": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "Id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "Name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "Status": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "User_Id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "Book_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "bookcopies"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "books"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "User_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "bookcopies"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "Book_Id"
+                  ],
+                  "name": "bookcopies_Book_Id_idx_f7bddef2",
+                  "prefix": "bookcopies_Book_Id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "User_Id"
+                  ],
+                  "name": "bookcopies_User_Id_idx_99d17088",
+                  "prefix": "bookcopies_User_Id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "Id"
+                ]
+              },
+              "uniques": []
+            },
             "books": {
               "columns": {
                 "Author": {
@@ -257,6 +1101,289 @@
               },
               "foreignKeys": [],
               "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "Id"
+                ]
+              },
+              "uniques": []
+            },
+            "fines": {
+              "columns": {
+                "AmountOwed": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "DatePaid": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
+                "DaysOverDue": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "Id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "Loan_Id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "User_Id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "Loan_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "fines"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "loanedbooks"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "User_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "fines"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "Loan_Id"
+                  ],
+                  "name": "fines_Loan_Id_idx_27a456d6",
+                  "prefix": "fines_Loan_Id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "User_Id"
+                  ],
+                  "name": "fines_User_Id_idx_99d17088",
+                  "prefix": "fines_User_Id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "Id"
+                ]
+              },
+              "uniques": []
+            },
+            "loanedbooks": {
+              "columns": {
+                "Book_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "Id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "LoanDate": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "ReturnDate": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "Status": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "User_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "Book_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "loanedbooks"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "books"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "User_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "loanedbooks"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "Book_id"
+                  ],
+                  "name": "loanedbooks_Book_id_idx_df807605",
+                  "prefix": "loanedbooks_Book_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "User_id"
+                  ],
+                  "name": "loanedbooks_User_id_idx_7e9a62fd",
+                  "prefix": "loanedbooks_User_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "Id"
+                ]
+              },
+              "uniques": []
+            },
+            "reservations": {
+              "columns": {
+                "Book_Id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "Id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "ReservationDate": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "Status": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "User_Id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "User_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "reservations"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "Book_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "reservations"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "books"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "Book_Id"
+                  ],
+                  "name": "reservations_Book_Id_idx_f7bddef2",
+                  "prefix": "reservations_Book_Id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "User_Id"
+                  ],
+                  "name": "reservations_User_Id_idx_99d17088",
+                  "prefix": "reservations_User_Id_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "Id"
@@ -326,7 +1453,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "242bada36f32a89e5d50befb48eaf5b87eff6c569e37fff526c1e5ab829fdbc4"
+    "storageHash": "dc7bfdf3805d88df10d21e8e7ca6c438ef2259f4f6557d13e09f769a5677db12"
   },
   "capabilities": {
     "postgres": {

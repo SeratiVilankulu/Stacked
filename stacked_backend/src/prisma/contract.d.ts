@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'242bada36f32a89e5d50befb48eaf5b87eff6c569e37fff526c1e5ab829fdbc4'>;
+  StorageHashBase<'dc7bfdf3805d88df10d21e8e7ca6c438ef2259f4f6557d13e09f769a5677db12'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -241,6 +241,12 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
 
 export type FieldOutputTypes = {
   readonly public: {
+    readonly Admin: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly bookId: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+    };
     readonly Book: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly title: CodecTypes['pg/text@1']['output'];
@@ -250,6 +256,37 @@ export type FieldOutputTypes = {
       readonly isbn: CodecTypes['pg/int4@1']['output'] | null;
       readonly coverImageUrl: CodecTypes['pg/text@1']['output'] | null;
       readonly copiesAvailable: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly BookCopy: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly bookId: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'] | null;
+      readonly condition: CodecTypes['pg/text@1']['output'] | null;
+      readonly status: CodecTypes['pg/text@1']['output'];
+    };
+    readonly Fine: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly loanId: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly daysOverDue: CodecTypes['pg/int4@1']['output'];
+      readonly amountOwed: CodecTypes['pg/numeric@1']['output'];
+      readonly datePaid: CodecTypes['pg/date-string@1']['output'] | null;
+    };
+    readonly LoanedBook: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly bookId: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly loanDate: CodecTypes['pg/date-string@1']['output'];
+      readonly returnDate: CodecTypes['pg/date-string@1']['output'];
+      readonly status: CodecTypes['pg/text@1']['output'];
+    };
+    readonly Reservation: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly userId: CodecTypes['pg/int4@1']['output'];
+      readonly bookId: CodecTypes['pg/int4@1']['output'];
+      readonly reservationDate: CodecTypes['pg/date-string@1']['output'];
+      readonly status: CodecTypes['pg/text@1']['output'] | null;
     };
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -265,6 +302,12 @@ export type FieldOutputTypes = {
 };
 export type FieldInputTypes = {
   readonly public: {
+    readonly Admin: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly bookId: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+    };
     readonly Book: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly title: CodecTypes['pg/text@1']['input'];
@@ -274,6 +317,37 @@ export type FieldInputTypes = {
       readonly isbn: CodecTypes['pg/int4@1']['input'] | null;
       readonly coverImageUrl: CodecTypes['pg/text@1']['input'] | null;
       readonly copiesAvailable: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly BookCopy: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly bookId: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'] | null;
+      readonly condition: CodecTypes['pg/text@1']['input'] | null;
+      readonly status: CodecTypes['pg/text@1']['input'];
+    };
+    readonly Fine: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly loanId: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly daysOverDue: CodecTypes['pg/int4@1']['input'];
+      readonly amountOwed: CodecTypes['pg/numeric@1']['input'];
+      readonly datePaid: CodecTypes['pg/date-string@1']['input'] | null;
+    };
+    readonly LoanedBook: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly bookId: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly loanDate: CodecTypes['pg/date-string@1']['input'];
+      readonly returnDate: CodecTypes['pg/date-string@1']['input'];
+      readonly status: CodecTypes['pg/text@1']['input'];
+    };
+    readonly Reservation: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly userId: CodecTypes['pg/int4@1']['input'];
+      readonly bookId: CodecTypes['pg/int4@1']['input'];
+      readonly reservationDate: CodecTypes['pg/date-string@1']['input'];
+      readonly status: CodecTypes['pg/text@1']['input'] | null;
     };
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -289,6 +363,20 @@ export type FieldInputTypes = {
 };
 export type StorageColumnTypes = {
   readonly public: {
+    readonly admin: {
+      readonly Book_Id: CodecTypes['pg/int4@1']['output'];
+      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Name: CodecTypes['pg/text@1']['output'];
+      readonly User_Id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly bookcopies: {
+      readonly Book_Id: CodecTypes['pg/int4@1']['output'];
+      readonly Condition: CodecTypes['pg/text@1']['output'] | null;
+      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Name: CodecTypes['pg/text@1']['output'] | null;
+      readonly Status: CodecTypes['pg/text@1']['output'];
+      readonly User_Id: CodecTypes['pg/int4@1']['output'];
+    };
     readonly books: {
       readonly Author: CodecTypes['pg/text@1']['output'];
       readonly CopiesAvailable: CodecTypes['pg/int4@1']['output'];
@@ -298,6 +386,29 @@ export type StorageColumnTypes = {
       readonly Id: CodecTypes['pg/int4@1']['output'];
       readonly ISBN: CodecTypes['pg/int4@1']['output'] | null;
       readonly Title: CodecTypes['pg/text@1']['output'];
+    };
+    readonly fines: {
+      readonly AmountOwed: CodecTypes['pg/numeric@1']['output'];
+      readonly DatePaid: CodecTypes['pg/date-string@1']['output'] | null;
+      readonly DaysOverDue: CodecTypes['pg/int4@1']['output'];
+      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly Loan_Id: CodecTypes['pg/int4@1']['output'];
+      readonly User_Id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly loanedbooks: {
+      readonly Book_id: CodecTypes['pg/int4@1']['output'];
+      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly LoanDate: CodecTypes['pg/date-string@1']['output'];
+      readonly ReturnDate: CodecTypes['pg/date-string@1']['output'];
+      readonly Status: CodecTypes['pg/text@1']['output'];
+      readonly User_id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly reservations: {
+      readonly Book_Id: CodecTypes['pg/int4@1']['output'];
+      readonly Id: CodecTypes['pg/int4@1']['output'];
+      readonly ReservationDate: CodecTypes['pg/date-string@1']['output'];
+      readonly Status: CodecTypes['pg/text@1']['output'] | null;
+      readonly User_Id: CodecTypes['pg/int4@1']['output'];
     };
     readonly users: {
       readonly CreatedAt: CodecTypes['pg/date-string@1']['output'];
@@ -313,6 +424,20 @@ export type StorageColumnTypes = {
 };
 export type StorageColumnInputTypes = {
   readonly public: {
+    readonly admin: {
+      readonly Book_Id: CodecTypes['pg/int4@1']['input'];
+      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Name: CodecTypes['pg/text@1']['input'];
+      readonly User_Id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly bookcopies: {
+      readonly Book_Id: CodecTypes['pg/int4@1']['input'];
+      readonly Condition: CodecTypes['pg/text@1']['input'] | null;
+      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Name: CodecTypes['pg/text@1']['input'] | null;
+      readonly Status: CodecTypes['pg/text@1']['input'];
+      readonly User_Id: CodecTypes['pg/int4@1']['input'];
+    };
     readonly books: {
       readonly Author: CodecTypes['pg/text@1']['input'];
       readonly CopiesAvailable: CodecTypes['pg/int4@1']['input'];
@@ -322,6 +447,29 @@ export type StorageColumnInputTypes = {
       readonly Id: CodecTypes['pg/int4@1']['input'];
       readonly ISBN: CodecTypes['pg/int4@1']['input'] | null;
       readonly Title: CodecTypes['pg/text@1']['input'];
+    };
+    readonly fines: {
+      readonly AmountOwed: CodecTypes['pg/numeric@1']['input'];
+      readonly DatePaid: CodecTypes['pg/date-string@1']['input'] | null;
+      readonly DaysOverDue: CodecTypes['pg/int4@1']['input'];
+      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly Loan_Id: CodecTypes['pg/int4@1']['input'];
+      readonly User_Id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly loanedbooks: {
+      readonly Book_id: CodecTypes['pg/int4@1']['input'];
+      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly LoanDate: CodecTypes['pg/date-string@1']['input'];
+      readonly ReturnDate: CodecTypes['pg/date-string@1']['input'];
+      readonly Status: CodecTypes['pg/text@1']['input'];
+      readonly User_id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly reservations: {
+      readonly Book_Id: CodecTypes['pg/int4@1']['input'];
+      readonly Id: CodecTypes['pg/int4@1']['input'];
+      readonly ReservationDate: CodecTypes['pg/date-string@1']['input'];
+      readonly Status: CodecTypes['pg/text@1']['input'] | null;
+      readonly User_Id: CodecTypes['pg/int4@1']['input'];
     };
     readonly users: {
       readonly CreatedAt: CodecTypes['pg/date-string@1']['input'];
@@ -346,7 +494,12 @@ export namespace Models {
     password: CodecTypes['pg/text@1']['output'];
     role: CodecTypes['pg/text@1']['output'];
     createdAt: CodecTypes['pg/date-string@1']['output'];
-    readonly [RelationKeys]?: never;
+    admins: public_Admin[];
+    bookCopies: public_BookCopy[];
+    fines: public_Fine[];
+    loanedBooks: public_LoanedBook[];
+    reservations: public_Reservation[];
+    readonly [RelationKeys]?: 'admins' | 'bookCopies' | 'fines' | 'loanedBooks' | 'reservations';
   };
   export type public_Book = {
     id: CodecTypes['pg/int4@1']['output'];
@@ -357,7 +510,64 @@ export namespace Models {
     isbn: CodecTypes['pg/int4@1']['output'] | null;
     coverImageUrl: CodecTypes['pg/text@1']['output'] | null;
     copiesAvailable: CodecTypes['pg/int4@1']['output'];
-    readonly [RelationKeys]?: never;
+    admins: public_Admin[];
+    bookCopies: public_BookCopy[];
+    loanedBooks: public_LoanedBook[];
+    reservations: public_Reservation[];
+    readonly [RelationKeys]?: 'admins' | 'bookCopies' | 'loanedBooks' | 'reservations';
+  };
+  export type public_Admin = {
+    id: CodecTypes['pg/int4@1']['output'];
+    userId: CodecTypes['pg/int4@1']['output'];
+    bookId: CodecTypes['pg/int4@1']['output'];
+    name: CodecTypes['pg/text@1']['output'];
+    book: public_Book;
+    user: public_User;
+    readonly [RelationKeys]?: 'book' | 'user';
+  };
+  export type public_BookCopy = {
+    id: CodecTypes['pg/int4@1']['output'];
+    bookId: CodecTypes['pg/int4@1']['output'];
+    userId: CodecTypes['pg/int4@1']['output'];
+    name: CodecTypes['pg/text@1']['output'] | null;
+    condition: CodecTypes['pg/text@1']['output'] | null;
+    status: CodecTypes['pg/text@1']['output'];
+    book: public_Book;
+    user: public_User;
+    readonly [RelationKeys]?: 'book' | 'user';
+  };
+  export type public_LoanedBook = {
+    id: CodecTypes['pg/int4@1']['output'];
+    bookId: CodecTypes['pg/int4@1']['output'];
+    userId: CodecTypes['pg/int4@1']['output'];
+    loanDate: CodecTypes['pg/date-string@1']['output'];
+    returnDate: CodecTypes['pg/date-string@1']['output'];
+    status: CodecTypes['pg/text@1']['output'];
+    book: public_Book;
+    fines: public_Fine[];
+    user: public_User;
+    readonly [RelationKeys]?: 'book' | 'fines' | 'user';
+  };
+  export type public_Fine = {
+    id: CodecTypes['pg/int4@1']['output'];
+    loanId: CodecTypes['pg/int4@1']['output'];
+    userId: CodecTypes['pg/int4@1']['output'];
+    daysOverDue: CodecTypes['pg/int4@1']['output'];
+    amountOwed: CodecTypes['pg/numeric@1']['output'];
+    datePaid: CodecTypes['pg/date-string@1']['output'] | null;
+    loan: public_LoanedBook;
+    user: public_User;
+    readonly [RelationKeys]?: 'loan' | 'user';
+  };
+  export type public_Reservation = {
+    id: CodecTypes['pg/int4@1']['output'];
+    userId: CodecTypes['pg/int4@1']['output'];
+    bookId: CodecTypes['pg/int4@1']['output'];
+    reservationDate: CodecTypes['pg/date-string@1']['output'];
+    status: CodecTypes['pg/text@1']['output'] | null;
+    book: public_Book;
+    user: public_User;
+    readonly [RelationKeys]?: 'book' | 'user';
   };
 }
 
@@ -365,6 +575,11 @@ export declare const models: {
   public: {
     User: Models.public_User;
     Book: Models.public_Book;
+    Admin: Models.public_Admin;
+    BookCopy: Models.public_BookCopy;
+    LoanedBook: Models.public_LoanedBook;
+    Fine: Models.public_Fine;
+    Reservation: Models.public_Reservation;
   };
 };
 
@@ -386,6 +601,156 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
+            readonly admin: {
+              columns: {
+                readonly Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly User_Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly Book_Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly Name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['Id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'admin_User_Id_idx_99d17088';
+                  readonly prefix: 'admin_User_Id_idx';
+                  readonly columns: readonly ['User_Id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'admin_Book_Id_idx_f7bddef2';
+                  readonly prefix: 'admin_Book_Id_idx';
+                  readonly columns: readonly ['Book_Id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'admin';
+                    readonly columns: readonly ['User_Id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'admin';
+                    readonly columns: readonly ['Book_Id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'books';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+              ];
+            };
+            readonly bookcopies: {
+              columns: {
+                readonly Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly Book_Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly User_Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly Name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly Condition: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly Status: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['Id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'bookcopies_Book_Id_idx_f7bddef2';
+                  readonly prefix: 'bookcopies_Book_Id_idx';
+                  readonly columns: readonly ['Book_Id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'bookcopies_User_Id_idx_99d17088';
+                  readonly prefix: 'bookcopies_User_Id_idx';
+                  readonly columns: readonly ['User_Id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'bookcopies';
+                    readonly columns: readonly ['Book_Id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'books';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'bookcopies';
+                    readonly columns: readonly ['User_Id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+              ];
+            };
             readonly books: {
               columns: {
                 readonly Id: {
@@ -437,6 +802,241 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+            readonly fines: {
+              columns: {
+                readonly Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly Loan_Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly User_Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly DaysOverDue: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly AmountOwed: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                };
+                readonly DatePaid: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['Id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'fines_Loan_Id_idx_27a456d6';
+                  readonly prefix: 'fines_Loan_Id_idx';
+                  readonly columns: readonly ['Loan_Id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'fines_User_Id_idx_99d17088';
+                  readonly prefix: 'fines_User_Id_idx';
+                  readonly columns: readonly ['User_Id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'fines';
+                    readonly columns: readonly ['Loan_Id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'loanedbooks';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'fines';
+                    readonly columns: readonly ['User_Id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+              ];
+            };
+            readonly loanedbooks: {
+              columns: {
+                readonly Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly Book_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly User_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly LoanDate: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly ReturnDate: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly Status: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['Id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'loanedbooks_Book_id_idx_df807605';
+                  readonly prefix: 'loanedbooks_Book_id_idx';
+                  readonly columns: readonly ['Book_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'loanedbooks_User_id_idx_7e9a62fd';
+                  readonly prefix: 'loanedbooks_User_id_idx';
+                  readonly columns: readonly ['User_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'loanedbooks';
+                    readonly columns: readonly ['Book_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'books';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'loanedbooks';
+                    readonly columns: readonly ['User_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+              ];
+            };
+            readonly reservations: {
+              columns: {
+                readonly Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly User_Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly Book_Id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly ReservationDate: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly Status: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['Id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'reservations_User_Id_idx_99d17088';
+                  readonly prefix: 'reservations_User_Id_idx';
+                  readonly columns: readonly ['User_Id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'reservations_Book_Id_idx_f7bddef2';
+                  readonly prefix: 'reservations_Book_Id_idx';
+                  readonly columns: readonly ['Book_Id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'reservations';
+                    readonly columns: readonly ['User_Id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'reservations';
+                    readonly columns: readonly ['Book_Id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'books';
+                    readonly columns: readonly ['Id'];
+                  };
+                },
+              ];
             };
             readonly users: {
               columns: {
@@ -503,11 +1103,72 @@ type ContractBase = Omit<
   readonly roots: {
     readonly users: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
     readonly books: { readonly namespace: 'public' & NamespaceId; readonly model: 'Book' };
+    readonly admin: { readonly namespace: 'public' & NamespaceId; readonly model: 'Admin' };
+    readonly bookcopies: { readonly namespace: 'public' & NamespaceId; readonly model: 'BookCopy' };
+    readonly loanedbooks: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'LoanedBook';
+    };
+    readonly fines: { readonly namespace: 'public' & NamespaceId; readonly model: 'Fine' };
+    readonly reservations: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'Reservation';
+    };
   };
   readonly domain: {
     readonly namespaces: {
       readonly public: {
         readonly models: {
+          readonly Admin: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly bookId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly book: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Book' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['bookId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'admin';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'Id' };
+                readonly userId: { readonly column: 'User_Id' };
+                readonly bookId: { readonly column: 'Book_Id' };
+                readonly name: { readonly column: 'Name' };
+              };
+            };
+          };
           readonly Book: {
             readonly fields: {
               readonly id: {
@@ -543,7 +1204,52 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
             };
-            readonly relations: Record<string, never>;
+            readonly relations: {
+              readonly admins: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Admin';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['bookId'];
+                };
+              };
+              readonly bookCopies: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'BookCopy';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['bookId'];
+                };
+              };
+              readonly loanedBooks: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'LoanedBook';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['bookId'];
+                };
+              };
+              readonly reservations: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Reservation';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['bookId'];
+                };
+              };
+            };
             readonly storage: {
               readonly table: 'books';
               readonly namespaceId: 'public';
@@ -556,6 +1262,252 @@ type ContractBase = Omit<
                 readonly isbn: { readonly column: 'ISBN' };
                 readonly coverImageUrl: { readonly column: 'CoverImageURL' };
                 readonly copiesAvailable: { readonly column: 'CopiesAvailable' };
+              };
+            };
+          };
+          readonly BookCopy: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly bookId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly name: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly condition: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly book: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Book' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['bookId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'bookcopies';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'Id' };
+                readonly bookId: { readonly column: 'Book_Id' };
+                readonly userId: { readonly column: 'User_Id' };
+                readonly name: { readonly column: 'Name' };
+                readonly condition: { readonly column: 'Condition' };
+                readonly status: { readonly column: 'Status' };
+              };
+            };
+          };
+          readonly Fine: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly loanId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly daysOverDue: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly amountOwed: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly datePaid: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+            };
+            readonly relations: {
+              readonly loan: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'LoanedBook';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['loanId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'fines';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'Id' };
+                readonly loanId: { readonly column: 'Loan_Id' };
+                readonly userId: { readonly column: 'User_Id' };
+                readonly daysOverDue: { readonly column: 'DaysOverDue' };
+                readonly amountOwed: { readonly column: 'AmountOwed' };
+                readonly datePaid: { readonly column: 'DatePaid' };
+              };
+            };
+          };
+          readonly LoanedBook: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly bookId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly loanDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly returnDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly status: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly book: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Book' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['bookId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly fines: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Fine' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['loanId'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'loanedbooks';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'Id' };
+                readonly bookId: { readonly column: 'Book_id' };
+                readonly userId: { readonly column: 'User_id' };
+                readonly loanDate: { readonly column: 'LoanDate' };
+                readonly returnDate: { readonly column: 'ReturnDate' };
+                readonly status: { readonly column: 'Status' };
+              };
+            };
+          };
+          readonly Reservation: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly bookId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly reservationDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly status: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly book: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Book' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['bookId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'reservations';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'Id' };
+                readonly userId: { readonly column: 'User_Id' };
+                readonly bookId: { readonly column: 'Book_Id' };
+                readonly reservationDate: { readonly column: 'ReservationDate' };
+                readonly status: { readonly column: 'Status' };
               };
             };
           };
@@ -594,7 +1546,60 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
               };
             };
-            readonly relations: Record<string, never>;
+            readonly relations: {
+              readonly admins: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Admin';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly bookCopies: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'BookCopy';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly fines: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Fine' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly loanedBooks: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'LoanedBook';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly reservations: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Reservation';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+            };
             readonly storage: {
               readonly table: 'users';
               readonly namespaceId: 'public';
