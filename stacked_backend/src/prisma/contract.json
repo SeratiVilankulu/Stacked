@@ -1026,6 +1026,7 @@
               },
               "foreignKeys": [
                 {
+                  "onDelete": "restrict",
                   "source": {
                     "columns": [
                       "User_Id"
@@ -1042,6 +1043,7 @@
                   }
                 },
                 {
+                  "onDelete": "restrict",
                   "source": {
                     "columns": [
                       "Book_Id"
@@ -1142,6 +1144,7 @@
               },
               "foreignKeys": [
                 {
+                  "onDelete": "cascade",
                   "source": {
                     "columns": [
                       "Book_Id"
@@ -1158,6 +1161,7 @@
                   }
                 },
                 {
+                  "onDelete": "restrict",
                   "source": {
                     "columns": [
                       "User_Id"
@@ -1286,6 +1290,7 @@
               },
               "foreignKeys": [
                 {
+                  "onDelete": "cascade",
                   "source": {
                     "columns": [
                       "Loan_Id"
@@ -1302,6 +1307,7 @@
                   }
                 },
                 {
+                  "onDelete": "restrict",
                   "source": {
                     "columns": [
                       "User_Id"
@@ -1400,6 +1406,7 @@
               },
               "foreignKeys": [
                 {
+                  "onDelete": "restrict",
                   "source": {
                     "columns": [
                       "Book_id"
@@ -1416,6 +1423,7 @@
                   }
                 },
                 {
+                  "onDelete": "restrict",
                   "source": {
                     "columns": [
                       "User_id"
@@ -1504,6 +1512,7 @@
               },
               "foreignKeys": [
                 {
+                  "onDelete": "cascade",
                   "source": {
                     "columns": [
                       "User_Id"
@@ -1520,6 +1529,7 @@
                   }
                 },
                 {
+                  "onDelete": "cascade",
                   "source": {
                     "columns": [
                       "Book_Id"
@@ -1679,7 +1689,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "9e2a993a329085000d96f523c205718c1ae9e300c3221f653d9fa94a9d1f3aa7"
+    "storageHash": "33b617cae0180f84f86048ae8fd3c704b2321bdc2b12b49eeaf18d70c778691b"
   },
   "execution": {
     "executionHash": "c086a7597d693fbc34742f8b5d61bd545c802d64b8816a803f1c2a3f8e615d28",

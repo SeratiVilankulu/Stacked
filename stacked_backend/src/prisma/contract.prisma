@@ -43,8 +43,8 @@ model Admin {
   bookId Uuid   @map("Book_Id")
   name   String @map("Name")
 
-  user User @relation(fields: [userId], references: [id])
-  book Book @relation(fields: [bookId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Restrict)
 
   @@map("admin")
 }
@@ -57,8 +57,8 @@ model BookCopy {
   condition BookCondition? @map("Condition")
   status    BookAvailability @map("Status")
 
-  book Book @relation(fields: [bookId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@map("bookcopies")
 }
@@ -72,8 +72,8 @@ model LoanedBook {
   returnedAt TimestamptzString? @map("ReturnedAt")
   status     LoanStatus         @map("Status")
 
-  book  Book   @relation(fields: [bookId], references: [id])
-  user  User   @relation(fields: [userId], references: [id])
+  book  Book   @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  user  User   @relation(fields: [userId], references: [id], onDelete: Restrict)
   fines Fine[]
 
   @@map("loanedbooks")
@@ -87,8 +87,8 @@ model Fine {
   amountOwed  Decimal            @map("AmountOwed")
   datePaid    TimestamptzString? @map("DatePaid")
 
-  loan LoanedBook @relation(fields: [loanId], references: [id])
-  user User       @relation(fields: [userId], references: [id])
+  loan LoanedBook @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  user User       @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@map("fines")
 }
@@ -100,8 +100,8 @@ model Reservation {
   reservationDate TimestamptzString  @default(now()) @map("ReservationDate")
   status          ReservationStatus? @map("Status")
 
-  user User @relation(fields: [userId], references: [id])
-  book Book @relation(fields: [bookId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
   @@map("reservations")
 }
