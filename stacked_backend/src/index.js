@@ -7,15 +7,18 @@ connectDB(); // connect to the database
 
 // Import Routes
 import userRoutes from "./routes/userRoute.js";
+import authRoutes from "./routes/authRoute.js";
 import bookRoutes from "./routes/bookRoute.js";
 
 const app = express(); // create an instance of the express application
 
 // Parse JSON request bodies into req.body (must run before the routes)
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // API Routes
 app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
 app.use("/books", bookRoutes);
 
 const PORT = process.env.PORT; // set the port to listen on
