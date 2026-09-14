@@ -82,4 +82,18 @@ async function login(req, res) {
 	}
 }
 
-export { register, login };
+async function logout(req, res) {
+	res.clearCookie("token", "", {
+		httpOnly: true,
+		expires: new Date(0),
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "lax",
+		path: "/",
+	});
+	res.status(200).json({
+		status: "success",
+		message: "User logged out",
+	});
+}
+
+export { register, login, logout };
