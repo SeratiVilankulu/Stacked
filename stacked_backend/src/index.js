@@ -1,5 +1,6 @@
 import express from "express"; // import the express package
 import dotenv from "dotenv"; // import the dotenv package
+import cookieParser from "cookie-parser";
 import { connectDB, disconnectDB } from "./prisma/db.ts";
 dotenv.config(); // load environment variables from .env file
 
@@ -15,6 +16,7 @@ const app = express(); // create an instance of the express application
 // Parse JSON request bodies into req.body (must run before the routes)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // API Routes
 app.use("/users", userRoutes);

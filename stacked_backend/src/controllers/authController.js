@@ -1,5 +1,6 @@
 import { db } from "../prisma/db.ts";
 import bcrypt from "bcryptjs";
+import { sendTokenCookie } from "../utils/generateToken.js";
 
 async function register(req, res) {
 	try {
@@ -35,16 +36,10 @@ async function register(req, res) {
 			role: "USER",
 		});
 
-		res.status(201).json({
+		// New user login set the auth cookie
+		sendTokenCookie(user, 201, res, {
 			status: "success",
-			data: {
-				user: {
-					id: user.id,
-					name: name,
-					surname: surname,
-					email: email,
-				},
-			},
+			data: { user: { id: user.id, name: user.name, email: user.email } },
 		});
 	} catch (error) {
 		return res.status(500).json({
@@ -67,7 +62,6 @@ async function login(req, res) {
 			email,
 		}).first();
 
-		// If user doesn't exist
 		if (!user) {
 			return res.status(401).json({ error: "Invalid email or password" });
 		}
@@ -79,8 +73,8 @@ async function login(req, res) {
 			return res.status(401).json({ error: "Invalid email or password" });
 		}
 
-		// Success
-		res.status(200).json({ message: "User successfully logged in" });
+		// The token is not in the body, the browser holds it in the cookie.
+		sendTokenCookie(user, 200, res, { message: "User successfully logged in" });
 	} catch (error) {
 		return res.status(500).json({
 			message: error.message,
