@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 
 #Table Structure Text
 tableStructure.txt
+
+# Claude Code local dev-server config
+.claude/launch.json
