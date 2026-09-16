@@ -75,6 +75,17 @@
 		font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
 		line-height: 1.15;
 	}
+
+	li {
+		align-content: center;
+	}
+
+	li > a {
+		text-decoration: none;
+		font-weight: 500;
+		color: var(--color-teal);
+		font-family: var(--font-body);
+	}
 }
 
 /* Keyboard focus is always visible */
@@ -82,6 +93,7 @@
 	outline: 2px solid;
 	outline-color: var(--color-teal, #003844);
 	outline-offset: 2px;
+	text-align: center;
 }
 
 @layer components {
