@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { Mail, Lock, User, Pencil } from "lucide-react";
 import AuthLogo from "../../components/AuthLogo";
 import stackedBooks from "@/assets/stackedBooks.jpg";
@@ -12,23 +13,24 @@ function Register() {
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
-    termsAndConditions: false,
   });
+
   const [errorMsg, setErrorMsg] = useState({});
   const [successMsg, setSuccessMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleUserInput = (target) => {
-    const { name, value, type, checked } = target;
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+  const handleUserInput = (e) => {
+    const { name, value } = e.target;
+
+    setUserData((prev) => ({
+      ...prev,
+      [name]: value,
     }));
   };
 
   // Form Validations
-  const validateForm = async () => {
+  const validateForm = async (e) => {
+    e.preventDefault();
     const errorMsg = {};
 
     // Email validations
@@ -73,17 +75,6 @@ function Register() {
         "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.";
     }
 
-    if (!userData.confirmPassword.trim()) {
-      errorMsg.confirmPassword = "Please confirm your password.";
-    } else if (userData.password !== userData.confirmPassword) {
-      errorMsg.confirmPassword = "Passwords do not match.";
-    }
-
-    if (!userData.termsAndConditions) {
-      errorMsg.termsAndConditions =
-        "You must agree to the terms and conditions to register.";
-    }
-
     // If there are validation errors, show them and return
     if (Object.keys(errorMsg).length > 0) {
       setErrorMsg(errorMsg);
@@ -91,6 +82,23 @@ function Register() {
     }
 
     setIsSubmitting(true);
+
+    // Submit user data to the backend
+    try {
+      await axios.post("http://localhost:5001/api/auth/register", userData);
+      setSuccessMsg("Registration successful!");
+      setErrorMsg({});
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      // Handle API error response
+      const apiError =
+        error.response?.data || "Registration failed. Please try again.";
+      setErrorMsg({ api: apiError });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -100,7 +108,7 @@ function Register() {
         style={{ backgroundImage: `url(${stackedBooks})` }}
         className="relative bg-cover bg-no-repeat bg-center"
       >
-        <div class="absolute inset-0 bg-teal/85 flex flex-col gap-35 text-cream md:px-20 md:py-12">
+        <div className="absolute inset-0 bg-teal/85 flex flex-col gap-35 text-cream md:px-20 md:py-12">
           <AuthLogo />
           <div className="flex flex-col gap-2">
             <h1 className="text-5xl/12! text-cream md:text-3xl ">
@@ -124,7 +132,7 @@ function Register() {
         >
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="name" className="text-sm font-medium text-teal">
+              <label htmlFor="name" className="text-xs font-medium text-teal">
                 Name
               </label>
               <div className="flex items-center gap-2 rounded-(--radius-md) border border-border-strong px-3 py-2.5 transition-colors duration-200 focus:outline-none!">
@@ -136,14 +144,16 @@ function Register() {
                   id="name"
                   name="name"
                   type="name"
-                  required
                   value={userData.name}
-                  onChange={({ target }) => handleUserInput(target)}
+                  onChange={handleUserInput}
                   disabled={isSubmitting}
                   placeholder="Jane"
                   className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
                 />
               </div>
+              {errorMsg.name && (
+                <p className="text-red-800 text-xs">{errorMsg.name}</p>
+              )}
             </div>
             <div className="flex flex-col gap-1.5">
               <label
@@ -161,14 +171,16 @@ function Register() {
                   id="surname"
                   name="surname"
                   type="surname"
-                  required
                   value={userData.surname}
-                  onChange={({ target }) => handleUserInput(target)}
+                  onChange={handleUserInput}
                   disabled={isSubmitting}
                   placeholder="Doe"
                   className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
                 />
               </div>
+              {errorMsg.surname && (
+                <p className="text-red-800 text-xs">{errorMsg.surname}</p>
+              )}
             </div>
           </div>
 
@@ -186,14 +198,16 @@ function Register() {
                   id="email"
                   name="email"
                   type="email"
-                  required
                   value={userData.email}
-                  onChange={({ target }) => handleUserInput(target)}
+                  onChange={handleUserInput}
                   disabled={isSubmitting}
                   placeholder="jane@example.com"
                   className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
                 />
               </div>
+              {errorMsg.email && (
+                <p className="text-red-800 text-xs">{errorMsg.email}</p>
+              )}
             </div>
             <div className="flex flex-col gap-1.5">
               <label
@@ -211,14 +225,16 @@ function Register() {
                   id="username"
                   name="username"
                   type="username"
-                  required
                   value={userData.username}
-                  onChange={({ target }) => handleUserInput(target)}
+                  onChange={handleUserInput}
                   disabled={isSubmitting}
                   placeholder="user1234"
                   className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
                 />
               </div>
+              {errorMsg.username && (
+                <p className="text-red-800 text-xs">{errorMsg.username}</p>
+              )}
             </div>
           </div>
 
@@ -237,14 +253,16 @@ function Register() {
                 id="password"
                 name="password"
                 type="password"
-                required
                 value={userData.password}
-                onChange={({ target }) => handleUserInput(target)}
+                onChange={handleUserInput}
                 disabled={isSubmitting}
                 placeholder="Enter your password"
                 className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
               />
             </div>
+            {errorMsg.password && (
+              <p className="text-red-800 text-xs">{errorMsg.password}</p>
+            )}
           </div>
 
           <button
@@ -253,6 +271,17 @@ function Register() {
           >
             Sign In
           </button>
+
+          {errorMsg.api && (
+            <p className="text-red-600 text-size-xs mt-2 text-center">
+              {errorMsg.api}
+            </p>
+          )}
+          {successMsg && (
+            <p className="text-green-600 text-size-xs mt-2 text-center">
+              {successMsg}
+            </p>
+          )}
 
           <div className="flex items-center gap-3">
             <span className="h-px flex-1 bg-border" />
