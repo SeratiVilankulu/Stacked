@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, User, Pencil } from "lucide-react";
 import AuthLogo from "../../components/AuthLogo";
+import stackedBooks from "@/assets/stackedBooks.jpg";
 
 function Register() {
   const navigate = useNavigate();
@@ -93,33 +94,29 @@ function Register() {
   };
 
   return (
-    <main className="grid grid-cols-2 min-h-screen grid-cols-1 ">
+    <main className="grid grid-cols-2 min-h-screen ">
       {/* Left panel */}
-      <div className="relative flex flex-col justify-between gap-8 bg-teal px-8 py-10 text-cream md:px-10 md:py-12">
-        <AuthLogo />
-
-        <div className="flex flex-col gap-2">
-          <h1 className="text-5xl/12! text-cream md:text-3xl ">
-            Welcome to Stacked <br />
-            Community Library
-          </h1>
-          <p className="text-md leading-6 text-cream/70">
-            Log in to continue your reading journey.
-          </p>
-        </div>
-
-        <div className="relative h-40 overflow-hidden rounded-2xl shadow-card md:h-48">
-          <img
-            src="/images/library.jpg"
-            alt="Stack of books"
-            className="h-full w-full object-cover"
-          />
+      <div
+        style={{ backgroundImage: `url(${stackedBooks})` }}
+        className="relative bg-cover bg-no-repeat bg-center"
+      >
+        <div class="absolute inset-0 bg-teal/85 flex flex-col gap-35 text-cream md:px-20 md:py-12">
+          <AuthLogo />
+          <div className="flex flex-col gap-2">
+            <h1 className="text-5xl/12! text-cream md:text-3xl ">
+              Welcome to Stacked <br />
+              Community Library
+            </h1>
+            <p className="text-md leading-6 text-cream/70">
+              Log in to continue your reading journey.
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Right panel */}
       <div className="flex flex-col items-center justify-center gap-6 bg-surface px-8 py-10 md:px-10 md:py-12">
-        <h1 className="text-4xl">Sign In</h1>
+        <h1 className="text-4xl">Register</h1>
 
         <form
           onSubmit={validateForm}
@@ -131,7 +128,7 @@ function Register() {
                 Name
               </label>
               <div className="flex items-center gap-2 rounded-(--radius-md) border border-border-strong px-3 py-2.5 transition-colors duration-200 focus:outline-none!">
-                <Mail
+                <Pencil
                   className="size-4 shrink-0 text-teal"
                   aria-hidden="true"
                 />
@@ -144,7 +141,7 @@ function Register() {
                   onChange={({ target }) => handleUserInput(target)}
                   disabled={isSubmitting}
                   placeholder="Jane"
-                  className="w-full min-w-0 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
+                  className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
                 />
               </div>
             </div>
@@ -156,7 +153,7 @@ function Register() {
                 Surname
               </label>
               <div className="flex items-center gap-2 rounded-(--radius-md) border border-border-strong px-3 py-2.5 transition-colors duration-200 focus:outline-none!">
-                <Mail
+                <Pencil
                   className="size-4 shrink-0 text-teal"
                   aria-hidden="true"
                 />
@@ -165,11 +162,11 @@ function Register() {
                   name="surname"
                   type="surname"
                   required
-                  value={userData.name}
+                  value={userData.surname}
                   onChange={({ target }) => handleUserInput(target)}
                   disabled={isSubmitting}
                   placeholder="Doe"
-                  className="w-full min-w-0 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
+                  className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
                 />
               </div>
             </div>
@@ -180,7 +177,7 @@ function Register() {
               <label htmlFor="email" className="text-sm font-medium text-teal">
                 Email Address
               </label>
-              <div className="flex items-center gap-2 rounded-(--radius-md) border border-border-strong px-3 py-2.5 transition-colors duration-200 focus:outline-none!">
+              <div className="flex items-center gap-2 rounded-(--radius-md) border border-border-strong px-3 py-2.5 transition-colors duration-200 focus:outline-none">
                 <Mail
                   className="size-4 shrink-0 text-teal"
                   aria-hidden="true"
@@ -190,11 +187,11 @@ function Register() {
                   name="email"
                   type="email"
                   required
-                  value={userData.name}
+                  value={userData.email}
                   onChange={({ target }) => handleUserInput(target)}
                   disabled={isSubmitting}
-                  placeholder="you@example.com"
-                  className="w-full min-w-0 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
+                  placeholder="jane@example.com"
+                  className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
                 />
               </div>
             </div>
@@ -206,7 +203,7 @@ function Register() {
                 Username
               </label>
               <div className="flex items-center gap-2 rounded-(--radius-md) border border-border-strong px-3 py-2.5 transition-colors duration-200 focus:outline-none!">
-                <Mail
+                <User
                   className="size-4 shrink-0 text-teal"
                   aria-hidden="true"
                 />
@@ -215,11 +212,11 @@ function Register() {
                   name="username"
                   type="username"
                   required
-                  value={userData.name}
+                  value={userData.username}
                   onChange={({ target }) => handleUserInput(target)}
                   disabled={isSubmitting}
                   placeholder="user1234"
-                  className="w-full min-w-0 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
+                  className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
                 />
               </div>
             </div>
@@ -241,11 +238,11 @@ function Register() {
                 name="password"
                 type="password"
                 required
-                value={userData.name}
+                value={userData.password}
                 onChange={({ target }) => handleUserInput(target)}
                 disabled={isSubmitting}
                 placeholder="Enter your password"
-                className="w-full min-w-0 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
+                className="w-full min-w-0 bg-transparent text-sm text-ink outline-none! text-left! placeholder:text-muted"
               />
             </div>
           </div>
@@ -267,8 +264,8 @@ function Register() {
         <p className="text-center text-sm text-muted">
           Have an account already?{" "}
           <a
-            href="/login"
-            className="font-semibold text-orange hover:underline"
+            className="cursor-pointer font-semibold text-orange hover:underline"
+            onClick={() => navigate("/login")}
           >
             Login
           </a>
