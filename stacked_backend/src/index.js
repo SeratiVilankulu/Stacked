@@ -1,22 +1,35 @@
 import express from "express"; // import the express package
 import dotenv from "dotenv"; // import the dotenv package
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import { connectDB, disconnectDB } from "./prisma/db.ts";
 dotenv.config(); // load environment variables from .env file
 
 connectDB(); // connect to the database
 
+const app = express(); // create an instance of the express application
+
+app.use(
+	cors({
+		origin: process.env.CLIENT_URL,
+		credentials: true,
+	}),
+);
+
 // Import Routes
 import userRoutes from "./routes/userRoute.js";
+import authRoutes from "./routes/authRoute.js";
 import bookRoutes from "./routes/bookRoute.js";
-
-const app = express(); // create an instance of the express application
 
 // Parse JSON request bodies into req.body (must run before the routes)
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-// API Routes
-app.use("/users", userRoutes);
-app.use("/books", bookRoutes);
+// API Routes - all under /api, which is what the frontend calls.
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/books", bookRoutes);
 
 const PORT = process.env.PORT; // set the port to listen on
 const server = app.listen(PORT, () => {

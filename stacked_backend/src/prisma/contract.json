@@ -1906,7 +1906,18 @@
                   "Id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "Username"
+                  ]
+                },
+                {
+                  "columns": [
+                    "Email"
+                  ]
+                }
+              ]
             }
           },
           "valueSet": {
@@ -1966,7 +1977,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "bac5e0c2444ee73acd912386a9bcf806fe8795acc55912aab19c2727c801e729"
+    "storageHash": "bf7155eaf448d0e6fad38216f24663aeed35d7769ae0c77d8aad704bfb9f1937"
   },
   "execution": {
     "executionHash": "e86f6d0edeace6f78f0b9979b83eb6b0afbf936a0733778023a205456221a3d4",
