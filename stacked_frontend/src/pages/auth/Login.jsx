@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Mail, Lock } from "lucide-react";
 import AuthLogo from "../../components/AuthLogo";
+import { useAuth } from "../../context/auth-context.js";
 import stackedBooks from "@/assets/stackedBooks.jpg";
 
 function Login() {
 	const navigate = useNavigate();
+	const { refreshUser } = useAuth();
 	const [formData, setFormData] = useState({ email: "", password: "" });
 
 	const [errorMsg, setErrorMsg] = useState({});
@@ -48,7 +50,8 @@ function Login() {
 			await axios.post("http://localhost:5001/api/auth/login", formData, {
 				withCredentials: true,
 			});
-			localStorage.setItem("user", JSON.stringify({ email: formData.email }));
+			// Pull the signed-in user from /auth/user so the nav swaps to the account
+			await refreshUser();
 			setSuccessMsg("Login Successful!");
 			setTimeout(() => navigate("/"), 1500); //redirect to home page once successful
 		} catch (error) {

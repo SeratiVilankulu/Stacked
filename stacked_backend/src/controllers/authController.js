@@ -96,4 +96,12 @@ async function logout(req, res) {
 	});
 }
 
-export { register, login, logout };
+// Who is signed in? 'protect' has already verified the cookie and loaded the account, so this just hands it back.
+async function user(req, res) {
+	res.status(200).json({
+		status: "success",
+		data: { user: req.user },
+	});
+}
+
+export { register, login, logout, user };

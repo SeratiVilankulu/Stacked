@@ -5,6 +5,7 @@ import "./index.css";
 import App from "./App.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AuthProvider } from "./context/AuthProvider.jsx";
 import Register from "./pages/auth/Register.jsx";
 import Login from "./pages/auth/Login.jsx";
 
@@ -17,6 +18,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    {/* Outside the router so every route shares one signed-in user. */}
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 );
