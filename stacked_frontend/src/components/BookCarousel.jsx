@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import BookCard from "./BookCard";
+import { useAuth } from "../context/auth-context.js";
 import { ChevronLeft, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
 
 const books = [
@@ -41,7 +42,9 @@ const books = [
   },
 ];
 
-function BookCarousel({ isAuthenticated = false }) {
+function BookCarousel() {
+  const { isAuthenticated } = useAuth();
+
   const scrollerRef = useRef(null);
 
   const scrollByCard = (direction) => {
@@ -89,7 +92,11 @@ function BookCarousel({ isAuthenticated = false }) {
           className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-1"
         >
           {books.map((book) => (
-            <div key={book.title} data-card>
+            <div
+              key={book.title}
+              data-card
+              className="w-44 shrink-0 snap-start sm:w-48"
+            >
               <BookCard book={book} />
             </div>
           ))}

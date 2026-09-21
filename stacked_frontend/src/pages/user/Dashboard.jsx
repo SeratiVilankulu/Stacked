@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import BookCard from "../../components/BookCard.jsx";
 import SideBar from "../../components/SideBar.jsx";
 import AuthLogo from "../../components/AuthLogo.jsx";
+import BookCarousel from "../../components/BookCarousel.jsx";
 import { Menu, X } from "lucide-react";
 import NavBar from "../../components/NavBar.jsx";
 
@@ -52,7 +52,7 @@ function Dashboard() {
           {/* Dashboard content */}
           <div className="px-5 pb-12 sm:px-8 lg:px-10">
             <section>
-              <BookCard isAuthenticated />
+              <BookCarousel />
             </section>
           </div>
         </main>

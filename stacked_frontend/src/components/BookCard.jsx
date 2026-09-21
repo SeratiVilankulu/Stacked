@@ -9,9 +9,10 @@ const GENRE_STYLES = {
 };
 
 function BookCard({ book }) {
+  console.log("These are our props", book);
   return (
     <div className="flex w-44 shrink-0 snap-start flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-surface p-3 shadow-card sm:w-48">
-      <div className="aspect-[3/4] w-full overflow-hidden rounded-[var(--radius-md)]">
+      <div className="aspect-3/4 w-full overflow-hidden rounded-[var(--radius-md)]">
         <img
           src={book.cover}
           alt={`${book.title} cover`}
@@ -19,7 +20,7 @@ function BookCard({ book }) {
         />
       </div>
       <div className="flex flex-col gap-1">
-        <p className="line-clamp-2 text-sm font-semibold text-teal">
+        <p className="line-clamp-1 text-sm font-semibold text-teal">
           {book.title}
         </p>
         <p className="text-xs text-muted">{book.author}</p>
