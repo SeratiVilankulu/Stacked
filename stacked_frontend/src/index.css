@@ -2,159 +2,167 @@
 @import "tailwindcss";
 
 @theme {
-	/* Colour palette */
-	--color-cream: #fffdf4; /* Floral White - the page ground */
-	--color-sky: #c1dbe8; /* Pale Sky - feature bands, soft chips */
-	--color-mocha: #43302e; /* Deep Mocha - dark warm surfaces, body text */
-	--color-teal: #003844; /* Dark Teal - primary: headings, buttons, footer */
-	--color-orange: #f18805; /* Tiger Orange - accent */
+  /* Colour palette */
+  --color-cream: #fffdf4; /* Floral White - the page ground */
+  --color-sky: #c1dbe8; /* Pale Sky - feature bands, soft chips */
+  --color-mocha: #43302e; /* Deep Mocha - dark warm surfaces, body text */
+  --color-teal: #003844; /* Dark Teal - primary: headings, buttons, footer */
+  --color-orange: #f18805; /* Tiger Orange - accent */
 
-	/* Accent */
-	--color-orange-ink: #9c5c03; /* orange text/links */
-	--color-orange-soft: #fdf0dc; /* tinted fill behind orange icons */
+  /* Accent */
+  --color-orange-ink: #9c5c03; /* orange text/links */
+  --color-orange-soft: #fdf0dc; /* tinted fill behind orange icons */
 
-	/* Surfaces */
-	--color-surface: #ffffff; /* cards sitting on the cream ground */
-	--color-sand: #f6eee0; /* warm band - alternating sections */
-	--color-border: #e8e0d0; /* border */
-	--color-border-strong: #d6cab3; /* input underlines, dividers */
+  /* Surfaces */
+  --color-surface: #ffffff; /* cards sitting on the cream ground */
+  --color-sand: #f6eee0; /* warm band - alternating sections */
+  --color-border: #e8e0d0; /* border */
+  --color-border-strong: #d6cab3; /* input underlines, dividers */
 
-	/* Text */
-	--color-ink: #43302e; /* body */
-	--color-muted: #6f6862; /* secondary */
+  /* Text */
+  --color-ink: #43302e; /* body */
+  --color-muted: #6f6862; /* secondary */
 
-	/* States */
-	--color-teal-deep: #002932; /* primary hover */
-	--color-alert: #a33a2c; /* errors */
-	--color-success: #1f6f4a;
+  /* States */
+  --color-teal-deep: #002932; /* primary hover */
+  --color-alert: #a33a2c; /* errors */
+  --color-success: #1f6f4a;
 
-	/* Fonts */
-	--font-heading: "DM Serif Display", Georgia, serif; /* headings */
-	--font-body: "DM Sans", system-ui, sans-serif;
-  --font-quote:  "PT Serif", serif;
+  /* Fonts */
+  --font-heading: "DM Serif Display", Georgia, serif; /* headings */
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-quote: "PT Serif", serif;
 
-	/* Border radius */
-	--radius-sm: 0.375rem; /* small inputs */
-	--radius-md: 0.75rem; /* cards, inputs */
-	--radius-lg: 1.25rem; /* panels, image */
-	--radius-pill: 9999px; /* buttons, tags */
+  /* Border radius */
+  --radius-sm: 0.375rem; /* small inputs */
+  --radius-md: 0.75rem; /* cards, inputs */
+  --radius-lg: 1.25rem; /* panels, image */
+  --radius-pill: 9999px; /* buttons, tags */
 
-	/* Shadows */
-	--shadow-card:
-		0 1px 2px rgb(67 48 46 / 0.04), 0 4px 12px rgb(67 48 46 / 0.06);
-	--shadow-lift:
-		0 2px 4px rgb(67 48 46 / 0.06), 0 12px 28px rgb(67 48 46 / 0.1);
+  /* Shadows */
+  --shadow-card:
+    0 1px 2px rgb(67 48 46 / 0.04), 0 4px 12px rgb(67 48 46 / 0.06);
+  --shadow-lift:
+    0 2px 4px rgb(67 48 46 / 0.06), 0 12px 28px rgb(67 48 46 / 0.1);
 }
 
 @layer base {
-	html,
-	body {
-		margin: 0;
-		padding: 0;
-		min-height: 100dvh;
-		background-color: var(--color-cream);
-		color: var(--color-ink);
-		font-family: var(--font-body);
-		-webkit-font-smoothing: antialiased;
-		font-synthesis-weight: none;
-	}
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100dvh;
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    font-synthesis-weight: none;
+  }
 
-	h1,
-	h2,
-	h3 {
-		font-family: var(--font-heading);
-		color: var(--color-teal);
-		font-weight: 400;
-	}
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    color: var(--color-teal);
+    font-weight: 400;
+  }
 
-	h1 {
-		font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
-		line-height: 1.08;
-	}
+  h1 {
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+    line-height: 1.08;
+  }
 
-	h2 {
-		font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
-		line-height: 1.15;
-	}
+  h2 {
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+    line-height: 1.15;
+  }
 
-	li {
-		align-content: center;
-	}
+  li {
+    align-content: center;
+  }
 
-	li > a {
-		text-decoration: none;
-		font-weight: 500;
-		color: var(--color-teal);
-		font-family: var(--font-body);
-	}
+  li > a {
+    text-decoration: none;
+    font-weight: 500;
+    color: var(--color-teal);
+    font-family: var(--font-body);
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Keyboard focus is always visible */
 :focus-visible {
-	outline: 2px solid;
-	outline-color: var(--color-teal, #003844);
-	outline-offset: 2px;
-	text-align: center;
+  outline: 2px solid;
+  outline-color: var(--color-teal, #003844);
+  outline-offset: 2px;
+  text-align: center;
 }
 
 @layer components {
-	.container-page {
-		width: 100%;
-		max-width: 80rem;
-		margin-inline: auto;
-		padding-inline: 1.5rem;
-	}
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
 }
 
 @layer utilities {
-	/* The letter spaced eyebrow above heading */
-	.text-eyebrow {
-		font-family: var(--font-body);
-		font-size: 0.75rem;
-		font-weight: 600;
-		letter-spacing: 0.16em;
-		text-transform: uppercase;
-	}
+  /* The letter spaced eyebrow above heading */
+  .text-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
 
-	/* Small uppercase field label. */
-	.text-label {
-		font-family: var(--font-body);
-		font-size: 0.75rem;
-		font-weight: 500;
-		letter-spacing: 0.04em;
-	}
+  /* Small uppercase field label. */
+  .text-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
 
-	.bg-hero-wash {
-		background-image: radial-gradient(
-			120% 90% at 50% 0%,
-			#fffefa 0%,
-			var(--color-cream) 60%,
-			var(--color-sand) 100%
-		);
-	}
+  .bg-hero-wash {
+    background-image: radial-gradient(
+      120% 90% at 50% 0%,
+      #fffefa 0%,
+      var(--color-cream) 60%,
+      var(--color-sand) 100%
+    );
+  }
 
-	.animate-rise {
-		animation: rise 480ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
-	}
+  .animate-rise {
+    animation: rise 480ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  }
 }
 
 @keyframes rise {
-	from {
-		opacity: 0;
-		transform: translateY(12px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-	*,
-	*::before,
-	*::after {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-	}
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
