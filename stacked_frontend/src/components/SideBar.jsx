@@ -1,8 +1,14 @@
 import React from "react";
-// import AuthLogo from "./AuthLogo";
 import SidebarLink from "./SideBarLink.jsx";
 import Leaf from "@/assets/leaf_image.png";
 import {
+  LayoutDashboard,
+  BookOpen,
+  Bookmark,
+  Clock3,
+  House,
+  Bell,
+  LogOut,
   LayoutDashboard,
   BookOpen,
   Bookmark,
