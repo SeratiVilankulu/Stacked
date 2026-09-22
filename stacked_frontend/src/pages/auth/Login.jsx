@@ -51,9 +51,12 @@ function Login() {
 				withCredentials: true,
 			});
 			// Pull the signed-in user from /auth/user so the nav swaps to the account
-			await refreshUser();
+			const loggedInUser = await refreshUser();
 			setSuccessMsg("Login Successful!");
-			setTimeout(() => navigate("/"), 1500); //redirect to home page once successful
+			// Admins land on the admin dashboard, and users their own dashboard
+			const destination =
+				loggedInUser?.role === "ADMIN" ? "/admin/dashboard" : "/dashboard";
+			setTimeout(() => navigate(destination), 1500);
 		} catch (error) {
 			let apiError;
 

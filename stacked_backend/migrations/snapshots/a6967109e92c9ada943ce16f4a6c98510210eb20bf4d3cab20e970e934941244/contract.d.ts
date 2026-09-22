@@ -34,9 +34,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'efe7a2a4f1d9c56271ae7abd5cbaf2ca98b8c64773c305a560c20e8872a647b7'>;
+  StorageHashBase<'a6967109e92c9ada943ce16f4a6c98510210eb20bf4d3cab20e970e934941244'>;
 export type ExecutionHash =
-  ExecutionHashBase<'1c1ea195c6fa32b307829cf2e8ef40e93f0c595222369a119536bd39ede6e514'>;
+  ExecutionHashBase<'e86f6d0edeace6f78f0b9979b83eb6b0afbf936a0733778023a205456221a3d4'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -242,6 +242,12 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
 
 export type FieldOutputTypes = {
   readonly public: {
+    readonly Admin: {
+      readonly id: CodecTypes['pg/uuid@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly email: CodecTypes['pg/text@1']['output'];
+      readonly password: CodecTypes['pg/text@1']['output'];
+    };
     readonly Book: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly adminId: CodecTypes['pg/uuid@1']['output'];
@@ -307,6 +313,12 @@ export type FieldOutputTypes = {
 };
 export type FieldInputTypes = {
   readonly public: {
+    readonly Admin: {
+      readonly id: CodecTypes['pg/uuid@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly email: CodecTypes['pg/text@1']['input'];
+      readonly password: CodecTypes['pg/text@1']['input'];
+    };
     readonly Book: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly adminId: CodecTypes['pg/uuid@1']['input'];
@@ -372,6 +384,12 @@ export type FieldInputTypes = {
 };
 export type StorageColumnTypes = {
   readonly public: {
+    readonly admin: {
+      readonly Email: CodecTypes['pg/text@1']['output'];
+      readonly Id: CodecTypes['pg/uuid@1']['output'];
+      readonly Name: CodecTypes['pg/text@1']['output'];
+      readonly Password: CodecTypes['pg/text@1']['output'];
+    };
     readonly bookcopies: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['output'];
       readonly Condition: 'NEW' | 'GOOD' | 'FAIR' | 'POOR' | null;
@@ -437,6 +455,12 @@ export type StorageColumnTypes = {
 };
 export type StorageColumnInputTypes = {
   readonly public: {
+    readonly admin: {
+      readonly Email: CodecTypes['pg/text@1']['input'];
+      readonly Id: CodecTypes['pg/uuid@1']['input'];
+      readonly Name: CodecTypes['pg/text@1']['input'];
+      readonly Password: CodecTypes['pg/text@1']['input'];
+    };
     readonly bookcopies: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['input'];
       readonly Condition: 'NEW' | 'GOOD' | 'FAIR' | 'POOR' | null;
@@ -512,20 +536,11 @@ export namespace Models {
     role: 'ADMIN' | 'USER';
     createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
     bookCopies: public_BookCopy[];
-    booksManaged: public_Book[];
-    finesIssued: public_Fine[];
-    finesReceived: public_Fine[];
+    fines: public_Fine[];
     library: public_Library[];
     loanedBooks: public_LoanedBook[];
     reservations: public_Reservation[];
-    readonly [RelationKeys]?:
-      | 'bookCopies'
-      | 'booksManaged'
-      | 'finesIssued'
-      | 'finesReceived'
-      | 'library'
-      | 'loanedBooks'
-      | 'reservations';
+    readonly [RelationKeys]?: 'bookCopies' | 'fines' | 'library' | 'loanedBooks' | 'reservations';
   };
   export type public_Book = {
     id: CodecTypes['pg/uuid@1']['output'];
@@ -537,13 +552,22 @@ export namespace Models {
     isbn: CodecTypes['pg/int4@1']['output'] | null;
     coverImageUrl: CodecTypes['pg/text@1']['output'] | null;
     copiesAvailable: CodecTypes['pg/int4@1']['output'];
-    admin: public_User;
+    admin: public_Admin;
     bookCopies: public_BookCopy[];
     libraryEntries: public_Library[];
     loanedBooks: public_LoanedBook[];
     reservations: public_Reservation[];
     readonly [RelationKeys]?:
       'admin' | 'bookCopies' | 'libraryEntries' | 'loanedBooks' | 'reservations';
+  };
+  export type public_Admin = {
+    id: CodecTypes['pg/uuid@1']['output'];
+    name: CodecTypes['pg/text@1']['output'];
+    email: CodecTypes['pg/text@1']['output'];
+    password: CodecTypes['pg/text@1']['output'];
+    books: public_Book[];
+    fines: public_Fine[];
+    readonly [RelationKeys]?: 'books' | 'fines';
   };
   export type public_BookCopy = {
     id: CodecTypes['pg/uuid@1']['output'];
@@ -577,7 +601,7 @@ export namespace Models {
     daysOverDue: CodecTypes['pg/int4@1']['output'];
     amountOwed: CodecTypes['pg/numeric@1']['output'];
     datePaid: CodecTypes['pg/timestamptz-string@1']['output'] | null;
-    admin: public_User;
+    admin: public_Admin;
     loan: public_LoanedBook;
     user: public_User;
     readonly [RelationKeys]?: 'admin' | 'loan' | 'user';
@@ -608,6 +632,7 @@ export declare const models: {
   public: {
     User: Models.public_User;
     Book: Models.public_Book;
+    Admin: Models.public_Admin;
     BookCopy: Models.public_BookCopy;
     LoanedBook: Models.public_LoanedBook;
     Fine: Models.public_Fine;
@@ -634,6 +659,34 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
+            readonly admin: {
+              columns: {
+                readonly Id: {
+                  readonly nativeType: 'uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                };
+                readonly Name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly Email: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly Password: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['Id'] };
+              uniques: readonly [{ readonly columns: readonly ['Email'] }];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
             readonly bookcopies: {
               columns: {
                 readonly Id: {
@@ -777,7 +830,7 @@ type ContractBase = Omit<
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'users';
+                    readonly tableName: 'admin';
                     readonly columns: readonly ['Id'];
                   };
                 },
@@ -876,7 +929,7 @@ type ContractBase = Omit<
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'users';
+                    readonly tableName: 'admin';
                     readonly columns: readonly ['Id'];
                   };
                 },
@@ -1199,6 +1252,7 @@ type ContractBase = Omit<
   readonly roots: {
     readonly users: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
     readonly books: { readonly namespace: 'public' & NamespaceId; readonly model: 'Book' };
+    readonly admin: { readonly namespace: 'public' & NamespaceId; readonly model: 'Admin' };
     readonly bookcopies: { readonly namespace: 'public' & NamespaceId; readonly model: 'BookCopy' };
     readonly loanedbooks: {
       readonly namespace: 'public' & NamespaceId;
@@ -1215,6 +1269,54 @@ type ContractBase = Omit<
     readonly namespaces: {
       readonly public: {
         readonly models: {
+          readonly Admin: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly email: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly password: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly books: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Book' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['adminId'];
+                };
+              };
+              readonly fines: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Fine' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['adminId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'admin';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'Id' };
+                readonly name: { readonly column: 'Name' };
+                readonly email: { readonly column: 'Email' };
+                readonly password: { readonly column: 'Password' };
+              };
+            };
+          };
           readonly Book: {
             readonly fields: {
               readonly id: {
@@ -1256,7 +1358,10 @@ type ContractBase = Omit<
             };
             readonly relations: {
               readonly admin: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Admin';
+                };
                 readonly cardinality: 'N:1';
                 readonly nullable: false;
                 readonly on: {
@@ -1421,7 +1526,10 @@ type ContractBase = Omit<
             };
             readonly relations: {
               readonly admin: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Admin';
+                };
                 readonly cardinality: 'N:1';
                 readonly nullable: false;
                 readonly on: {
@@ -1710,23 +1818,7 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['userId'];
                 };
               };
-              readonly booksManaged: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Book' };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['adminId'];
-                };
-              };
-              readonly finesIssued: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Fine' };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['adminId'];
-                };
-              };
-              readonly finesReceived: {
+              readonly fines: {
                 readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Fine' };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -1862,6 +1954,14 @@ type ContractBase = Omit<
     readonly executionHash: ExecutionHash;
     readonly mutations: {
       readonly defaults: readonly [
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'admin';
+            readonly column: 'Id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
         {
           readonly ref: {
             readonly namespace: 'public';

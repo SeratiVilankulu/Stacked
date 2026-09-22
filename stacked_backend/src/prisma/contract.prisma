@@ -10,18 +10,20 @@ model User {
   role      UserRole          @map("Role")
   createdAt TimestamptzString @default(now()) @map("CreatedAt")
 
-  admins       Admin[]
-  bookCopies   BookCopy[]
-  fines        Fine[]
-  loanedBooks  LoanedBook[]
-  reservations Reservation[]
-  library      Library[]
+  booksManaged  Book[]
+  bookCopies    BookCopy[]
+  finesReceived Fine[]       @relation("FineUser")
+  finesIssued   Fine[]       @relation("FineAdmin")
+  loanedBooks   LoanedBook[]
+  reservations  Reservation[]
+  library       Library[]
 
   @@map("users")
 }
 
 model Book {
   id              Uuid    @id @default(uuid()) @map("Id")
+  adminId         Uuid               @map("Admin_Id")
   title           String  @map("Title")
   description     String? @map("Description")
   genre           String  @map("Genre")
@@ -30,25 +32,13 @@ model Book {
   coverImageUrl   String? @map("CoverImageURL")
   copiesAvailable Int     @map("CopiesAvailable")
 
-  admins       Admin[]
+  admin        User @relation(fields: [adminId], references: [id], onDelete: Restrict)
   bookCopies   BookCopy[]
   loanedBooks  LoanedBook[]
   reservations Reservation[]
   libraryEntries Library[]
 
   @@map("books")
-}
-
-model Admin {
-  id     Uuid   @id @default(uuid()) @map("Id")
-  userId Uuid   @map("User_Id")
-  bookId Uuid   @map("Book_Id")
-  name   String @map("Name")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
-  book Book @relation(fields: [bookId], references: [id], onDelete: Restrict)
-
-  @@map("admin")
 }
 
 model BookCopy {
@@ -85,12 +75,14 @@ model Fine {
   id          Uuid               @id @default(uuid()) @map("Id")
   loanId      Uuid               @map("Loan_Id")
   userId      Uuid               @map("User_Id")
+  adminId     Uuid               @map("Admin_Id")
   daysOverDue Int                @map("DaysOverDue")
   amountOwed  Decimal            @map("AmountOwed")
   datePaid    TimestamptzString? @map("DatePaid")
 
-  loan LoanedBook @relation(fields: [loanId], references: [id], onDelete: Cascade)
-  user User       @relation(fields: [userId], references: [id], onDelete: Restrict)
+  loan  LoanedBook @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  user  User       @relation("FineUser", fields: [userId], references: [id], onDelete: Restrict)
+  admin User       @relation("FineAdmin", fields: [adminId], references: [id], onDelete: Restrict)
 
   @@map("fines")
 }

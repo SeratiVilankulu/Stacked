@@ -4,10 +4,6 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "admin": {
-      "model": "Admin",
-      "namespace": "public"
-    },
     "bookcopies": {
       "model": "BookCopy",
       "namespace": "public"
@@ -153,92 +149,15 @@
           }
         },
         "models": {
-          "Admin": {
-            "fields": {
-              "bookId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/uuid@1",
-                  "kind": "scalar"
-                }
-              },
-              "id": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/uuid@1",
-                  "kind": "scalar"
-                }
-              },
-              "name": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "userId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/uuid@1",
-                  "kind": "scalar"
-                }
-              }
-            },
-            "relations": {
-              "book": {
-                "cardinality": "N:1",
-                "nullable": false,
-                "on": {
-                  "localFields": [
-                    "bookId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "Book",
-                  "namespace": "public"
-                }
-              },
-              "user": {
-                "cardinality": "N:1",
-                "nullable": false,
-                "on": {
-                  "localFields": [
-                    "userId"
-                  ],
-                  "targetFields": [
-                    "id"
-                  ]
-                },
-                "to": {
-                  "model": "User",
-                  "namespace": "public"
-                }
-              }
-            },
-            "storage": {
-              "fields": {
-                "bookId": {
-                  "column": "Book_Id"
-                },
-                "id": {
-                  "column": "Id"
-                },
-                "name": {
-                  "column": "Name"
-                },
-                "userId": {
-                  "column": "User_Id"
-                }
-              },
-              "namespaceId": "public",
-              "table": "admin"
-            }
-          },
           "Book": {
             "fields": {
+              "adminId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
               "author": {
                 "nullable": false,
                 "type": {
@@ -297,18 +216,19 @@
               }
             },
             "relations": {
-              "admins": {
-                "cardinality": "1:N",
+              "admin": {
+                "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
-                    "id"
+                    "adminId"
                   ],
                   "targetFields": [
-                    "bookId"
+                    "id"
                   ]
                 },
                 "to": {
-                  "model": "Admin",
+                  "model": "User",
                   "namespace": "public"
                 }
               },
@@ -375,6 +295,9 @@
             },
             "storage": {
               "fields": {
+                "adminId": {
+                  "column": "Admin_Id"
+                },
                 "author": {
                   "column": "Author"
                 },
@@ -522,6 +445,13 @@
           },
           "Fine": {
             "fields": {
+              "adminId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
               "amountOwed": {
                 "nullable": false,
                 "type": {
@@ -566,6 +496,22 @@
               }
             },
             "relations": {
+              "admin": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "adminId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              },
               "loan": {
                 "cardinality": "N:1",
                 "nullable": false,
@@ -601,6 +547,9 @@
             },
             "storage": {
               "fields": {
+                "adminId": {
+                  "column": "Admin_Id"
+                },
                 "amountOwed": {
                   "column": "AmountOwed"
                 },
@@ -1025,21 +974,6 @@
               }
             },
             "relations": {
-              "admins": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "userId"
-                  ]
-                },
-                "to": {
-                  "model": "Admin",
-                  "namespace": "public"
-                }
-              },
               "bookCopies": {
                 "cardinality": "1:N",
                 "on": {
@@ -1055,7 +989,37 @@
                   "namespace": "public"
                 }
               },
-              "fines": {
+              "booksManaged": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "adminId"
+                  ]
+                },
+                "to": {
+                  "model": "Book",
+                  "namespace": "public"
+                }
+              },
+              "finesIssued": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "adminId"
+                  ]
+                },
+                "to": {
+                  "model": "Fine",
+                  "namespace": "public"
+                }
+              },
+              "finesReceived": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -1156,90 +1120,6 @@
       "public": {
         "entries": {
           "table": {
-            "admin": {
-              "columns": {
-                "Book_Id": {
-                  "codecId": "pg/uuid@1",
-                  "nativeType": "uuid",
-                  "nullable": false
-                },
-                "Id": {
-                  "codecId": "pg/uuid@1",
-                  "nativeType": "uuid",
-                  "nullable": false
-                },
-                "Name": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
-                "User_Id": {
-                  "codecId": "pg/uuid@1",
-                  "nativeType": "uuid",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [
-                {
-                  "onDelete": "restrict",
-                  "source": {
-                    "columns": [
-                      "User_Id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "admin"
-                  },
-                  "target": {
-                    "columns": [
-                      "Id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "users"
-                  }
-                },
-                {
-                  "onDelete": "restrict",
-                  "source": {
-                    "columns": [
-                      "Book_Id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "admin"
-                  },
-                  "target": {
-                    "columns": [
-                      "Id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "books"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "Book_Id"
-                  ],
-                  "name": "admin_Book_Id_idx_f7bddef2",
-                  "prefix": "admin_Book_Id_idx",
-                  "unique": false
-                },
-                {
-                  "columns": [
-                    "User_Id"
-                  ],
-                  "name": "admin_User_Id_idx_99d17088",
-                  "prefix": "admin_User_Id_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "Id"
-                ]
-              },
-              "uniques": []
-            },
             "bookcopies": {
               "checks": [
                 {
@@ -1360,6 +1240,11 @@
             },
             "books": {
               "columns": {
+                "Admin_Id": {
+                  "codecId": "pg/uuid@1",
+                  "nativeType": "uuid",
+                  "nullable": false
+                },
                 "Author": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -1401,8 +1286,35 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "Admin_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "books"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "Admin_Id"
+                  ],
+                  "name": "books_Admin_Id_idx_f0c67153",
+                  "prefix": "books_Admin_Id_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "Id"
@@ -1412,6 +1324,11 @@
             },
             "fines": {
               "columns": {
+                "Admin_Id": {
+                  "codecId": "pg/uuid@1",
+                  "nativeType": "uuid",
+                  "nullable": false
+                },
                 "AmountOwed": {
                   "codecId": "pg/numeric@1",
                   "nativeType": "numeric",
@@ -1477,9 +1394,34 @@
                     "namespaceId": "public",
                     "tableName": "users"
                   }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "Admin_Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "fines"
+                  },
+                  "target": {
+                    "columns": [
+                      "Id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "Admin_Id"
+                  ],
+                  "name": "fines_Admin_Id_idx_f0c67153",
+                  "prefix": "fines_Admin_Id_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "Loan_Id"
@@ -1977,23 +1919,12 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "bf7155eaf448d0e6fad38216f24663aeed35d7769ae0c77d8aad704bfb9f1937"
+    "storageHash": "efe7a2a4f1d9c56271ae7abd5cbaf2ca98b8c64773c305a560c20e8872a647b7"
   },
   "execution": {
-    "executionHash": "e86f6d0edeace6f78f0b9979b83eb6b0afbf936a0733778023a205456221a3d4",
+    "executionHash": "1c1ea195c6fa32b307829cf2e8ef40e93f0c595222369a119536bd39ede6e514",
     "mutations": {
       "defaults": [
-        {
-          "onCreate": {
-            "id": "uuidv4",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "Id",
-            "namespace": "public",
-            "table": "admin"
-          }
-        },
         {
           "onCreate": {
             "id": "uuidv4",
