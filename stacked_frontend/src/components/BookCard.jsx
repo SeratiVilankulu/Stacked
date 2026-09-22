@@ -1,39 +1,46 @@
-import react from "react";
+// components/BookCarousel.jsx
+import React from "react";
+
+const GENRE_STYLES = {
+  Fiction: "bg-success",
+  "Self-Help": "bg-orange",
+  "Sci-Fi": "bg-teal",
+  Romance: "bg-alert",
+};
 
 function BookCard({ book }) {
-	return (
-		<article className="group">
-			<div className="relative overflow-hidden rounded-2xl bg-[#C1DBE8]">
-				<img
-					src={book.cover}
-					alt={book.title}
-					className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-105"
-				/>
-
-				<button className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-[#FFFDF4]/90 text-[#003844] shadow-sm backdrop-blur transition hover:bg-[#F18805] hover:text-white">
-					<Bookmark size={17} />
-				</button>
-			</div>
-
-			<div className="mt-3">
-				<p className="text-[11px] font-semibold uppercase tracking-wide text-[#F18805]">
-					{book.genre}
-				</p>
-
-				<h3 className="mt-1 line-clamp-1 font-semibold text-[#003844]">
-					{book.title}
-				</h3>
-
-				<p className="mt-1 text-xs text-[#43302E]/60">{book.author}</p>
-
-				<div className="mt-2 flex items-center gap-1 text-xs">
-					<Star size={13} fill="currentColor" className="text-[#F18805]" />
-
-					<span className="font-medium">{book.rating}</span>
-				</div>
-			</div>
-		</article>
-	);
+  console.log("These are our props", book);
+  return (
+    <div className="flex w-44 shrink-0 snap-start flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-surface p-3 shadow-card sm:w-48">
+      <div className="aspect-3/4 w-full overflow-hidden rounded-[var(--radius-md)]">
+        <img
+          src={book.cover}
+          alt={`${book.title} cover`}
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <div className="flex flex-col gap-1">
+        <p className="line-clamp-1 text-sm font-semibold text-teal">
+          {book.title}
+        </p>
+        <p className="text-xs text-muted">{book.author}</p>
+        <span className="mt-1 inline-flex w-fit items-center gap-1.5 text-xs text-muted">
+          <span
+            className={`size-1.5 rounded-full ${
+              GENRE_STYLES[book.genre] ?? "bg-sky"
+            }`}
+          />
+          {book.genre}
+        </span>
+      </div>
+      <button
+        type="button"
+        className="mt-1 cursor-pointer rounded-pill bg-teal py-2 text-sm font-semibold text-cream transition-colors duration-200 hover:bg-teal-deep active:translate-y-px"
+      >
+        Borrow
+      </button>
+    </div>
+  );
 }
 
 export default BookCard;
