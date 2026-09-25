@@ -9,6 +9,7 @@ model User {
   password  String            @map("Password")
   role      UserRole          @map("Role")
   createdAt TimestamptzString @default(now()) @map("CreatedAt")
+  status    String            @map("Status")
 
   booksManaged  Book[]
   bookCopies    BookCopy[]
@@ -28,7 +29,7 @@ model Book {
   description     String? @map("Description")
   genre           String  @map("Genre")
   author          String  @map("Author")
-  isbn            Int?    @map("ISBN")
+  isbn            String  @map("ISBN")
   coverImageUrl   String? @map("CoverImageURL")
   copiesAvailable Int     @map("CopiesAvailable")
 

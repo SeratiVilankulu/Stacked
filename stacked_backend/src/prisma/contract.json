@@ -201,9 +201,9 @@
                 }
               },
               "isbn": {
-                "nullable": true,
+                "nullable": false,
                 "type": {
-                  "codecId": "pg/int4@1",
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -958,6 +958,13 @@
                   "plane": "domain"
                 }
               },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "surname": {
                 "nullable": false,
                 "type": {
@@ -1099,6 +1106,9 @@
                 },
                 "role": {
                   "column": "Role"
+                },
+                "status": {
+                  "column": "Status"
                 },
                 "surname": {
                   "column": "Surname"
@@ -1271,9 +1281,9 @@
                   "nullable": false
                 },
                 "ISBN": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": true
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
                 },
                 "Id": {
                   "codecId": "pg/uuid@1",
@@ -1830,6 +1840,11 @@
                     "plane": "storage"
                   }
                 },
+                "Status": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "Surname": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -1919,7 +1934,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "efe7a2a4f1d9c56271ae7abd5cbaf2ca98b8c64773c305a560c20e8872a647b7"
+    "storageHash": "7b063bf0de8d82a068723551896d047fe35a676a899162bfa44cfb2a454febd4"
   },
   "execution": {
     "executionHash": "1c1ea195c6fa32b307829cf2e8ef40e93f0c595222369a119536bd39ede6e514",
