@@ -9,13 +9,6 @@ import {
   House,
   Bell,
   LogOut,
-  LayoutDashboard,
-  BookOpen,
-  Bookmark,
-  Clock3,
-  House,
-  Bell,
-  LogOut,
 } from "lucide-react";
 
 function Sidebar() {

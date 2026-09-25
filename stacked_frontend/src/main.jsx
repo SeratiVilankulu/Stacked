@@ -11,6 +11,7 @@ import Register from "./pages/auth/Register.jsx";
 import Login from "./pages/auth/Login.jsx";
 import Dashboard from "./pages/user/Dashboard.jsx";
 import AdminDashboard from "./pages/admin/Dashboard.jsx";
+import ManageUsers from "./pages/admin/ManageUsers.jsx";
 import About from "./pages/public/About.jsx";
 
 // Add page routes
@@ -31,6 +32,14 @@ const router = createBrowserRouter([
 		element: (
 			<RequireRole role="ADMIN">
 				<AdminDashboard />
+			</RequireRole>
+		),
+	},
+	{
+		path: "/admin/users",
+		element: (
+			<RequireRole role="ADMIN">
+				<ManageUsers />
 			</RequireRole>
 		),
 	},
