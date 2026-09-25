@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'7b063bf0de8d82a068723551896d047fe35a676a899162bfa44cfb2a454febd4'>;
+  StorageHashBase<'6625de263176da9fccac6fcd97dad411a4cf95c63bbc5e1eb1fb8d87aad865ad'>;
 export type ExecutionHash =
   ExecutionHashBase<'1c1ea195c6fa32b307829cf2e8ef40e93f0c595222369a119536bd39ede6e514'>;
 export type ProfileHash =
@@ -302,7 +302,6 @@ export type FieldOutputTypes = {
       readonly password: CodecTypes['pg/text@1']['output'];
       readonly role: 'ADMIN' | 'USER';
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly status: CodecTypes['pg/text@1']['output'];
     };
   };
 };
@@ -368,7 +367,6 @@ export type FieldInputTypes = {
       readonly password: CodecTypes['pg/text@1']['input'];
       readonly role: 'ADMIN' | 'USER';
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly status: CodecTypes['pg/text@1']['input'];
     };
   };
 };
@@ -432,7 +430,6 @@ export type StorageColumnTypes = {
       readonly Name: CodecTypes['pg/text@1']['output'];
       readonly Password: CodecTypes['pg/text@1']['output'];
       readonly Role: 'ADMIN' | 'USER';
-      readonly Status: CodecTypes['pg/text@1']['output'];
       readonly Surname: CodecTypes['pg/text@1']['output'];
       readonly Username: CodecTypes['pg/text@1']['output'];
     };
@@ -498,7 +495,6 @@ export type StorageColumnInputTypes = {
       readonly Name: CodecTypes['pg/text@1']['input'];
       readonly Password: CodecTypes['pg/text@1']['input'];
       readonly Role: 'ADMIN' | 'USER';
-      readonly Status: CodecTypes['pg/text@1']['input'];
       readonly Surname: CodecTypes['pg/text@1']['input'];
       readonly Username: CodecTypes['pg/text@1']['input'];
     };
@@ -515,7 +511,6 @@ export namespace Models {
     password: CodecTypes['pg/text@1']['output'];
     role: 'ADMIN' | 'USER';
     createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-    status: CodecTypes['pg/text@1']['output'];
     bookCopies: public_BookCopy[];
     booksManaged: public_Book[];
     finesIssued: public_Fine[];
@@ -1156,11 +1151,6 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
-                readonly Status: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
               };
               primaryKey: { readonly columns: readonly ['Id'] };
               uniques: readonly [
@@ -1707,10 +1697,6 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
-              readonly status: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
             };
             readonly relations: {
               readonly bookCopies: {
@@ -1794,7 +1780,6 @@ type ContractBase = Omit<
                 readonly password: { readonly column: 'Password' };
                 readonly role: { readonly column: 'Role' };
                 readonly createdAt: { readonly column: 'CreatedAt' };
-                readonly status: { readonly column: 'Status' };
               };
             };
           };
