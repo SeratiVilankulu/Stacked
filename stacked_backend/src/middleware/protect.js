@@ -23,6 +23,11 @@ async function protect(req, res, next) {
 			return res.status(401).json({ message: "Not signed in" });
 		}
 
+		// Blocks users that are suspended after they logged in, without waiting for their token to expire
+		if (user.status === "SUSPENDED") {
+			return res.status(403).json({ message: "Account suspended" });
+		}
+
 		// The password hash must never travel any further than this.
 		const { password: _password, ...safeUser } = user;
 		req.user = safeUser;
