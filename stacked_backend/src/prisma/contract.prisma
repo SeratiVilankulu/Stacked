@@ -12,7 +12,6 @@ model User {
   status    String            @map("Status")
 
   booksManaged  Book[]
-  bookCopies    BookCopy[]
   finesReceived Fine[]       @relation("FineUser")
   finesIssued   Fine[]       @relation("FineAdmin")
   loanedBooks   LoanedBook[]
@@ -35,7 +34,6 @@ model Book {
 
   admin        User @relation(fields: [adminId], references: [id], onDelete: Restrict)
   bookCopies   BookCopy[]
-  loanedBooks  LoanedBook[]
   reservations Reservation[]
   libraryEntries Library[]
 
@@ -45,29 +43,28 @@ model Book {
 model BookCopy {
   id        Uuid    @id @default(uuid()) @map("Id")
   bookId    Uuid    @map("Book_Id")
-  userId    Uuid    @map("User_Id")
   name      String? @map("Name")
   condition BookCondition? @map("Condition")
   status    BookAvailability @map("Status")
 
-  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  book        Book         @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  loanedBooks LoanedBook[]
 
   @@map("bookcopies")
 }
 
 model LoanedBook {
   id         Uuid               @id @default(uuid()) @map("Id")
-  bookId     Uuid               @map("Book_id")
+  bookCopyId Uuid               @map("BookCopy_Id")
   userId     Uuid               @map("User_id")
   loanDate   TimestamptzString  @default(now()) @map("LoanDate")
   dueDate    DateString         @map("ReturnDate")
   returnedAt TimestamptzString? @map("ReturnedAt")
   status     LoanStatus         @map("Status")
 
-  book  Book   @relation(fields: [bookId], references: [id], onDelete: Restrict)
-  user  User   @relation(fields: [userId], references: [id], onDelete: Restrict)
-  fines Fine[]
+  bookCopy BookCopy @relation(fields: [bookCopyId], references: [id], onDelete: Restrict)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  fines    Fine[]
 
   @@map("loanedbooks")
 }

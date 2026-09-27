@@ -20,6 +20,7 @@ app.use(
 import userRoutes from "./routes/userRoute.js";
 import authRoutes from "./routes/authRoute.js";
 import bookRoutes from "./routes/bookRoute.js";
+import libraryRoutes from "./routes/libraryRoute.js";
 
 // Parse JSON request bodies into req.body (must run before the routes)
 app.use(express.json());
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
+app.use("/api/library", libraryRoutes);
 
 const PORT = process.env.PORT; // set the port to listen on
 const server = app.listen(PORT, () => {
