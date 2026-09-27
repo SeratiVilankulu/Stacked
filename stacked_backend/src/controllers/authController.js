@@ -11,15 +11,26 @@ async function register(req, res) {
 			return res.status(400).json({ message: "All fields are required" });
 		}
 
-		// Check if user with the same email
-		const userExists = await db.orm.public.User.where({
+		// Check if user with the same email exists
+		const userEmailExists = await db.orm.public.User.where({
 			email,
 		}).first();
 
-		if (userExists) {
+		if (userEmailExists) {
 			return res
 				.status(400)
 				.json({ message: "User with this email already exists" });
+		}
+
+		// Check if user with same username exists
+		const userUsernameExists = await db.orm.public.User.where({
+			username,
+		}).first();
+
+		if (userUsernameExists) {
+			return res
+				.status(400)
+				.json({ message: "User with this username already exists" });
 		}
 
 		// Hash password
@@ -33,6 +44,7 @@ async function register(req, res) {
 			email,
 			username,
 			password: hashedPassword,
+			status: "ACTIVE",
 			role: "USER",
 		});
 
@@ -42,8 +54,9 @@ async function register(req, res) {
 			data: { user: { id: user.id, name: user.name, email: user.email } },
 		});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
-			message: error.message,
+			message: "Failed to register user",
 		});
 	}
 }
@@ -73,19 +86,27 @@ async function login(req, res) {
 			return res.status(401).json({ error: "Invalid email or password" });
 		}
 
+		if (user.status === "SUSPENDED") {
+			return res.status(403).json({
+				status: "Suspended account",
+				message:
+					"Account Suspended. Please contact Admin to unblock your account!",
+			});
+		}
+
 		// The token is not in the body, the browser holds it in the cookie.
 		sendTokenCookie(user, 200, res, { message: "User successfully logged in" });
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
-			message: error.message,
+			message: "Failed to login user",
 		});
 	}
 }
 
 async function logout(req, res) {
-	res.clearCookie("token", "", {
+	res.clearCookie("token", {
 		httpOnly: true,
-		expires: new Date(0),
 		secure: process.env.NODE_ENV === "production",
 		sameSite: "lax",
 		path: "/",
