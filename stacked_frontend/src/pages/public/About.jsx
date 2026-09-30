@@ -1,5 +1,5 @@
 // src/pages/public/About.jsx
-import React from "react";
+
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 import { Users, BookOpen, Sparkles, MapPin, Phone, Mail } from "lucide-react";

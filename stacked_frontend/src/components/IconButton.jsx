@@ -1,5 +1,3 @@
-import React from "react";
-
 function IconButton({ label, onClick, danger, children }) {
   return (
     <button

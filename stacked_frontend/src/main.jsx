@@ -13,37 +13,46 @@ import Dashboard from "./pages/user/Dashboard.jsx";
 import AdminDashboard from "./pages/admin/Dashboard.jsx";
 import ManageUsers from "./pages/admin/ManageUsers.jsx";
 import About from "./pages/public/About.jsx";
+import ManageBooks from "./pages/admin/ManageBooks.jsx";
 
 // Add page routes
 const router = createBrowserRouter([
-	{ path: "/", element: <App /> },
-	{ path: "/register", element: <Register /> },
-	{ path: "/login", element: <Login /> },
-	{
-		path: "/dashboard",
-		element: (
-			<RequireRole role="USER">
-				<Dashboard />
-			</RequireRole>
-		),
-	},
-	{
-		path: "/admin/dashboard",
-		element: (
-			<RequireRole role="ADMIN">
-				<AdminDashboard />
-			</RequireRole>
-		),
-	},
-	{
-		path: "/admin/users",
-		element: (
-			<RequireRole role="ADMIN">
-				<ManageUsers />
-			</RequireRole>
-		),
-	},
-	{ path: "/about", element: <About /> },
+  { path: "/", element: <App /> },
+  { path: "/register", element: <Register /> },
+  { path: "/login", element: <Login /> },
+  {
+    path: "/dashboard",
+    element: (
+      <RequireRole role="USER">
+        <Dashboard />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
+      <RequireRole role="ADMIN">
+        <AdminDashboard />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/admin/users",
+    element: (
+      <RequireRole role="ADMIN">
+        <ManageUsers />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/admin/books",
+    element: (
+      <RequireRole role="ADMIN">
+        <ManageBooks />
+      </RequireRole>
+    ),
+  },
+  { path: "/about", element: <About /> },
 ]);
 
 createRoot(document.getElementById("root")).render(

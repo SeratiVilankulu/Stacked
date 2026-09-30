@@ -1,5 +1,5 @@
 // components/Footer.jsx
-import React from "react";
+
 import { CiFacebook } from "react-icons/ci";
 import { FiInstagram } from "react-icons/fi";
 import { BsTwitterX } from "react-icons/bs";

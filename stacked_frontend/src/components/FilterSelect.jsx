@@ -1,5 +1,4 @@
-import React from "react";
-import { ChevronDown} from "lucide-react"
+import { ChevronDown } from "lucide-react";
 
 function FilterSelect({ label, value, onChange, options }) {
   return (
@@ -9,7 +8,7 @@ function FilterSelect({ label, value, onChange, options }) {
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full cursor-pointer appearance-none rounded-[var(--radius-md)] border border-sky bg-cream py-2.5 pr-10 pl-4 text-sm text-teal focus:outline-none! lg:w-40"
+          className="w-full cursor-pointer appearance-none rounded-[var(--radius-md)] border border-sky bg-surface/60 py-2.5 pr-10 pl-4 text-sm text-teal focus:outline-none! lg:w-40"
         >
           {options.map(([v, text]) => (
             <option key={v} value={v}>

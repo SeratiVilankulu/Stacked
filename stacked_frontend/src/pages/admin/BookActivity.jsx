@@ -1,33 +1,27 @@
-import { BadgeCheck, Ban, UserPlus, Users } from "lucide-react";
+import { Library, BookCheck, Ban } from "lucide-react";
 
-function UserActivity({ users }) {
-  const thisMonth = new Date().toISOString().slice(0, 7);
+function BookActivity({ books }) {
   const activity = [
-    { icon: Users, value: users.length, label: "Total Users" },
+    { icon: Library, value: books.length, label: "Total books" },
     {
-      icon: UserPlus,
-      value: users.filter((u) => u.createdAt.startsWith(thisMonth)).length,
-      label: "New This Month",
-    },
-    {
-      icon: BadgeCheck,
-      value: users.filter((u) => u.status === "Active").length,
-      label: "Active Users",
+      icon: BookCheck,
+      value: books.filter((b) => b.status === "Available").length,
+      label: "Available books",
     },
     {
       icon: Ban,
-      value: users.filter((u) => u.status === "Suspended").length,
-      label: "Suspended",
+      value: books.filter((b) => b.status === "Unavailable").length,
+      label: "Unavailable books",
       accent: true,
     },
   ];
 
   return (
     <aside className="rounded-[var(--radius-lg)] border border-sky bg-surface/60 p-5 shadow-card">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl">User Activity</h3>
+      <div className="flex items-center">
+        <h3 className="text-xl">Book Activity</h3>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-4 flex flex-col gap-3">
         {activity.map(({ icon: Icon, value, label, accent }) => (
           <div key={label} className="rounded-[var(--radius-md)] bg-sky/40 p-4">
             <div className="flex items-end gap-2">
@@ -47,4 +41,4 @@ function UserActivity({ users }) {
   );
 }
 
-export default UserActivity;
+export default BookActivity;

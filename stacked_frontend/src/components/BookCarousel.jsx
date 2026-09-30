@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import BookCard from "./BookCard";
 import { useAuth } from "../context/auth-context.js";
 import { ChevronLeft, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
