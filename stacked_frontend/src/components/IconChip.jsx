@@ -1,5 +1,3 @@
-import React from "react";
-
 function IconChip({ icon: Icon, tone, className = "size-14 rounded-2xl" }) {
   // Icon chip colours, reused by the stat cards, quick actions and activity feed.
   const TONES = {

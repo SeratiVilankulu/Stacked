@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import AdminSideBar from "./AdminSideBar.jsx";
 import UserMenu from "../UserMenu.jsx";
@@ -29,7 +28,7 @@ function AdminLayout({ children }) {
 
       <div className="flex min-h-screen">
         {/* Desktop sidebar */}
-        <aside className="sticky top-0 flex h-screen w-68 shrink-0 flex-col bg-mocha px-4 py-7">
+        <aside className="sticky top-0 h-screen w-68 shrink-0 flex-col bg-mocha px-4 py-7 hidden lg:flex">
           <AdminSideBar />
         </aside>
 

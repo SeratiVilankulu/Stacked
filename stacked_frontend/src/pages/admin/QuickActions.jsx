@@ -1,12 +1,12 @@
-import { ChevronRight, ShieldCheck, UserPlus, Users } from "lucide-react";
+import { ChevronRight, Users } from "lucide-react";
+import { CiBookmarkPlus } from "react-icons/ci";
 
 const QUICK_ACTIONS = [
-  { icon: UserPlus, label: "Add New User" },
+  { icon: CiBookmarkPlus, label: "Add Book" },
   { icon: Users, label: "View All Users" },
-  { icon: ShieldCheck, label: "Manage User Roles" },
 ];
 
-function UserQuickActions() {
+function QuickActions() {
   return (
     <aside className="rounded-[var(--radius-lg)] border border-sky bg-surface/60 p-5 shadow-card">
       <h3 className="text-xl">Quick Actions</h3>
@@ -28,4 +28,4 @@ function UserQuickActions() {
   );
 }
 
-export default UserQuickActions;
+export default QuickActions;

@@ -1,6 +1,5 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import IconChip from "./IconChip";
+import IconChip from "../../components/IconChip.jsx";
 
 import { ArrowRight } from "lucide-react";
 

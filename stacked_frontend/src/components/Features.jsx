@@ -1,4 +1,3 @@
-import React from "react";
 import { BookOpen, User, ShieldCheck, Clock3 } from "lucide-react";
 
 function Features() {
@@ -7,9 +6,7 @@ function Features() {
       <div className="mx-auto mt-10 grid max-w-6xl mb-10 grid-cols-1 divide-y divide-border md:grid-cols-4 md:divide-x md:divide-y-0">
         {/* Feature 1 */}
         <div className="flex items-center gap-4 px-5 py-5 md:py-2">
-          <div
-            className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-teal"
-          >
+          <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-teal">
             <BookOpen className="size-7 text-white" />
           </div>
 

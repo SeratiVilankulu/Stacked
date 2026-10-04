@@ -1,4 +1,3 @@
-import React from "react";
 import { GiBookCover } from "react-icons/gi";
 
 const AuthLogo = () => {

@@ -1,4 +1,3 @@
-import React from "react";
 import SidebarLink from "./SideBarLink.jsx";
 import Leaf from "@/assets/leaf_image.png";
 import {

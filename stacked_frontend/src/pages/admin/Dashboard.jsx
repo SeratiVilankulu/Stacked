@@ -1,8 +1,7 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import AdminLayout from "../../components/admin/AdminLayout.jsx";
 import ActionCard from "./ActionCard.jsx";
-import IconChip from "./IconChip";
+import IconChip from "../../components/IconChip.jsx";
 import { useAuth } from "../../context/auth-context.js";
 import HeroBooks from "@/assets/stackedBooks.jpg";
 import Leaf from "@/assets/leaf_image.png";
@@ -44,7 +43,6 @@ const QUICK_ACTIONS = [
   },
 ];
 
-// Placeholder feed until activity is recorded on the backend.
 const ACTIVITY = [
   {
     icon: BookOpen,
@@ -87,7 +85,7 @@ function AdminDashboard() {
                 Welcome back, {user?.name}.
               </h1>
               <p className="mt-3 text-muted">
-                Here&rsquo;s what&rsquo;s happening with the library today.
+                Here's what's happening with the library today.
               </p>
             </div>
 
@@ -139,12 +137,6 @@ function AdminDashboard() {
         <aside className="h-fit rounded-[var(--radius-lg)] bg-sky/40 p-6">
           <div className="flex items-center justify-between">
             <h3 className="text-xl">Recent Activity</h3>
-            <Link
-              to="/admin/reports"
-              className="flex items-center gap-1 text-sm font-medium text-orange hover:underline"
-            >
-              View all <ArrowRight size={14} />
-            </Link>
           </div>
 
           <ul className="mt-4 divide-y divide-teal/10">

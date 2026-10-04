@@ -1,8 +1,14 @@
-import React from "react";
 import AdminSidebarLink from "./AdminSidebarLinks.jsx";
 import AuthLogo from "../AuthLogo.jsx";
 import Leaf from "@/assets/leaf_image.png";
-import { House, BookOpen, User, Clock, Database } from "lucide-react";
+import {
+  House,
+  LayoutDashboard,
+  BookOpen,
+  User,
+  Clock,
+  Database,
+} from "lucide-react";
 
 function AdminSideBar() {
   return (
@@ -15,12 +21,12 @@ function AdminSideBar() {
 
           <AdminSidebarLink
             to="/admin/dashboard"
-            icon={<House size={19} />}
+            icon={<LayoutDashboard size={19} />}
             label="Dashboard"
           />
 
           <AdminSidebarLink
-            to="/manage-books"
+            to="/admin/books"
             icon={<BookOpen size={19} />}
             label="Manage Books"
           />
@@ -50,7 +56,7 @@ function AdminSideBar() {
       {/* Bottom section */}
       <div className="mt-auto">
         {/* Quote */}
-        <div className="mx-4 rounded-2xl pt-10">
+        <div className="mx-4 rounded-2xl">
           <img
             src={Leaf}
             alt=""

@@ -1,7 +1,6 @@
-import React from "react";
 import LeafBlue from "@/assets/leaf_image2.png";
 
-function QuoteCard() {
+function QuoteCard({ quote, from }) {
   return (
     <aside className="relative overflow-hidden rounded-[var(--radius-lg)] bg-sky/60 p-6 pt-25">
       <img
@@ -11,8 +10,9 @@ function QuoteCard() {
         className="pointer-events-none absolute top-2 right-28 w-24 opacity-60"
       />
       <p className="font-quote text-xl leading-snug italic text-teal">
-        &ldquo;A library card is a passport to new worlds.&rdquo;
+        &ldquo;{quote}&rdquo;
       </p>
+      <span className="font-body text-sm text-teal">{from}</span>
     </aside>
   );
 }

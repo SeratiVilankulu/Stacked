@@ -1,5 +1,3 @@
-import React from "react";
-
 function PageButton({ label, active, disabled, onClick, children }) {
   return (
     <button

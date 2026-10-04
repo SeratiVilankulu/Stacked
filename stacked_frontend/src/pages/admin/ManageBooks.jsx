@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import AdminLayout from "../../components/admin/AdminLayout.jsx";
 import FilterSelect from "../../components/FilterSelect.jsx";
 import Checkbox from "../../components/Checkbox.jsx";
@@ -7,47 +7,45 @@ import IconButton from "../../components/IconButton.jsx";
 import PageHeading from "../../components/admin/PageHeading.jsx";
 import FilterBar from "../../components/admin/FilterBar.jsx";
 import Pagination from "../../components/admin/Pagination.jsx";
-import UserActivity from "./UserActivity.jsx";
-import QuickActions from "./QuickActions.jsx";
+import BookActivity from "./BookActivity.jsx";
 import QuoteCard from "../../components/QuoteCard.jsx";
 import {
-  AVATAR_COLOURS,
   PAGE_SIZE,
-  ROLE_LABELS,
-  ROLE_STYLES,
-  SAMPLE_USERS,
+  SAMPLE_BOOKS,
+  GENRE_LABELS,
+  GENRE_STYLES,
   STATUS_STYLES,
-} from "./userData.js";
+} from "./bookData.js";
 import { Pencil, Trash2 } from "lucide-react";
 
-function ManageUsers() {
-  const [users, setUsers] = useState(SAMPLE_USERS);
+function ManageBooks() {
+  const [books, setBooks] = useState(SAMPLE_BOOKS);
   const [query, setQuery] = useState("");
-  const [role, setRole] = useState("ALL");
+  const [genre, setGenre] = useState("ALL");
   const [status, setStatus] = useState("ALL");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(() => new Set());
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return users.filter(
-      (u) =>
-        (role === "ALL" || u.role === role) &&
-        (status === "ALL" || u.status === status) &&
+    return books.filter(
+      (b) =>
+        (genre === "ALL" || b.genre === genre) &&
+        (status === "ALL" || b.status === status) &&
         (!q ||
-          `${u.name} ${u.surname} ${u.email} ${u.username}`
+          `${b.title} ${b.author} ${b.isbn} ${GENRE_LABELS[b.genre]}`
             .toLowerCase()
             .includes(q)),
     );
-  }, [users, query, role, status]);
+  }, [books, query, genre, status]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const start = (currentPage - 1) * PAGE_SIZE;
-  const pageUsers = filtered.slice(start, start + PAGE_SIZE);
+  const pageBooks = filtered.slice(start, start + PAGE_SIZE);
 
   const allOnPageSelected =
-    pageUsers.length > 0 && pageUsers.every((u) => selected.has(u.id));
+    pageBooks.length > 0 && pageBooks.every((b) => selected.has(b.title));
 
   // Any filter change starts back on page 1.
   const filterReset = (setter) => (value) => {
@@ -55,18 +53,18 @@ function ManageUsers() {
     setPage(1);
   };
 
-  const toggleOne = (id) =>
+  const toggleOne = (title) =>
     setSelected((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      next.has(title) ? next.delete(title) : next.add(title);
       return next;
     });
 
   const toggleAllOnPage = () =>
     setSelected((prev) => {
       const next = new Set(prev);
-      pageUsers.forEach((u) =>
-        allOnPageSelected ? next.delete(u.id) : next.add(u.id),
+      pageBooks.forEach((b) =>
+        allOnPageSelected ? next.delete(b.title) : next.add(b.title),
       );
       return next;
     });
@@ -76,22 +74,25 @@ function ManageUsers() {
       <div className="grid gap-8 px-6 py-8 sm:px-4 lg:px-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-6">
           <PageHeading
-            title="Manage Users"
-            description="View, add, edit and manage library members accounts."
+            title="Manage Books"
+            description="View, add, edit and manage library books."
           />
 
           <FilterBar
-            searchLabel="Search Users"
+            searchLabel="Search Books"
             query={query}
             onQueryChange={filterReset(setQuery)}
-            placeholder="Search by name, email or username..."
-            actionLabel="Add User"
+            placeholder="Search by title, author or isbn..."
+            actionLabel="Add Book"
           >
             <FilterSelect
-              label="Role"
-              value={role}
-              onChange={filterReset(setRole)}
-              options={[["ALL", "All Roles"], ...Object.entries(ROLE_LABELS)]}
+              label="Genre"
+              value={genre}
+              onChange={filterReset(setGenre)}
+              options={[
+                ["ALL", "All Genres"],
+                ...Object.entries(GENRE_LABELS),
+              ]}
             />
             <FilterSelect
               label="Status"
@@ -99,13 +100,13 @@ function ManageUsers() {
               onChange={filterReset(setStatus)}
               options={[
                 ["ALL", "All Statuses"],
-                ["Active", "Active"],
-                ["Suspended", "Suspended"],
+                ["Available", "Available"],
+                ["Unavailable", "Unavailable"],
               ]}
             />
           </FilterBar>
 
-          {/* Users table */}
+          {/* Books table */}
           <section className="overflow-hidden rounded-[var(--radius-lg)] border border-sky bg-surface shadow-card">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[48rem] text-left text-[13px]">
@@ -115,69 +116,64 @@ function ManageUsers() {
                       <Checkbox
                         checked={allOnPageSelected}
                         onChange={toggleAllOnPage}
-                        label="Select all users on this page"
+                        label="Select all books on this page"
                       />
                     </th>
-                    <th className="px-2.5 py-4 font-semibold">Name</th>
-                    <th className="px-2.5 py-4 font-semibold">Email</th>
-                    <th className="px-2.5 py-4 font-semibold">Role</th>
-                    <th className="px-2.5 py-4 font-semibold">Username</th>
+                    <th className="px-2.5 py-4 font-semibold">Cover</th>
+                    <th className="px-2.5 py-4 font-semibold">Title</th>
+                    <th className="px-2.5 py-4 font-semibold">Author</th>
+                    <th className="px-2.5 py-4 font-semibold">Genre</th>
                     <th className="px-2.5 py-4 font-semibold">Status</th>
-                    <th className="px-2.5 py-4 font-semibold">Joined</th>
+                    <th className="px-2.5 py-4 font-semibold">Total</th>
                     <th className="px-2.5 py-4 pr-5 font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {pageUsers.map((u, i) => (
+                  {pageBooks.map((b) => (
                     <tr
-                      key={u.id}
+                      key={b.title}
                       className="transition-colors hover:bg-sky/10"
                     >
                       <td className="py-3 pl-5">
                         <Checkbox
-                          checked={selected.has(u.id)}
-                          onChange={() => toggleOne(u.id)}
-                          label={`Select ${u.name} ${u.surname}`}
+                          checked={selected.has(b.title)}
+                          onChange={() => toggleOne(b.title)}
+                          label={`Select ${b.title}`}
                         />
                       </td>
                       <td className="px-2.5 py-3">
-                        <div className="flex items-center gap-3">
-                          <span
-                            className={`grid size-8 shrink-0 place-items-center rounded-full text-xs font-semibold ${
-                              AVATAR_COLOURS[
-                                (start + i) % AVATAR_COLOURS.length
-                              ]
-                            }`}
-                          >
-                            {u.name[0]}
-                            {u.surname[0]}
-                          </span>
-                          <span className="font-medium whitespace-nowrap text-teal">
-                            {u.name} {u.surname}
-                          </span>
-                        </div>
+                        <img
+                          src={b.coverImage}
+                          alt={`Cover of ${b.title}`}
+                          loading="lazy"
+                          className="aspect-2/3 w-10 shrink-0 object-cover shadow-card sm:w-12 lg:w-14 rounded"
+                        />
                       </td>
-                      <td className="px-2.5 py-3 text-teal">{u.email}</td>
                       <td className="px-2.5 py-3">
-                        <Pill className={ROLE_STYLES[u.role]}>
-                          {ROLE_LABELS[u.role]}
+                        <span className="font-medium whitespace-nowrap text-teal">
+                          {b.title}
+                        </span>
+                      </td>
+                      <td className="px-2.5 py-3 text-teal">{b.author}</td>
+                      <td className="px-2.5 py-3">
+                        <Pill className={GENRE_STYLES[b.genre]}>
+                          {GENRE_LABELS[b.genre]}
                         </Pill>
                       </td>
-                      <td className="px-2.5 py-3 text-teal">{u.username}</td>
                       <td className="px-2.5 py-3">
-                        <Pill className={STATUS_STYLES[u.status]}>
-                          {u.status}
+                        <Pill className={STATUS_STYLES[b.status]}>
+                          {b.status}
                         </Pill>
                       </td>
                       <td className="px-2.5 py-3 whitespace-nowrap text-muted">
-                        {u.createdAt}
+                        {b.total}
                       </td>
                       <td className="px-2.5 py-3 pr-5">
                         <div className="flex gap-2">
-                          <IconButton label={`Edit ${u.name}`}>
+                          <IconButton label={`Edit ${b.title}`}>
                             <Pencil size={16} />
                           </IconButton>
-                          <IconButton label={`Delete ${u.name}`} danger>
+                          <IconButton label={`Delete ${b.title}`} danger>
                             <Trash2 size={16} />
                           </IconButton>
                         </div>
@@ -185,10 +181,10 @@ function ManageUsers() {
                     </tr>
                   ))}
 
-                  {pageUsers.length === 0 && (
+                  {pageBooks.length === 0 && (
                     <tr>
                       <td colSpan={8} className="py-12 text-center text-muted">
-                        No users match your filters.
+                        No books match your filters.
                       </td>
                     </tr>
                   )}
@@ -201,7 +197,7 @@ function ManageUsers() {
               pageCount={pageCount}
               pageSize={PAGE_SIZE}
               total={filtered.length}
-              noun="users"
+              noun="books"
               onPageChange={setPage}
             />
           </section>
@@ -209,10 +205,10 @@ function ManageUsers() {
 
         {/* Right column */}
         <div className="space-y-6">
-          <UserActivity users={users} />
-          <QuickActions />
+          <BookActivity books={books} />
           <QuoteCard
-            quote={"A libraryA library card is a passport to new worlds."}
+            quote={"A book is a dream you hold in your hands."}
+            from={"Neil Gaiman"}
           />
         </div>
       </div>
@@ -220,4 +216,4 @@ function ManageUsers() {
   );
 }
 
-export default ManageUsers;
+export default ManageBooks;

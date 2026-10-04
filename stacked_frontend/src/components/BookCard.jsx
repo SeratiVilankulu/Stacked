@@ -1,5 +1,4 @@
 // components/BookCarousel.jsx
-import React from "react";
 
 const GENRE_STYLES = {
   Fiction: "bg-success",

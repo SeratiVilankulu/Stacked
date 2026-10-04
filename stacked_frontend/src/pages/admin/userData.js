@@ -21,7 +21,7 @@ export const AVATAR_COLOURS = [
 ];
 
 // Placeholder members
-// the User model; `status` has no column yet.
+// TODO: Will remove once endpoit call is made in the frontend
 export const SAMPLE_USERS = [
   {
     id: "2",
