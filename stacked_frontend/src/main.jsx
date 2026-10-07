@@ -16,6 +16,8 @@ import About from "./pages/public/About.jsx";
 import ManageBooks from "./pages/admin/ManageBooks.jsx";
 import BrowseBooks from "./pages/user/BrowseBooks.jsx";
 import BookDetails from "./pages/user/BookDetails.jsx";
+import MyLoans from "./pages/user/MyLoans.jsx";
+import PayFine from "./pages/user/PayFine.jsx";
 
 // Add page routes
 const router = createBrowserRouter([
@@ -43,6 +45,22 @@ const router = createBrowserRouter([
     element: (
       <RequireRole role="USER">
         <BookDetails />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/loans",
+    element: (
+      <RequireRole role="USER">
+        <MyLoans />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/loans/:loanId/pay",
+    element: (
+      <RequireRole role="USER">
+        <PayFine />
       </RequireRole>
     ),
   },
