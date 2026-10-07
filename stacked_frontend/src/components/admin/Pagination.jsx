@@ -10,12 +10,15 @@ function Pagination({
   total,
   noun,
   onPageChange,
+  className = "border-t border-sky px-5 py-4",
 }) {
   const start = (currentPage - 1) * pageSize;
   const end = Math.min(start + pageSize, total);
 
   return (
-    <div className="flex flex-col items-center justify-between gap-3 border-t border-sky px-5 py-4 text-sm text-muted sm:flex-row">
+    <div
+      className={`flex flex-col items-center justify-between gap-3 text-sm text-muted sm:flex-row ${className}`}
+    >
       <p>
         {total === 0
           ? `No ${noun}`

@@ -1,51 +1,25 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import BookCard from "./BookCard";
+import GenreFilter from "./GenreFilter.jsx";
 import { useAuth } from "../context/auth-context.js";
 import { ChevronLeft, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
-
-const books = [
-  {
-    title: "The Midnight Library",
-    author: "Matt Haig",
-    genre: "Fiction",
-    cover: "/images/books/midnight-library.jpg",
-  },
-  {
-    title: "Daisy Jones & The Six",
-    author: "Taylor Jenkins Reid",
-    genre: "Fiction",
-    cover: "/images/books/daisy-jones.jpg",
-  },
-  {
-    title: "Atomic Habits",
-    author: "James Clear",
-    genre: "Self-Help",
-    cover: "/images/books/atomic-habits.jpg",
-  },
-  {
-    title: "Project Hail Mary",
-    author: "Andy Weir",
-    genre: "Sci-Fi",
-    cover: "/images/books/project-hail-mary.jpg",
-  },
-  {
-    title: "The Seven Husbands of Evelyn Hugo",
-    author: "Taylor Jenkins Reid",
-    genre: "Romance",
-    cover: "/images/books/evelyn-hugo.jpg",
-  },
-  {
-    title: "Where the Crawdads Sing",
-    author: "Delia Owens",
-    genre: "Fiction",
-    cover: "/images/books/crawdads-sing.jpg",
-  },
-];
+import { SAMPLE_BOOKS } from "../pages/admin/bookData.js";
 
 function BookCarousel() {
   const { isAuthenticated } = useAuth();
 
   const scrollerRef = useRef(null);
+  const [genre, setGenre] = useState("ALL");
+
+  const books =
+    genre === "ALL"
+      ? SAMPLE_BOOKS
+      : SAMPLE_BOOKS.filter((book) => book.genre === genre);
+
+  const changeGenre = (value) => {
+    setGenre(value);
+    scrollerRef.current?.scrollTo({ left: 0 });
+  };
 
   const scrollByCard = (direction) => {
     const node = scrollerRef.current;
@@ -77,6 +51,8 @@ function BookCarousel() {
         </a>
       </div>
 
+      <GenreFilter value={genre} onChange={changeGenre} />
+
       <div className="relative mt-6">
         <button
           type="button"
@@ -91,6 +67,11 @@ function BookCarousel() {
           ref={scrollerRef}
           className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-1"
         >
+          {books.length === 0 && (
+            <p className="w-full py-12 text-center text-sm text-muted">
+              No books in this genre yet.
+            </p>
+          )}
           {books.map((book) => (
             <div
               key={book.title}

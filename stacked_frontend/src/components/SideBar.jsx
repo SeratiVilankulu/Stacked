@@ -12,7 +12,7 @@ import {
 
 function Sidebar() {
   return (
-    <aside className="hidden min-h-screen w-64 flex-col bg-[#43302E] px-5 py-7 text-white lg:flex">
+    <aside className="flex min-h-full w-full flex-col bg-mocha px-5 py-7 text-white">
       {/* Navigation */}
       <nav className="flex-1">
         <div className="space-y-1.5">
@@ -77,17 +77,7 @@ function Sidebar() {
           <div className="mt-4 h-0.5 w-8 bg-orange" />
         </div>
 
-        {/* Logout */}
-        <div className="my-7 border-t border-cream/15" />
-
-        <button
-          type="button"
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-cream/70 transition hover:bg-cream/10 hover:text-white"
-        >
-          <LogOut size={19} />
-
-          <span>Sign Out</span>
-        </button>
+        
       </div>
     </aside>
   );

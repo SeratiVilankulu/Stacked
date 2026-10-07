@@ -33,7 +33,7 @@ import ThinkingCover from "@/assets/Thinking.jpg";
 import MockingbirdCover from "@/assets/To_Kill_A_Mockingbird.jpg";
 import CrawdadsCover from "@/assets/Where_The_Crawdads.jpg";
 
-export const PAGE_SIZE = 5;
+export const PAGE_SIZE = 6;
 
 export const GENRE_LABELS = {
   SCIENCEFICTION: "Sci-Fi",
@@ -44,6 +44,7 @@ export const GENRE_LABELS = {
   FICTION: "Fiction",
   PHILOSOPHY: "Philosophy",
   HORROR: "Horror",
+  BIOGRAPHY: "Biography",
 };
 
 export const GENRE_STYLES = {
@@ -55,7 +56,10 @@ export const GENRE_STYLES = {
   FICTION: "bg-sky text-teal",
   PHILOSOPHY: "bg-purple-100 text-purple-800",
   HORROR: "bg-red-100 text-red-800",
+  BIOGRAPHY: "bg-blue-100 text-blue-800",
 };
+
+export const STATUS_OPTIONS = ["Available", "Unavailable"];
 
 export const STATUS_STYLES = {
   Available: "bg-success/10 text-success",

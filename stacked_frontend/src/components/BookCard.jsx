@@ -1,19 +1,12 @@
-// components/BookCarousel.jsx
-
-const GENRE_STYLES = {
-  Fiction: "bg-success",
-  "Self-Help": "bg-orange",
-  "Sci-Fi": "bg-teal",
-  Romance: "bg-alert",
-};
+import { GENRE_LABELS, GENRE_STYLES } from "../pages/admin/bookData.js";
 
 function BookCard({ book }) {
   console.log("These are our props", book);
   return (
-    <div className="flex w-44 shrink-0 snap-start flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-surface p-3 shadow-card sm:w-48">
-      <div className="aspect-3/4 w-full overflow-hidden rounded-[var(--radius-md)]">
+    <div className="flex w-44 shrink-0 snap-start flex-col gap-3 rounded-md border border-border bg-surface p-3 shadow-card sm:w-48">
+      <div className="aspect-2/3 w-full overflow-hidden rounded-sm">
         <img
-          src={book.cover}
+          src={book.coverImage}
           alt={`${book.title} cover`}
           className="h-full w-full object-cover"
         />
@@ -29,7 +22,7 @@ function BookCard({ book }) {
               GENRE_STYLES[book.genre] ?? "bg-sky"
             }`}
           />
-          {book.genre}
+          {GENRE_LABELS[book.genre] ?? book.genre}
         </span>
       </div>
       <button

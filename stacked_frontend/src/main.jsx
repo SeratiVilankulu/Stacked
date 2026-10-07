@@ -14,6 +14,8 @@ import AdminDashboard from "./pages/admin/Dashboard.jsx";
 import ManageUsers from "./pages/admin/ManageUsers.jsx";
 import About from "./pages/public/About.jsx";
 import ManageBooks from "./pages/admin/ManageBooks.jsx";
+import BrowseBooks from "./pages/user/BrowseBooks.jsx";
+import BookDetails from "./pages/user/BookDetails.jsx";
 
 // Add page routes
 const router = createBrowserRouter([
@@ -25,6 +27,22 @@ const router = createBrowserRouter([
     element: (
       <RequireRole role="USER">
         <Dashboard />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/books",
+    element: (
+      <RequireRole role="USER">
+        <BrowseBooks />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/books/:title",
+    element: (
+      <RequireRole role="USER">
+        <BookDetails />
       </RequireRole>
     ),
   },

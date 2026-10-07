@@ -58,12 +58,12 @@ function About() {
               <h2 className="text-3xl">Built By Readers, For Readers</h2>
               <p className="leading-7 text-muted">
                 Stacked opened its doors in 2011 as a small volunteer-run
-                reading room above a Midrand community hall. A handful of
+                reading room above a community hall. A handful of
                 donated shelves and a shared love of books grew, year by year,
                 into the library you see today.
               </p>
               <p className="leading-7 text-muted">
-                We're proud to be entirely community-supported, funded by local
+                We're proud to be entirely community supported, funded by local
                 partners, staffed by people who live here, and shaped by the
                 readers who walk through our doors every day.
               </p>

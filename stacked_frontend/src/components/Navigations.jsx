@@ -13,7 +13,7 @@ function Navigations() {
       </li>
       <li
         className="cursor-pointer hover:border-b-2 border-orange hover:pb-2 duration-300 ease-in"
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/books")}
       >
         <a>Books</a>
       </li>
