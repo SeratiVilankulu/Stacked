@@ -153,7 +153,7 @@ async function getUser(req, res) {
 			return res.status(404).json({ error: "User not found" });
 		}
 
-		res.status(200).json({ status: "success", data: user });
+		res.status(200).json({ status: "success", data: toPublicUser(user) });
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ error: "Could not fetch user" });
