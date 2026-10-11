@@ -5,7 +5,6 @@ import {
   BookOpen,
   Bookmark,
   ChevronDown,
-  ChevronRight,
   Clock3,
   Compass,
   History,
@@ -14,6 +13,8 @@ import UserLayout from "../../components/UserLayout.jsx";
 import PageHeading from "../../components/admin/PageHeading.jsx";
 import Pagination from "../../components/admin/Pagination.jsx";
 import QuoteCard from "../../components/QuoteCard.jsx";
+import TabBar from "../../components/TabBar.jsx";
+import QuickActionsPanel from "../../components/QuickActionsPanel.jsx";
 import LoanRow from "../../components/loans/LoanRow.jsx";
 import LoanStats from "../../components/loans/LoanStats.jsx";
 import {
@@ -132,32 +133,19 @@ function MyLoans() {
             </div>
           </div>
 
-          {/* Tabs */}
-          <div role="tablist" className="flex flex-wrap gap-3">
-            {Object.entries(TABS).map(([key, { label, icon: Icon }]) => {
-              const active = tab === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => changeTab(key)}
-                  className={`flex cursor-pointer items-center gap-2.5 rounded-md border px-5 py-3 text-sm font-medium transition-colors duration-200 ${
-                    active
-                      ? "border-teal bg-teal text-cream"
-                      : "border-border bg-surface text-teal hover:bg-sky/30"
-                  }`}
-                >
-                  <Icon size={18} aria-hidden="true" />
-                  {label} ({tabCounts[key]})
-                </button>
-              );
-            })}
-          </div>
+          <TabBar
+            tabs={Object.entries(TABS).map(([key, { label, icon }]) => ({
+              key,
+              label,
+              icon,
+              count: tabCounts[key],
+            }))}
+            active={tab}
+            onChange={changeTab}
+          />
 
           {/* Loans panel */}
-          <section className="rounded-[var(--radius-lg)] border border-sky bg-surface/60 shadow-card">
+          <section className="rounded-lg border border-sky bg-surface/60 shadow-card">
             <header className="flex flex-wrap items-center justify-between gap-4 border-b border-sky px-5 py-4">
               <div className="flex items-center gap-3">
                 {tab === "current" ? (
@@ -232,23 +220,7 @@ function MyLoans() {
 
         {/* Right column */}
         <div className="space-y-6">
-          <aside className="rounded-[var(--radius-lg)] border border-sky bg-surface/60 p-5 shadow-card">
-            <h3 className="text-xl">Quick Actions</h3>
-            <ul className="mt-4 space-y-3">
-              {QUICK_ACTIONS.map(({ to, icon: Icon, label }) => (
-                <li key={label}>
-                  <Link
-                    to={to}
-                    className="flex w-full items-center gap-4 rounded-md bg-sky/40 px-4 py-3 text-sm transition-colors duration-200 hover:bg-sky"
-                  >
-                    <Icon size={22} aria-hidden="true" />
-                    <span className="flex-1">{label}</span>
-                    <ChevronRight size={18} aria-hidden="true" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </aside>
+          <QuickActionsPanel actions={QUICK_ACTIONS} />
 
           <LoanStats
             current={counts.ON_LOAN}

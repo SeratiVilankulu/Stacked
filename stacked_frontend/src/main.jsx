@@ -19,6 +19,7 @@ import BrowseBooks from "./pages/user/BrowseBooks.jsx";
 import BookDetails from "./pages/user/BookDetails.jsx";
 import MyLoans from "./pages/user/MyLoans.jsx";
 import PayFine from "./pages/user/PayFine.jsx";
+import MyLibrary from "./pages/user/MyLibrary.jsx";
 
 // Add page routes
 const router = createBrowserRouter([
@@ -46,6 +47,14 @@ const router = createBrowserRouter([
     element: (
       <RequireRole role="USER">
         <BookDetails />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/my-library",
+    element: (
+      <RequireRole role="USER">
+        <MyLibrary />
       </RequireRole>
     ),
   },
