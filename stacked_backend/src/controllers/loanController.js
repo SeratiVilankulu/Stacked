@@ -146,9 +146,23 @@ async function getAllLoans(req, res) {
 
 		// Filtered after loading because overdue is worked out from the due date
 		const detailed = await withBookDetails(loans);
-		const data = status
+		const filtered = status
 			? detailed.filter((loan) => loan.status === status)
 			: detailed;
+
+		// Attach the user's name and email, so admins can see who has each book
+		const userIds = [...new Set(filtered.map((loan) => loan.userId))];
+		const users =
+			userIds.length > 0
+				? await db.orm.public.User.where((user) => user.id.in(userIds))
+						.select("id", "name", "surname", "email")
+						.all()
+				: [];
+		const userById = new Map(users.map((user) => [user.id, user]));
+		const data = filtered.map((loan) => ({
+			...loan,
+			user: userById.get(loan.userId),
+		}));
 
 		res.status(200).json({ status: "success", data });
 	} catch (error) {

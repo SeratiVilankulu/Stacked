@@ -7,7 +7,7 @@ function ActionCard({ to, icon, tone, title, text, leaf }) {
   return (
     <Link
       to={to}
-      className="group relative flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-sky bg-surface px-4 py-6 shadow-card transition-shadow duration-200 hover:shadow-lift"
+      className="group relative flex flex-col overflow-hidden rounded-lg border border-sky bg-surface px-4 py-6 shadow-card transition-shadow duration-200 hover:shadow-lift"
     >
       <IconChip icon={icon} tone={tone} className="size-16 rounded-full" />
       <h3 className="mt-5 text-xl">{title}</h3>

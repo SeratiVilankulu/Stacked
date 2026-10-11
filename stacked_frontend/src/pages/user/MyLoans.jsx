@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -18,8 +18,9 @@ import QuickActionsPanel from "../../components/QuickActionsPanel.jsx";
 import LoanRow from "../../components/loans/LoanRow.jsx";
 import LoanStats from "../../components/loans/LoanStats.jsx";
 import { toast } from "sonner";
-import { LOAN_STATUS_LABELS, loanStatus } from "./loanData.js";
-import { fetchMyLoans, renewLoan as renewLoanRequest } from "../../lib/loans.js";
+import { LOAN_STATUS_LABELS, formatDate, loanStatus } from "./loanData.js";
+import RenewModal from "../../components/loans/RenewModal.jsx";
+import { fetchMyLoans } from "../../lib/loans.js";
 import { apiErrorMessage } from "../../lib/api.js";
 import useRequest from "../../hooks/useRequest.js";
 
@@ -100,14 +101,13 @@ function MyLoans() {
     setPage(1);
   };
 
-  const renewLoan = async (loan) => {
-    try {
-      const updated = await renewLoanRequest(loan.id);
-      setRenewed((prev) => ({ ...prev, [updated.id]: updated }));
-      toast.success(`${loan.book.title} renewed`);
-    } catch (err) {
-      toast.error(apiErrorMessage(err, "Could not renew this loan."));
-    }
+  const [renewing, setRenewing] = useState(null); // The loan in the renew modal
+  const closeRenew = useCallback(() => setRenewing(null), []);
+
+  const handleRenewed = (updated) => {
+    setRenewed((prev) => ({ ...prev, [updated.id]: updated }));
+    toast.success(`${updated.book.title} renewed until ${formatDate(updated.dueDate)}`);
+    setRenewing(null);
   };
 
   const tabCounts = { current: currentCount, history: counts.RETURNED };
@@ -209,7 +209,7 @@ function MyLoans() {
                   <LoanRow
                     key={loan.id}
                     loan={loan}
-                    onRenew={renewLoan}
+                    onRenew={setRenewing}
                   />
                 ))}
               </ul>
@@ -240,6 +240,14 @@ function MyLoans() {
           <QuoteCard quote="A library card is a passport to new worlds." />
         </div>
       </div>
+
+      {renewing && (
+        <RenewModal
+          loan={renewing}
+          onClose={closeRenew}
+          onRenewed={handleRenewed}
+        />
+      )}
     </UserLayout>
   );
 }

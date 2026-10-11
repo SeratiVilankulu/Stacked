@@ -74,7 +74,7 @@ function UserMenu() {
 			{isOpen && (
 				<div
 					role="menu"
-					className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface shadow-lift"
+					className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-md border border-border bg-surface shadow-lift"
 				>
 					<div className="border-b border-border px-4 py-3">
 						<p className="truncate text-sm font-semibold text-ink">

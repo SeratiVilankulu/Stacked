@@ -38,7 +38,7 @@ function AdminSideBar() {
           />
 
           <AdminSidebarLink
-            to="/loans"
+            to="/admin/loans"
             icon={<Clock size={19} />}
             label="Manage Loans"
           />

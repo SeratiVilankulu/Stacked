@@ -16,3 +16,18 @@ export async function renewLoan(id) {
   const res = await api.patch(`/loans/${id}/renew`);
   return res.data.data;
 }
+
+// Admins only
+export async function fetchAllLoans(params = {}) {
+  const query = Object.fromEntries(
+    Object.entries(params).filter(([, v]) => v !== "" && v != null),
+  );
+  const res = await api.get("/loans", { params: query });
+  return res.data.data;
+}
+
+// Admin only
+export async function checkInLoan(id) {
+  const res = await api.patch(`/loans/${id}/return`);
+  return res.data.data;
+}
