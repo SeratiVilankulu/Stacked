@@ -7,7 +7,7 @@ import ProjectHailMaryCover from "@/assets/Project_Hail_Mary.jpg";
 import SilentPatientCover from "@/assets/Silent_Patient.jpg";
 import CirceCover from "@/assets/Circe .jpg";
 
-export const LOAN_PERIOD_DAYS = 14;
+export const LOAN_PERIOD_DAYS = 30;
 export const MAX_RENEWALS = 2;
 export const FINE_PER_DAY = 5; // Rands
 
@@ -27,7 +27,7 @@ export const LOAN_STATUS_STYLES = {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-// Whole days from today until `date` (negative once it has passed).
+// Whole days from today until `date`
 export function daysUntil(date) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -91,42 +91,42 @@ export const SAMPLE_LOANS = [
   {
     id: 1,
     book: book("Atomic Habits"),
-    borrowedOn: daysFromNow(-9),
+    borrowedOn: daysFromNow(-25),
     dueDate: daysFromNow(5),
     renewals: 0,
   },
   {
     id: 2,
     book: book("The Midnight Library"),
-    borrowedOn: daysFromNow(-12),
+    borrowedOn: daysFromNow(-28),
     dueDate: daysFromNow(2),
     renewals: 0,
   },
   {
     id: 3,
     book: book("Thinking, Fast and Slow"),
-    borrowedOn: daysFromNow(-4),
+    borrowedOn: daysFromNow(-50),
     dueDate: daysFromNow(10),
     renewals: 1,
   },
   {
     id: 4,
     book: book("Educated"),
-    borrowedOn: daysFromNow(-2),
+    borrowedOn: daysFromNow(-18),
     dueDate: daysFromNow(12),
     renewals: 0,
   },
   {
     id: 5,
     book: book("Sapiens"),
-    borrowedOn: daysFromNow(-24),
+    borrowedOn: daysFromNow(-100),
     dueDate: daysFromNow(-10),
     renewals: 2,
   },
   {
     id: 6,
     book: book("Project Hail Mary"),
-    borrowedOn: daysFromNow(-40),
+    borrowedOn: daysFromNow(-56),
     dueDate: daysFromNow(-26),
     returnedOn: daysFromNow(-28),
     renewals: 0,
@@ -134,7 +134,7 @@ export const SAMPLE_LOANS = [
   {
     id: 7,
     book: book("The Silent Patient"),
-    borrowedOn: daysFromNow(-60),
+    borrowedOn: daysFromNow(-106),
     dueDate: daysFromNow(-46),
     returnedOn: daysFromNow(-47),
     renewals: 1,
@@ -142,7 +142,7 @@ export const SAMPLE_LOANS = [
   {
     id: 8,
     book: book("Circe"),
-    borrowedOn: daysFromNow(-90),
+    borrowedOn: daysFromNow(-106),
     dueDate: daysFromNow(-76),
     returnedOn: daysFromNow(-80),
     renewals: 0,

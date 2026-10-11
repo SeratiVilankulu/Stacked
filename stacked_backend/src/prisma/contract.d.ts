@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'ba12f9d98543f420a3347a6683bd6e227c3e644a533c900b67fc66a3392f97a5'>;
+  StorageHashBase<'ee3e80a90c06847c02dbabce1a479c4811c7bcb612f7e6fd5baa232a9b87db8f'>;
 export type ExecutionHash =
   ExecutionHashBase<'1c1ea195c6fa32b307829cf2e8ef40e93f0c595222369a119536bd39ede6e514'>;
 export type ProfileHash =
@@ -284,6 +284,7 @@ export type FieldOutputTypes = {
       readonly dueDate: CodecTypes['pg/date-string@1']['output'];
       readonly returnedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly status: 'LOANED' | 'RETURNED' | 'OVERDUE';
+      readonly renewals: CodecTypes['pg/int4@1']['output'];
     };
     readonly Reservation: {
       readonly id: CodecTypes['pg/uuid@1']['output'];
@@ -349,6 +350,7 @@ export type FieldInputTypes = {
       readonly dueDate: CodecTypes['pg/date-string@1']['input'];
       readonly returnedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly status: 'LOANED' | 'RETURNED' | 'OVERDUE';
+      readonly renewals: CodecTypes['pg/int4@1']['input'];
     };
     readonly Reservation: {
       readonly id: CodecTypes['pg/uuid@1']['input'];
@@ -410,6 +412,7 @@ export type StorageColumnTypes = {
       readonly BookCopy_Id: CodecTypes['pg/uuid@1']['output'];
       readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly LoanDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly Renewals: CodecTypes['pg/int4@1']['output'];
       readonly ReturnDate: CodecTypes['pg/date-string@1']['output'];
       readonly ReturnedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly Status: 'LOANED' | 'RETURNED' | 'OVERDUE';
@@ -475,6 +478,7 @@ export type StorageColumnInputTypes = {
       readonly BookCopy_Id: CodecTypes['pg/uuid@1']['input'];
       readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly LoanDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly Renewals: CodecTypes['pg/int4@1']['input'];
       readonly ReturnDate: CodecTypes['pg/date-string@1']['input'];
       readonly ReturnedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly Status: 'LOANED' | 'RETURNED' | 'OVERDUE';
@@ -555,6 +559,7 @@ export namespace Models {
     dueDate: CodecTypes['pg/date-string@1']['output'];
     returnedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
     status: 'LOANED' | 'RETURNED' | 'OVERDUE';
+    renewals: CodecTypes['pg/int4@1']['output'];
     bookCopy: public_BookCopy;
     fines: public_Fine[];
     user: public_User;
@@ -959,6 +964,15 @@ type ContractBase = Omit<
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
+                };
+                readonly Renewals: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
                 };
               };
               primaryKey: { readonly columns: readonly ['Id'] };
@@ -1518,6 +1532,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly renewals: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
               readonly bookCopy: {
@@ -1561,6 +1579,7 @@ type ContractBase = Omit<
                 readonly dueDate: { readonly column: 'ReturnDate' };
                 readonly returnedAt: { readonly column: 'ReturnedAt' };
                 readonly status: { readonly column: 'Status' };
+                readonly renewals: { readonly column: 'Renewals' };
               };
             };
           };

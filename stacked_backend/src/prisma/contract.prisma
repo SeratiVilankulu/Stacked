@@ -61,6 +61,7 @@ model LoanedBook {
   dueDate    DateString         @map("ReturnDate")
   returnedAt TimestamptzString? @map("ReturnedAt")
   status     LoanStatus         @map("Status")
+  renewals   Int                @default(0) @map("Renewals")
 
   bookCopy BookCopy @relation(fields: [bookCopyId], references: [id], onDelete: Restrict)
   user     User     @relation(fields: [userId], references: [id], onDelete: Restrict)

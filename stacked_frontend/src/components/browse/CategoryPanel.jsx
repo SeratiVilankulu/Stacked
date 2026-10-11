@@ -62,7 +62,7 @@ function CategoryPanel({
                 type="button"
                 aria-pressed={active}
                 onClick={() => onGenreChange(key)}
-                className={`flex w-full cursor-pointer items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 text-left text-sm transition-colors duration-200 ${
+                className={`flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors duration-200 ${
                   active
                     ? "bg-sky/60 font-semibold text-teal"
                     : "text-teal hover:bg-sky/30"
@@ -83,7 +83,7 @@ function CategoryPanel({
       <ul className="mt-3 space-y-1">
         {statusOptions.map((s) => (
           <li key={s}>
-            <label className="flex cursor-pointer items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 text-sm text-teal hover:bg-sky/30">
+            <label className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm text-teal hover:bg-sky/30">
               <Checkbox
                 checked={statuses.includes(s)}
                 onChange={() => onToggleStatus(s)}

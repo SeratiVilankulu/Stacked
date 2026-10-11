@@ -677,6 +677,13 @@
                   "kind": "scalar"
                 }
               },
+              "renewals": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "returnedAt": {
                 "nullable": true,
                 "type": {
@@ -767,6 +774,9 @@
                 },
                 "loanDate": {
                   "column": "LoanDate"
+                },
+                "renewals": {
+                  "column": "Renewals"
                 },
                 "returnedAt": {
                   "column": "ReturnedAt"
@@ -1526,6 +1536,15 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
+                "Renewals": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
                 "ReturnDate": {
                   "codecId": "pg/date-string@1",
                   "nativeType": "date",
@@ -1863,7 +1882,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "ba12f9d98543f420a3347a6683bd6e227c3e644a533c900b67fc66a3392f97a5"
+    "storageHash": "ee3e80a90c06847c02dbabce1a479c4811c7bcb612f7e6fd5baa232a9b87db8f"
   },
   "execution": {
     "executionHash": "1c1ea195c6fa32b307829cf2e8ef40e93f0c595222369a119536bd39ede6e514",
