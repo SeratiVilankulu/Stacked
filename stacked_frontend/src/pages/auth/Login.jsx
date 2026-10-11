@@ -1,7 +1,7 @@
 // src/pages/public/SignIn.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../lib/api.js";
 import { Mail, Lock } from "lucide-react";
 import AuthLogo from "../../components/AuthLogo";
 import { useAuth } from "../../context/auth-context.js";
@@ -47,9 +47,7 @@ function Login() {
     setIsSubmitting(true);
 
     try {
-      await axios.post("http://localhost:5001/api/auth/login", formData, {
-        withCredentials: true,
-      });
+      await api.post("/auth/login", formData);
       // Pull the signed-in user from /auth/user so the nav swaps to the account
       const loggedInUser = await refreshUser();
       setSuccessMsg("Login Successful!");

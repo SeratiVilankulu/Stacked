@@ -3,7 +3,10 @@ import BookCard from "./BookCard";
 import GenreFilter from "./GenreFilter.jsx";
 import { useAuth } from "../context/auth-context.js";
 import { ChevronLeft, ChevronRight, ArrowRight, BookOpen } from "lucide-react";
-import { SAMPLE_BOOKS } from "../pages/admin/bookData.js";
+import { fetchBooks, fetchBookStats, genreNames } from "../lib/books.js";
+import useRequest from "../hooks/useRequest.js";
+
+const CAROUSEL_LIMIT = 12;
 
 function BookCarousel() {
   const { isAuthenticated } = useAuth();
@@ -11,10 +14,22 @@ function BookCarousel() {
   const scrollerRef = useRef(null);
   const [genre, setGenre] = useState("ALL");
 
-  const books =
-    genre === "ALL"
-      ? SAMPLE_BOOKS
-      : SAMPLE_BOOKS.filter((book) => book.genre === genre);
+  const { data: stats } = useRequest(fetchBookStats, "stats");
+  const genres = genreNames(stats);
+
+  const {
+    data,
+    isLoading,
+    error,
+  } = useRequest(
+    () =>
+      fetchBooks({
+        genre: genre === "ALL" ? "" : genre,
+        limit: CAROUSEL_LIMIT,
+      }),
+    genre,
+  );
+  const books = data?.books ?? [];
 
   const changeGenre = (value) => {
     setGenre(value);
@@ -51,7 +66,7 @@ function BookCarousel() {
         </a>
       </div>
 
-      <GenreFilter value={genre} onChange={changeGenre} />
+      <GenreFilter genres={genres} value={genre} onChange={changeGenre} />
 
       <div className="relative mt-6">
         <button
@@ -67,14 +82,18 @@ function BookCarousel() {
           ref={scrollerRef}
           className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-1"
         >
-          {books.length === 0 && (
+          {(isLoading || error || books.length === 0) && (
             <p className="w-full py-12 text-center text-sm text-muted">
-              No books in this genre yet.
+              {isLoading
+                ? "Loading books..."
+                : error
+                  ? "Couldn't load books. Please try again later."
+                  : "No books in this genre yet."}
             </p>
           )}
-          {books.map((book) => (
+          {!isLoading && !error && books.map((book) => (
             <div
-              key={book.title}
+              key={book.id}
               data-card
               className="w-44 shrink-0 snap-start sm:w-48"
             >

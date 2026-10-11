@@ -1,15 +1,14 @@
-import { GENRE_LABELS } from "../pages/admin/bookData.js";
+// List of genre names
+function GenreFilter({ genres, value, onChange }) {
+  const options = [["ALL", "All"], ...genres.map((g) => [g, g])];
 
-const OPTIONS = [["ALL", "All"], ...Object.entries(GENRE_LABELS)];
-
-function GenreFilter({ value, onChange }) {
   return (
     <div
       role="group"
       aria-label="Filter books by genre"
       className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 py-1"
     >
-      {OPTIONS.map(([key, label]) => {
+      {options.map(([key, label]) => {
         const active = key === value;
         return (
           <button

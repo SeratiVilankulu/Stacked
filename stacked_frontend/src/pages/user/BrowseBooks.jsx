@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import UserLayout from "../../components/UserLayout.jsx";
 import PageHeading from "../../components/admin/PageHeading.jsx";
 import Pagination from "../../components/admin/Pagination.jsx";
@@ -7,51 +7,53 @@ import BrowseToolbar from "../../components/browse/BrowseToolbar.jsx";
 import BrowseBookCard from "../../components/browse/BrowseBookCard.jsx";
 import CategoryPanel from "../../components/browse/CategoryPanel.jsx";
 import {
-  GENRE_LABELS,
-  SAMPLE_BOOKS,
   PAGE_SIZE,
   STATUS_OPTIONS,
-} from "../admin/bookData.js";
+  fetchBooks,
+  fetchBookStats,
+  genreNames,
+} from "../../lib/books.js";
+import { apiErrorMessage } from "../../lib/api.js";
+import useRequest from "../../hooks/useRequest.js";
 
-const SORTS = {
-  "title-asc": ["Title (A – Z)", (a, b) => a.title.localeCompare(b.title)],
-  "title-desc": ["Title (Z – A)", (a, b) => b.title.localeCompare(a.title)],
-};
+// Sorting happens on the server; these keys are what it understands.
+const SORT_OPTIONS = [
+  ["title-asc", "Title (A – Z)"],
+  ["title-desc", "Title (Z – A)"],
+];
 
-const SORT_OPTIONS = Object.entries(SORTS).map(([key, [label]]) => [
-  key,
-  label,
-]);
-
-const GENRE_OPTIONS = [["ALL", "All Genres"], ...Object.entries(GENRE_LABELS)];
 const AVAILABILITY_OPTIONS = [
   ["ALL", "All Books"],
   ...STATUS_OPTIONS.map((s) => [s, s]),
 ];
 
 function BrowseBooks() {
-  const [books] = useState(SAMPLE_BOOKS);
   const [sort, setSort] = useState("title-asc");
   const [genre, setGenre] = useState("ALL");
   const [statuses, setStatuses] = useState([]); // Empty means every status
   const [page, setPage] = useState(1);
 
-  const filtered = useMemo(
-    () =>
-      books
-        .filter(
-          (b) =>
-            (genre === "ALL" || b.genre === genre) &&
-            (statuses.length === 0 || statuses.includes(b.status)),
-        )
-        .sort(SORTS[sort][1]),
-    [books, genre, statuses, sort],
-  );
+  const { data: stats } = useRequest(fetchBookStats, "stats");
 
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
-  const start = (currentPage - 1) * PAGE_SIZE;
-  const pageBooks = filtered.slice(start, start + PAGE_SIZE);
+  // Ticking both statuses is the same as ticking neither.
+  const params = {
+    genre: genre === "ALL" ? "" : genre,
+    status: statuses.length === 1 ? statuses[0].toLowerCase() : "",
+    sort,
+    page,
+    limit: PAGE_SIZE,
+  };
+  const request = useRequest(() => fetchBooks(params), JSON.stringify(params));
+  const books = request.data?.books ?? [];
+  const total = request.data?.pagination.total ?? 0;
+  const { isLoading } = request;
+  const error = request.error && apiErrorMessage(request.error);
+
+  const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const genreOptions = [
+    ["ALL", "All Genres"],
+    ...genreNames(stats).map((g) => [g, g]),
+  ];
 
   // Any filter change starts back on page 1.
   const filterReset = (setter) => (value) => {
@@ -75,6 +77,26 @@ function BrowseBooks() {
     setPage(1);
   };
 
+  let content;
+  if (error) {
+    content = <EmptyState>{error}</EmptyState>;
+  } else if (isLoading && books.length === 0) {
+    content = <EmptyState>Loading books...</EmptyState>;
+  } else if (books.length === 0) {
+    content = <EmptyState>No books match your filters.</EmptyState>;
+  } else {
+    content = (
+      <div
+        aria-busy={isLoading}
+        className={`grid gap-5 transition-opacity md:grid-cols-2 2xl:grid-cols-3 ${isLoading ? "opacity-60" : ""}`}
+      >
+        {books.map((book) => (
+          <BrowseBookCard key={book.id} book={book} />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <UserLayout>
       <div className="grid gap-8 px-5 py-8 sm:px-8 lg:px-10 xl:grid-cols-[minmax(0,1fr)_18rem]">
@@ -90,7 +112,7 @@ function BrowseBooks() {
             sortOptions={SORT_OPTIONS}
             onSortChange={filterReset(setSort)}
             genre={genre}
-            genreOptions={GENRE_OPTIONS}
+            genreOptions={genreOptions}
             onGenreChange={filterReset(setGenre)}
             availability={statuses.length === 1 ? statuses[0] : "ALL"}
             availabilityOptions={AVAILABILITY_OPTIONS}
@@ -100,32 +122,22 @@ function BrowseBooks() {
           />
 
           <Pagination
-            currentPage={currentPage}
+            currentPage={page}
             pageCount={pageCount}
             pageSize={PAGE_SIZE}
-            total={filtered.length}
+            total={total}
             noun="books"
             onPageChange={setPage}
             className=""
           />
 
-          {pageBooks.length === 0 ? (
-            <p className="rounded-[var(--radius-lg)] border border-dashed border-border-strong py-16 text-center text-muted">
-              No books match your filters.
-            </p>
-          ) : (
-            <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3">
-              {pageBooks.map((book) => (
-                <BrowseBookCard key={book.title} book={book} />
-              ))}
-            </div>
-          )}
+          {content}
         </div>
 
         {/* Right column: the toolbar covers these filters */}
         <div className="hidden space-y-6 xl:block">
           <CategoryPanel
-            books={books}
+            stats={stats}
             genre={genre}
             onGenreChange={filterReset(setGenre)}
             statuses={statuses}
@@ -136,6 +148,14 @@ function BrowseBooks() {
         </div>
       </div>
     </UserLayout>
+  );
+}
+
+function EmptyState({ children }) {
+  return (
+    <p className="rounded-[var(--radius-lg)] border border-dashed border-border-strong py-16 text-center text-muted">
+      {children}
+    </p>
   );
 }
 

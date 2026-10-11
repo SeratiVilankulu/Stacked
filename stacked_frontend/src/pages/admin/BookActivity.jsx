@@ -1,16 +1,17 @@
 import { Library, BookCheck, Ban } from "lucide-react";
 
-function BookActivity({ books }) {
+
+function BookActivity({ stats }) {
   const activity = [
-    { icon: Library, value: books.length, label: "Total books" },
+    { icon: Library, value: stats?.total ?? "–", label: "Total books" },
     {
       icon: BookCheck,
-      value: books.filter((b) => b.status === "Available").length,
+      value: stats?.available ?? "–",
       label: "Available books",
     },
     {
       icon: Ban,
-      value: books.filter((b) => b.status === "Unavailable").length,
+      value: stats?.unavailable ?? "–",
       label: "Unavailable books",
       accent: true,
     },

@@ -1,11 +1,7 @@
-const STATUS_DOTS = {
-  Available: "bg-success",
-  Unavailable: "bg-orange",
-};
+import { STATUS_DOTS, bookStatus } from "../../lib/books.js";
 
-// "Book Details" side card plus the availability summary.
 function BookInfoCard({ book }) {
-  // Optional fields are skipped until the book data includes them.
+
   const details = [
     ["ISBN", book.isbn],
     ["Author", book.author],
@@ -14,7 +10,8 @@ function BookInfoCard({ book }) {
     ["Format", book.format],
   ].filter(([, value]) => value);
 
-  const copies = book.total ?? 0;
+  const copies = book.copiesAvailable ?? 0;
+  const status = bookStatus(book);
 
   return (
     <aside className="rounded-md border border-border bg-surface/60 p-6 shadow-card">
@@ -34,9 +31,9 @@ function BookInfoCard({ book }) {
       <p className="mt-4 flex items-center gap-3 font-medium text-teal">
         <span
           aria-hidden="true"
-          className={`size-2.5 rounded-full ${STATUS_DOTS[book.status] ?? "bg-muted"}`}
+          className={`size-2.5 rounded-full ${STATUS_DOTS[status]}`}
         />
-        {book.status}
+        {status}
       </p>
       <p className="mt-1 pl-5.5 text-xs text-muted">
         {copies === 1 ? "1 copy" : `${copies} copies`} in stock

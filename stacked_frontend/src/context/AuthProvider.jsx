@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../lib/api.js";
 import { AuthContext } from "./auth-context.js";
-
-const API = "http://localhost:5001/api";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -12,9 +10,7 @@ export function AuthProvider({ children }) {
   // Asks the server who is signed in. The auth cookie is httpOnly, so the browser attaches it automatically and JS never has to read it.
   const refreshUser = useCallback(async () => {
     try {
-      const res = await axios.get(`${API}/auth/user`, {
-        withCredentials: true,
-      });
+      const res = await api.get("/auth/user");
       const loaded = res.data?.data?.user ?? null;
       setUser(loaded);
       return loaded;
@@ -39,7 +35,7 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(async () => {
     try {
-      await axios.post(`${API}/auth/logout`, {}, { withCredentials: true });
+      await api.post("/auth/logout");
     } finally {
       setUser(null);
     }

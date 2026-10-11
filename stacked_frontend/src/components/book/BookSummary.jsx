@@ -1,50 +1,49 @@
 import { ArrowRight, BookOpen, Calendar, ListPlus, Tag } from "lucide-react";
 import Pill from "../Pill.jsx";
-import { GENRE_LABELS, GENRE_STYLES } from "../../pages/admin/bookData.js";
+import { bookStatus, genreStyle } from "../../lib/books.js";
 
 const STATUS_COLOURS = {
   Available: "text-success",
   Unavailable: "text-orange-ink",
 };
 
-// Title block: genre, title, author, availability, description, quick facts
-// and the borrow / save actions.
 function BookSummary({ book }) {
-  const genreLabel = GENRE_LABELS[book.genre] ?? book.genre;
-  const available = book.status === "Available";
+  const status = bookStatus(book);
+  const available = status === "Available";
 
   // Only show facts the book actually has.
   const facts = [
     book.pages && [BookOpen, "Pages", book.pages],
     book.published && [Calendar, "Published", book.published],
-    [Tag, "Genre", genreLabel],
+    [Tag, "Genre", book.genre],
   ].filter(Boolean);
 
   return (
     <div className="min-w-0">
-      <Pill className={GENRE_STYLES[book.genre] ?? "bg-sky text-teal"}>
-        {genreLabel}
-      </Pill>
+      <Pill className={genreStyle(book.genre)}>{book.genre}</Pill>
 
       <h1 className="mt-4 text-4xl xl:text-5xl">{book.title}</h1>
       <p className="mt-2 font-heading text-xl text-teal">{book.author}</p>
 
       <p
         className={`mt-5 flex items-center gap-2 text-sm font-medium ${
-          STATUS_COLOURS[book.status] ?? "text-teal"
+          STATUS_COLOURS[status]
         }`}
       >
         <BookOpen size={18} aria-hidden="true" />
-        {book.status}
+        {status}
       </p>
 
-      <p className="mt-5 max-w-prose leading-relaxed text-ink">
-        {book.description}
-      </p>
+      {book.description && (
+        <p className="mt-5 max-w-prose leading-relaxed text-ink">
+          {book.description}
+        </p>
+      )}
 
       <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-4">
-        {facts.map(([label, value]) => (
+        {facts.map(([Icon, label, value]) => (
           <div key={label} className="flex items-start gap-3">
+            <Icon size={18} className="mt-0.5 text-teal" aria-hidden="true" />
             <div>
               <dt className="text-sm text-muted">{label}</dt>
               <dd className="text-sm font-medium text-teal">{value}</dd>

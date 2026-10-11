@@ -4,6 +4,7 @@ import { protect } from "../middleware/protect.js";
 import { uploadImage } from "../middleware/uploadImage.js";
 import {
 	getAllBooks,
+	getBookStats,
 	getBook,
 	addBook,
 	updateBook,
@@ -20,12 +21,22 @@ const router = express.Router();
 // Any signed-in user can browse the catalogue
 router.get("/", protect, getAllBooks);
 
+// Declared before "/:id" so "stats" is not read as a book id
+router.get("/stats", protect, getBookStats);
+
 router.get("/:id", protect, getBook);
 
 // Only admins can change the catalogue. The cover arrives as a file in the "coverImage" form field
 router.post("/", protect, authorize("ADMIN"), uploadImage("coverImage"), addBook);
 
-router.patch("/:id", protect, authorize("ADMIN"), updateBook);
+// A new cover can be sent in the same "coverImage" field when editing
+router.patch(
+	"/:id",
+	protect,
+	authorize("ADMIN"),
+	uploadImage("coverImage"),
+	updateBook,
+);
 
 router.delete("/:id", protect, authorize("ADMIN"), deleteBook);
 

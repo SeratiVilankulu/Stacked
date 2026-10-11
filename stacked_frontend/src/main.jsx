@@ -5,6 +5,7 @@ import "./index.css";
 import App from "./App.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "sonner";
 import { AuthProvider } from "./context/AuthProvider.jsx";
 import RequireRole from "./components/RequireRole.jsx";
 import Register from "./pages/auth/Register.jsx";
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/books/:title",
+    path: "/books/:id",
     element: (
       <RequireRole role="USER">
         <BookDetails />
@@ -96,6 +97,7 @@ createRoot(document.getElementById("root")).render(
     {/* Outside the router so every route shares one signed-in user. */}
     <AuthProvider>
       <RouterProvider router={router} />
+      <Toaster position="top-right" richColors />
     </AuthProvider>
   </StrictMode>,
 );

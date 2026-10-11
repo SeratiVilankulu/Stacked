@@ -9,19 +9,36 @@ const MAX_COPIES = 10;
 const isValidCopies = (value) =>
 	Number.isInteger(value) && value >= 0 && value <= MAX_COPIES;
 
-// Takes the search box, the Genre dropdown then returns one page of matching books
+// UUID format
+const UUID_PATTERN =
+	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// A book counts as available while at least one copy is on the shelf
+const STATUSES = ["available", "unavailable"];
+
+// Takes the search box, the Genre and Status dropdowns and the sort order, then returns one page of matching books
 async function getAllBooks(req, res) {
 	try {
 		// Read query parameters if specific book has been searched (everything after "?" in the URL)
 		const search = (req.query.search || "").trim();
 		const genre = (req.query.genre || "").trim();
+		const status = (req.query.status || "").trim().toLowerCase();
+		const descending = req.query.sort === "title-desc"; // A – Z unless otherwise
 		const page = Math.max(parseInt(req.query.page) || 1, 1);
 		const limit = Math.min(Math.max(parseInt(req.query.limit) || 8, 1), 50); // 8 per page by default, 50 at most
+
+		if (status && !STATUSES.includes(status)) {
+			return res
+				.status(400)
+				.json({ error: `Status must be one of: ${STATUSES.join(", ")}` });
+		}
 
 		// Build the search rule. Only the filters that were sent are applied
 		const filter = (book) => {
 			const conditions = [];
 			if (genre) conditions.push(book.genre.ilike(genre));
+			if (status === "available") conditions.push(book.copiesAvailable.gt(0));
+			if (status === "unavailable") conditions.push(book.copiesAvailable.eq(0));
 			if (search) {
 				// Check the search text against title, author and ISBN, ignoring case
 				const pattern = `%${search}%`;
@@ -42,7 +59,7 @@ async function getAllBooks(req, res) {
 		const [{ count: total }, books] = await Promise.all([
 			matching().aggregate((agg) => ({ count: agg.count() })),
 			matching()
-				.orderBy((book) => book.title.asc())
+				.orderBy((book) => (descending ? book.title.desc() : book.title.asc()))
 				.limit(limit)
 				.offset((page - 1) * limit)
 				.all(),
@@ -66,9 +83,43 @@ async function getAllBooks(req, res) {
 	}
 }
 
+// Counts book statistic for book catalogue, used by the category and activity side panels
+async function getBookStats(req, res) {
+	try {
+		const [{ total }, { available }, genres] = await Promise.all([
+			db.orm.public.Book.aggregate((agg) => ({ total: agg.count() })),
+			db.orm.public.Book.where((book) => book.copiesAvailable.gt(0)).aggregate(
+				(agg) => ({ available: agg.count() }),
+			),
+			db.orm.public.Book.groupBy("genre").aggregate((agg) => ({
+				count: agg.count(),
+			})),
+		]);
+
+		res.status(200).json({
+			status: "success",
+			data: {
+				total,
+				available,
+				unavailable: total - available,
+				// e.g. { FANTASY: 4, MYSTERY: 2 }
+				byGenre: Object.fromEntries(genres.map((g) => [g.genre, g.count])),
+			},
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: "Could not fetch book stats" });
+	}
+}
+
 async function getBook(req, res) {
 	try {
 		const bookId = req.params.id;
+
+		// Check the request id is in UUID format. Postgres throws an error for any other format
+		if (!UUID_PATTERN.test(bookId)) {
+			return res.status(404).json({ error: "Book not found" });
+		}
 
 		const book = await db.orm.public.Book.where({ id: bookId }).first();
 
@@ -203,15 +254,33 @@ async function updateBook(req, res) {
 		}
 
 		// When there is nothing to change
-		if (Object.keys(updateData).length === 0) {
+		if (Object.keys(updateData).length === 0 && !req.file) {
 			return res.status(400).json({ error: "No fields to update" });
 		}
 
-		const updatedBook = await db.orm.public.Book.where({ id: bookId }).update(
-			updateData,
-		);
+		// A new cover file replaces whatever link the book had
+		let cover = null;
+		if (req.file) {
+			try {
+				cover = await uploadCoverImage(req.file.buffer);
+				updateData.coverImageUrl = cover.secure_url;
+			} catch (error) {
+				console.log(error);
+				return res.status(502).json({ error: "Could not upload cover image" });
+			}
+		}
 
-		res.status(200).json({ status: "success", data: updatedBook });
+		try {
+			const updatedBook = await db.orm.public.Book.where({ id: bookId }).update(
+				updateData,
+			);
+
+			res.status(200).json({ status: "success", data: updatedBook });
+		} catch (error) {
+			// If the book could not be saved, the image file is removed from Cloudinary
+			if (cover) await deleteCoverImage(cover.public_id).catch(console.log);
+			throw error;
+		}
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ error: "Could not update book" });
@@ -258,4 +327,4 @@ async function deleteBook(req, res) {
 	}
 }
 
-export { getAllBooks, getBook, addBook, updateBook, deleteBook };
+export { getAllBooks, getBookStats, getBook, addBook, updateBook, deleteBook };

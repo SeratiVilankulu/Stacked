@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import AdminLayout from "../../components/admin/AdminLayout.jsx";
 import FilterSelect from "../../components/FilterSelect.jsx";
 import Checkbox from "../../components/Checkbox.jsx";
@@ -7,45 +8,67 @@ import IconButton from "../../components/IconButton.jsx";
 import PageHeading from "../../components/admin/PageHeading.jsx";
 import FilterBar from "../../components/admin/FilterBar.jsx";
 import Pagination from "../../components/admin/Pagination.jsx";
+import BookFormModal from "../../components/admin/BookFormModal.jsx";
+import CoverImage from "../../components/book/CoverImage.jsx";
 import BookActivity from "./BookActivity.jsx";
 import QuoteCard from "../../components/QuoteCard.jsx";
 import {
   PAGE_SIZE,
-  SAMPLE_BOOKS,
-  GENRE_LABELS,
-  GENRE_STYLES,
   STATUS_STYLES,
-} from "./bookData.js";
+  bookStatus,
+  deleteBook,
+  fetchBooks,
+  fetchBookStats,
+  genreNames,
+  genreStyle,
+} from "../../lib/books.js";
+import { apiErrorMessage } from "../../lib/api.js";
+import useRequest from "../../hooks/useRequest.js";
 import { Pencil, Trash2 } from "lucide-react";
 
+const SEARCH_DELAY_MS = 300;
+
 function ManageBooks() {
-  const [books, setBooks] = useState(SAMPLE_BOOKS);
   const [query, setQuery] = useState("");
+  const [search, setSearch] = useState(""); // `query` once typing pauses
   const [genre, setGenre] = useState("ALL");
   const [status, setStatus] = useState("ALL");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(() => new Set());
+  const [editing, setEditing] = useState(null); // null, "new" or the book being edited
+  const [reloadKey, setReloadKey] = useState(0); // Bumped to refetch after a change
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return books.filter(
-      (b) =>
-        (genre === "ALL" || b.genre === genre) &&
-        (status === "ALL" || b.status === status) &&
-        (!q ||
-          `${b.title} ${b.author} ${b.isbn} ${GENRE_LABELS[b.genre]}`
-            .toLowerCase()
-            .includes(q)),
-    );
-  }, [books, query, genre, status]);
+  // Wait for typing to pause so every keystroke isn't a request
+  useEffect(() => {
+    const timer = setTimeout(() => setSearch(query.trim()), SEARCH_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [query]);
 
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
-  const start = (currentPage - 1) * PAGE_SIZE;
-  const pageBooks = filtered.slice(start, start + PAGE_SIZE);
+  const { data: stats } = useRequest(fetchBookStats, `stats-${reloadKey}`);
+
+  const params = {
+    search,
+    genre: genre === "ALL" ? "" : genre,
+    status: status === "ALL" ? "" : status.toLowerCase(),
+    page,
+    limit: PAGE_SIZE,
+  };
+  const request = useRequest(
+    () => fetchBooks(params),
+    `${JSON.stringify(params)}-${reloadKey}`,
+  );
+  const books = request.data?.books ?? [];
+  const total = request.data?.pagination.total ?? 0;
+  const { isLoading } = request;
+  const error = request.error && apiErrorMessage(request.error);
+
+  const reload = () => setReloadKey((k) => k + 1);
+  const closeForm = useCallback(() => setEditing(null), []);
+
+  const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const allOnPageSelected =
-    pageBooks.length > 0 && pageBooks.every((b) => selected.has(b.title));
+    books.length > 0 && books.every((b) => selected.has(b.id));
 
   // Any filter change starts back on page 1.
   const filterReset = (setter) => (value) => {
@@ -53,21 +76,50 @@ function ManageBooks() {
     setPage(1);
   };
 
-  const toggleOne = (title) =>
+  const toggleOne = (id) =>
     setSelected((prev) => {
       const next = new Set(prev);
-      next.has(title) ? next.delete(title) : next.add(title);
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
 
   const toggleAllOnPage = () =>
     setSelected((prev) => {
       const next = new Set(prev);
-      pageBooks.forEach((b) =>
-        allOnPageSelected ? next.delete(b.title) : next.add(b.title),
+      books.forEach((b) =>
+        allOnPageSelected ? next.delete(b.id) : next.add(b.id),
       );
       return next;
     });
+
+  const handleSaved = (saved) => {
+    toast.success(
+      editing === "new"
+        ? `"${saved.title}" was added`
+        : `"${saved.title}" was updated`,
+    );
+    setEditing(null);
+    reload();
+  };
+
+  const handleDelete = async (book) => {
+    if (!window.confirm(`Delete "${book.title}"? This cannot be undone.`)) return;
+
+    try {
+      await deleteBook(book.id);
+      toast.success(`"${book.title}" was deleted`);
+      // Removing the only book on a page steps back to the previous one
+      if (books.length === 1 && page > 1) setPage(page - 1);
+      setSelected((prev) => {
+        const next = new Set(prev);
+        next.delete(book.id);
+        return next;
+      });
+      reload();
+    } catch (err) {
+      toast.error(apiErrorMessage(err, "Could not delete the book"));
+    }
+  };
 
   return (
     <AdminLayout>
@@ -84,6 +136,7 @@ function ManageBooks() {
             onQueryChange={filterReset(setQuery)}
             placeholder="Search by title, author or isbn..."
             actionLabel="Add Book"
+            onAction={() => setEditing("new")}
           >
             <FilterSelect
               label="Genre"
@@ -91,7 +144,7 @@ function ManageBooks() {
               onChange={filterReset(setGenre)}
               options={[
                 ["ALL", "All Genres"],
-                ...Object.entries(GENRE_LABELS),
+                ...genreNames(stats).map((g) => [g, g]),
               ]}
             />
             <FilterSelect
@@ -128,26 +181,24 @@ function ManageBooks() {
                     <th className="px-2.5 py-4 pr-5 font-semibold">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border">
-                  {pageBooks.map((b) => (
+                <tbody
+                  aria-busy={isLoading}
+                  className={`divide-y divide-border transition-opacity ${isLoading ? "opacity-60" : ""}`}
+                >
+                  {!error && books.map((b) => (
                     <tr
-                      key={b.title}
+                      key={b.id}
                       className="transition-colors hover:bg-sky/10"
                     >
                       <td className="py-3 pl-5">
                         <Checkbox
-                          checked={selected.has(b.title)}
-                          onChange={() => toggleOne(b.title)}
+                          checked={selected.has(b.id)}
+                          onChange={() => toggleOne(b.id)}
                           label={`Select ${b.title}`}
                         />
                       </td>
                       <td className="px-2.5 py-3">
-                        <img
-                          src={b.coverImage}
-                          alt={`Cover of ${b.title}`}
-                          loading="lazy"
-                          className="aspect-2/3 w-10 shrink-0 object-cover shadow-card sm:w-12 lg:w-14 rounded"
-                        />
+                        <CoverImage book={b} className="w-10 sm:w-12 lg:w-14" />
                       </td>
                       <td className="px-2.5 py-3">
                         <span className="font-medium whitespace-nowrap text-teal">
@@ -156,24 +207,29 @@ function ManageBooks() {
                       </td>
                       <td className="px-2.5 py-3 text-teal">{b.author}</td>
                       <td className="px-2.5 py-3">
-                        <Pill className={GENRE_STYLES[b.genre]}>
-                          {GENRE_LABELS[b.genre]}
-                        </Pill>
+                        <Pill className={genreStyle(b.genre)}>{b.genre}</Pill>
                       </td>
                       <td className="px-2.5 py-3">
-                        <Pill className={STATUS_STYLES[b.status]}>
-                          {b.status}
+                        <Pill className={STATUS_STYLES[bookStatus(b)]}>
+                          {bookStatus(b)}
                         </Pill>
                       </td>
                       <td className="px-2.5 py-3 whitespace-nowrap text-muted">
-                        {b.total}
+                        {b.copiesAvailable}
                       </td>
                       <td className="px-2.5 py-3 pr-5">
                         <div className="flex gap-2">
-                          <IconButton label={`Edit ${b.title}`}>
+                          <IconButton
+                            label={`Edit ${b.title}`}
+                            onClick={() => setEditing(b)}
+                          >
                             <Pencil size={16} />
                           </IconButton>
-                          <IconButton label={`Delete ${b.title}`} danger>
+                          <IconButton
+                            label={`Delete ${b.title}`}
+                            onClick={() => handleDelete(b)}
+                            danger
+                          >
                             <Trash2 size={16} />
                           </IconButton>
                         </div>
@@ -181,10 +237,13 @@ function ManageBooks() {
                     </tr>
                   ))}
 
-                  {pageBooks.length === 0 && (
+                  {(error || books.length === 0) && (
                     <tr>
                       <td colSpan={8} className="py-12 text-center text-muted">
-                        No books match your filters.
+                        {error ||
+                          (isLoading
+                            ? "Loading books..."
+                            : "No books match your filters.")}
                       </td>
                     </tr>
                   )}
@@ -193,10 +252,10 @@ function ManageBooks() {
             </div>
 
             <Pagination
-              currentPage={currentPage}
+              currentPage={page}
               pageCount={pageCount}
               pageSize={PAGE_SIZE}
-              total={filtered.length}
+              total={total}
               noun="books"
               onPageChange={setPage}
             />
@@ -205,13 +264,22 @@ function ManageBooks() {
 
         {/* Right column */}
         <div className="space-y-6">
-          <BookActivity books={books} />
+          <BookActivity stats={stats} />
           <QuoteCard
             quote={"A book is a dream you hold in your hands."}
             from={"Neil Gaiman"}
           />
         </div>
       </div>
+
+      {editing && (
+        <BookFormModal
+          book={editing === "new" ? null : editing}
+          genres={genreNames(stats)}
+          onClose={closeForm}
+          onSaved={handleSaved}
+        />
+      )}
     </AdminLayout>
   );
 }

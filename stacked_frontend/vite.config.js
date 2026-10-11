@@ -8,12 +8,11 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
-    // Proxy API calls to the Express server so the browser
+    // API calls go to /api on this server and are forwarded to Express
     proxy: {
       "/api": {
         target: "http://localhost:5001",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

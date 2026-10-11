@@ -1,29 +1,20 @@
-import { ArrowRight, ListPlus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Pill from "../Pill.jsx";
-import { GENRE_LABELS, GENRE_STYLES } from "../../pages/admin/bookData.js";
-
-const STATUS_DOTS = {
-  Available: "bg-success",
-  Unavailable: "bg-orange",
-};
+import CoverImage from "../book/CoverImage.jsx";
+import { STATUS_DOTS, bookStatus, genreStyle } from "../../lib/books.js";
 
 function BrowseBookCard({ book }) {
+  const status = bookStatus(book);
+
   return (
     <article className="flex flex-col gap-4 rounded-md border border-border bg-surface p-4 shadow-card">
       <div className="flex gap-4">
-        <img
-          src={book.coverImage}
-          alt={`Cover of ${book.title}`}
-          loading="lazy"
-          className="aspect-2/3 w-24 shrink-0 rounded-sm object-cover shadow-card"
-        />
+        <CoverImage book={book} className="w-24" />
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <Pill className={GENRE_STYLES[book.genre] ?? "bg-sky text-teal"}>
-              {GENRE_LABELS[book.genre] ?? book.genre}
-            </Pill>
+            <Pill className={genreStyle(book.genre)}>{book.genre}</Pill>
             <button
               type="button"
               aria-label={`Save ${book.title}`}
@@ -40,16 +31,16 @@ function BrowseBookCard({ book }) {
           <p className="mt-3 flex items-center gap-2 text-sm text-teal">
             <span
               aria-hidden="true"
-              className={`size-2 rounded-full ${STATUS_DOTS[book.status] ?? "bg-muted"}`}
+              className={`size-2 rounded-full ${STATUS_DOTS[status]}`}
             />
-            {book.status}
+            {status}
           </p>
         </div>
       </div>
 
       <div className="mt-auto grid grid-cols-2 gap-3">
         <Link
-          to={`/books/${book.title}`}
+          to={`/books/${book.id}`}
           className="flex cursor-pointer items-center justify-center gap-1.5 rounded-[var(--radius-md)] bg-teal px-2 py-2.5 text-[13px] whitespace-nowrap font-semibold text-cream transition-colors duration-200 hover:bg-teal-deep"
         >
           View Details

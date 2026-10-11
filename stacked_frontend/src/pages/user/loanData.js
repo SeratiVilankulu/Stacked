@@ -1,4 +1,11 @@
-import { SAMPLE_BOOKS } from "../admin/bookData.js";
+import AtomicHabitsCover from "@/assets/Atomic_Habits.jpg";
+import MidnightLibraryCover from "@/assets/Midnight_Library.jpg";
+import ThinkingCover from "@/assets/Thinking.jpg";
+import EducatedCover from "@/assets/Educateds.jpg";
+import SapiensCover from "@/assets/Sapiens.jpg";
+import ProjectHailMaryCover from "@/assets/Project_Hail_Mary.jpg";
+import SilentPatientCover from "@/assets/Silent_Patient.jpg";
+import CirceCover from "@/assets/Circe .jpg";
 
 export const LOAN_PERIOD_DAYS = 14;
 export const MAX_RENEWALS = 2;
@@ -57,7 +64,24 @@ export function loanFine(loan) {
   return Math.max(0, -daysUntil(loan.dueDate)) * FINE_PER_DAY;
 }
 
-const book = (title) => SAMPLE_BOOKS.find((b) => b.title === title);
+// TODO: Remove with SAMPLE_LOANS once loans come from the backend
+const SAMPLE_LOAN_BOOKS = [
+  ["Atomic Habits", "James Clear", "Self-Help", AtomicHabitsCover],
+  ["The Midnight Library", "Matt Haig", "Fiction", MidnightLibraryCover],
+  ["Thinking, Fast and Slow", "Daniel Kahneman", "Psychology", ThinkingCover],
+  ["Educated", "Tara Westover", "Memoir", EducatedCover],
+  ["Sapiens", "Yuval Noah Harari", "Non-Fiction", SapiensCover],
+  ["Project Hail Mary", "Andy Weir", "Sci-Fi", ProjectHailMaryCover],
+  ["The Silent Patient", "Alex Michaelides", "Psychological Thriller", SilentPatientCover],
+  ["Circe", "Madeline Miller", "Fantasy", CirceCover],
+].map(([title, author, genre, coverImageUrl]) => ({
+  title,
+  author,
+  genre,
+  coverImageUrl,
+}));
+
+const book = (title) => SAMPLE_LOAN_BOOKS.find((b) => b.title === title);
 
 // Dates are relative to today so the sample always shows every status.
 const daysFromNow = (n) => addDays(new Date(), n).toISOString();

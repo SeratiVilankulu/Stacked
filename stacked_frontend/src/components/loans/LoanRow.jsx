@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { BookOpen, CalendarDays, CreditCard, RefreshCw } from "lucide-react";
 import Pill from "../Pill.jsx";
-import { GENRE_LABELS } from "../../pages/admin/bookData.js";
+import CoverImage from "../book/CoverImage.jsx";
 import {
   LOAN_STATUS_LABELS,
   LOAN_STATUS_STYLES,
@@ -28,19 +28,16 @@ function LoanRow({ loan, onRenew }) {
   const returned = status === "RETURNED";
   const overdue = status === "OVERDUE";
   const canRenew = loan.renewals < MAX_RENEWALS;
+  // Sample loans have no book id yet, so they fall back to the catalogue
+  const bookLink = book.id ? `/books/${book.id}` : "/books";
 
   return (
     <li className="grid grid-cols-[4rem_minmax(0,1fr)] gap-x-4 gap-y-3 py-4 md:grid-cols-[4rem_minmax(0,1fr)_7rem_9rem_7rem] md:items-center">
-      <img
-        src={book.coverImage}
-        alt={`Cover of ${book.title}`}
-        loading="lazy"
-        className="row-span-2 aspect-2/3 w-16 rounded-sm object-cover shadow-card md:row-span-1"
-      />
+      <CoverImage book={book} className="row-span-2 w-16 md:row-span-1" />
 
       <div className="min-w-0">
         <Link
-          to={`/books/${book.title}`}
+          to={bookLink}
           className="line-clamp-1 font-heading text-lg text-teal hover:underline"
         >
           {book.title}
@@ -48,7 +45,7 @@ function LoanRow({ loan, onRenew }) {
         <p className="text-sm text-muted">{book.author}</p>
         <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
           <BookOpen size={13} aria-hidden="true" />
-          {GENRE_LABELS[book.genre] ?? book.genre}
+          {book.genre}
         </p>
       </div>
 
@@ -82,7 +79,7 @@ function LoanRow({ loan, onRenew }) {
         <div className="md:justify-self-end">
           {returned ? (
             <Link
-              to={`/books/${book.title}`}
+              to={bookLink}
               className={`${ACTION_CLASSES} border-border-strong text-teal hover:bg-sky/30`}
             >
               Borrow again

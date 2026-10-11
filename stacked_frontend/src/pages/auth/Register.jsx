@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../lib/api.js";
 import { Mail, Lock, User, Pencil } from "lucide-react";
 import AuthLogo from "../../components/AuthLogo";
 import stackedBooks from "@/assets/stackedBooks.jpg";
@@ -85,9 +85,7 @@ function Register() {
 
 		// Submit user data to the backend
 		try {
-			await axios.post("http://localhost:5001/api/auth/register", userData, {
-				withCredentials: true,
-			});
+			await api.post("/auth/register", userData);
 			setSuccessMsg("Registration successful!");
 			setErrorMsg({});
 			setTimeout(() => {

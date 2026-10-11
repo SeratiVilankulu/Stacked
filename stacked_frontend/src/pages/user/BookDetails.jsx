@@ -6,10 +6,9 @@ import QuoteCard from "../../components/QuoteCard.jsx";
 import BookCover from "../../components/book/BookCover.jsx";
 import BookSummary from "../../components/book/BookSummary.jsx";
 import BookInfoCard from "../../components/book/BookInfoCard.jsx";
-import SimilarBooks from "../../components/book/SimilarBooks.jsx";
-import { SAMPLE_BOOKS } from "../admin/bookData.js";
-
-const SIMILAR_LIMIT = 4;
+import { fetchBook } from "../../lib/books.js";
+import { apiErrorMessage } from "../../lib/api.js";
+import useRequest from "../../hooks/useRequest.js";
 
 function BackLink() {
   return (
@@ -23,34 +22,50 @@ function BackLink() {
   );
 }
 
-function BookDetails() {
-  const { title } = useParams();
-  const book = SAMPLE_BOOKS.find((b) => b.title === title);
+// Message used while loading and when the book can't be shown.
+function Message({ title, children }) {
+  return (
+    <UserLayout>
+      <div className="px-5 py-16 text-center sm:px-8 lg:px-10">
+        <h1 className="text-3xl">{title}</h1>
+        {children && <p className="mt-3 text-muted">{children}</p>}
+        <div className="mt-6">
+          <BackLink />
+        </div>
+      </div>
+    </UserLayout>
+  );
+}
 
-  // Opening a similar book should start at the top of the page.
+function BookDetails() {
+  const { id } = useParams();
+
+  const {
+    data: book,
+    isLoading,
+    error,
+  } = useRequest(() => fetchBook(id), id);
+
+  // Opening a book should start at the top of the page.
   useEffect(() => {
     window.scrollTo({ top: 0 });
-  }, [title]);
+  }, [id]);
 
-  if (!book) {
+  if (isLoading) return <Message title="Loading book..." />;
+
+  if (error?.response?.status === 404) {
     return (
-      <UserLayout>
-        <div className="px-5 py-16 text-center sm:px-8 lg:px-10">
-          <h1 className="text-3xl">Book not found</h1>
-          <p className="mt-3 text-muted">
-            We couldn't find a book with Title {title}.
-          </p>
-          <div className="mt-6">
-            <BackLink />
-          </div>
-        </div>
-      </UserLayout>
+      <Message title="Book not found">
+        We couldn't find this book. It may have been removed from the catalogue.
+      </Message>
     );
   }
 
-  const similarBooks = SAMPLE_BOOKS.filter(
-    (b) => b.genre === book.genre && b.title !== book.title,
-  ).slice(0, SIMILAR_LIMIT);
+  if (error) {
+    return (
+      <Message title="Something went wrong">{apiErrorMessage(error)}</Message>
+    );
+  }
 
   return (
     <UserLayout>
@@ -58,13 +73,9 @@ function BookDetails() {
         <BackLink />
 
         <div className="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
-          <div className="min-w-0 space-y-10">
-            <div className="grid gap-8 md:grid-cols-[18rem_minmax(0,1fr)]">
-              <BookCover book={book} />
-              <BookSummary book={book} />
-            </div>
-
-            <SimilarBooks books={similarBooks} />
+          <div className="grid min-w-0 gap-8 md:grid-cols-[18rem_minmax(0,1fr)]">
+            <BookCover book={book} />
+            <BookSummary book={book} />
           </div>
 
           <div className="space-y-6">

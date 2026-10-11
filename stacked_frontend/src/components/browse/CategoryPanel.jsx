@@ -11,40 +11,42 @@ import {
   UserRound,
 } from "lucide-react";
 import Checkbox from "../Checkbox.jsx";
-import { GENRE_LABELS } from "../../pages/admin/bookData.js";
+import { genreNames } from "../../lib/books.js";
 
 const GENRE_ICONS = {
-  FICTION: BookOpen,
-  NONFICTION: Book,
-  SCIENCEFICTION: Rocket,
-  FANTASY: Sparkles,
-  ROMANCE: Heart,
-  MYSTERY: Fingerprint,
-  HORROR: Ghost,
-  PHILOSOPHY: Brain,
-  BIOGRAPHY: UserRound,
+  fiction: BookOpen,
+  "non-fiction": Book,
+  "sci-fi": Rocket,
+  fantasy: Sparkles,
+  romance: Heart,
+  mystery: Fingerprint,
+  thriller: Fingerprint,
+  horror: Ghost,
+  philosophy: Brain,
+  psychology: Brain,
+  biography: UserRound,
+  memoir: UserRound,
 };
 
-// Side panel with genre categories and availability checkboxes, each with
-// a count of matching books.
+// Side panel with genre categories and availability checkboxes. Counts come from the /books/stats endpoint.
 function CategoryPanel({
-  books,
+  stats,
   genre,
   onGenreChange,
   statuses,
   statusOptions,
   onToggleStatus,
 }) {
-  const genreCount = (key) => books.filter((b) => b.genre === key).length;
-  const statusCount = (s) => books.filter((b) => b.status === s).length;
+  const statusCount = (s) =>
+    (s === "Available" ? stats?.available : stats?.unavailable) ?? 0;
 
   const categories = [
-    ["ALL", "All Genres", Library, books.length],
-    ...Object.entries(GENRE_LABELS).map(([key, label]) => [
-      key,
-      label,
-      GENRE_ICONS[key] ?? BookOpen,
-      genreCount(key),
+    ["ALL", "All Genres", Library, stats?.total ?? 0],
+    ...genreNames(stats).map((name) => [
+      name,
+      name,
+      GENRE_ICONS[name.toLowerCase()] ?? BookOpen,
+      stats.byGenre[name],
     ]),
   ];
 
