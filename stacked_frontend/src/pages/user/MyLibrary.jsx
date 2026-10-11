@@ -23,11 +23,12 @@ import ReadingHistoryList from "../../components/library/ReadingHistoryList.jsx"
 import {
   LOAN_STATUS_LABELS,
   LOAN_STATUS_STYLES,
-  SAMPLE_LOANS,
   formatDate,
   loanStatus,
 } from "./loanData.js";
-import { SAMPLE_SAVED } from "./libraryData.js";
+import { fetchSampleSaved } from "./libraryData.js";
+import { fetchMyLoans } from "../../lib/loans.js";
+import useRequest from "../../hooks/useRequest.js";
 
 const PREVIEW_COUNT = 3;
 
@@ -45,7 +46,6 @@ const SORTS = {
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
-// Bordered panel with an icon heading and an optional control on the right.
 function LibraryPanel({ icon: Icon, title, subtitle, action, children }) {
   return (
     <section className="min-w-0 rounded-lg border border-sky bg-surface/60 shadow-card">
@@ -86,9 +86,17 @@ function EmptyShelf({ children }) {
 }
 
 function MyLibrary() {
-  // TODO: Load loans and saved books from the backend once endpoints exist.
-  const [loans] = useState(SAMPLE_LOANS);
-  const [saved, setSaved] = useState(SAMPLE_SAVED);
+  const { data: loanData } = useRequest(fetchMyLoans, "my-loans");
+  const loans = useMemo(() => loanData ?? [], [loanData]);
+
+  // TODO: Load saved books from the backend once the endpoint exists.
+  const { data: savedData } = useRequest(fetchSampleSaved, "sample-saved");
+  // Removing a saved book only hides it on this page for now
+  const [removedIds, setRemovedIds] = useState([]);
+  const saved = useMemo(
+    () => (savedData ?? []).filter((b) => !removedIds.includes(b.id)),
+    [savedData, removedIds],
+  );
   const [tab, setTab] = useState("borrowed");
   const [sort, setSort] = useState("due-asc");
 
@@ -107,11 +115,11 @@ function MyLibrary() {
     (l) => loanStatus(l) === "OVERDUE",
   ).length;
 
-  // Shelf only knows about books, so look the loan back up by title.
-  const loanFor = (book) => borrowed.find((l) => l.book.title === book.title);
+ // Look the loan back up by book id
+  const loanFor = (book) => borrowed.find((l) => l.book.id === book.id);
 
   const removeSaved = (book) =>
-    setSaved((prev) => prev.filter((b) => b.title !== book.title));
+    setRemovedIds((prev) => [...prev, book.id]);
 
   const showTab = (key) => {
     setTab(key);

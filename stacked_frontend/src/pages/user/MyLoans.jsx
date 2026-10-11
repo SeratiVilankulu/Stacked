@@ -17,13 +17,11 @@ import TabBar from "../../components/TabBar.jsx";
 import QuickActionsPanel from "../../components/QuickActionsPanel.jsx";
 import LoanRow from "../../components/loans/LoanRow.jsx";
 import LoanStats from "../../components/loans/LoanStats.jsx";
-import {
-  LOAN_PERIOD_DAYS,
-  LOAN_STATUS_LABELS,
-  SAMPLE_LOANS,
-  addDays,
-  loanStatus,
-} from "./loanData.js";
+import { toast } from "sonner";
+import { LOAN_STATUS_LABELS, loanStatus } from "./loanData.js";
+import { fetchMyLoans, renewLoan as renewLoanRequest } from "../../lib/loans.js";
+import { apiErrorMessage } from "../../lib/api.js";
+import useRequest from "../../hooks/useRequest.js";
 
 const PAGE_SIZE = 5;
 
@@ -57,7 +55,13 @@ const byReturnedDesc = (a, b) =>
   new Date(b.returnedOn) - new Date(a.returnedOn);
 
 function MyLoans() {
-  const [loans, setLoans] = useState(SAMPLE_LOANS);
+  const { data, isLoading, error } = useRequest(fetchMyLoans, "my-loans");
+  // Renewed loans replace the loaded ones, so the page updates without fetching everything again
+  const [renewed, setRenewed] = useState({});
+  const loans = useMemo(
+    () => (data ?? []).map((loan) => renewed[loan.id] ?? loan),
+    [data, renewed],
+  );
   const [tab, setTab] = useState("current");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [page, setPage] = useState(1);
@@ -96,19 +100,15 @@ function MyLoans() {
     setPage(1);
   };
 
-  // TODO: Call the renew endpoint once it exists.
-  const renewLoan = (loan) =>
-    setLoans((prev) =>
-      prev.map((l) =>
-        l.id === loan.id
-          ? {
-              ...l,
-              dueDate: addDays(l.dueDate, LOAN_PERIOD_DAYS).toISOString(),
-              renewals: l.renewals + 1,
-            }
-          : l,
-      ),
-    );
+  const renewLoan = async (loan) => {
+    try {
+      const updated = await renewLoanRequest(loan.id);
+      setRenewed((prev) => ({ ...prev, [updated.id]: updated }));
+      toast.success(`${loan.book.title} renewed`);
+    } catch (err) {
+      toast.error(apiErrorMessage(err, "Could not renew this loan."));
+    }
+  };
 
   const tabCounts = { current: currentCount, history: counts.RETURNED };
 
@@ -189,7 +189,15 @@ function MyLoans() {
               )}
             </header>
 
-            {pageLoans.length === 0 ? (
+            {isLoading ? (
+              <p className="px-5 py-16 text-center text-muted">
+                Loading your loans...
+              </p>
+            ) : error ? (
+              <p className="px-5 py-16 text-center text-alert">
+                {apiErrorMessage(error, "Could not load your loans.")}
+              </p>
+            ) : pageLoans.length === 0 ? (
               <p className="px-5 py-16 text-center text-muted">
                 {statusFilter === "ALL"
                   ? TABS[tab].empty

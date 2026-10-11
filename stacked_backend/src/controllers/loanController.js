@@ -16,7 +16,14 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 // "YYYY-MM-DD", the format the ReturnDate column stores
 const toDateString = (date) => date.toISOString().slice(0, 10);
 
-const daysBetween = (from, to) =>
+// Change the dat format which if sent from Postgres
+const toIsoString = (value) =>
+	value &&
+	new Date(
+		value.replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
+	).toISOString();
+
+const daysBetween =(from, to) =>
 	Math.round(
 		(new Date(toDateString(new Date(to))) -
 			new Date(toDateString(new Date(from)))) /
@@ -61,9 +68,9 @@ async function withBookDetails(loans) {
 			id: loan.id,
 			userId: loan.userId,
 			status,
-			borrowedOn: loan.loanDate,
+			borrowedOn: toIsoString(loan.loanDate),
 			dueDate: loan.dueDate,
-			returnedOn: loan.returnedAt,
+			returnedOn: toIsoString(loan.returnedAt),
 			renewals: loan.renewals,
 			daysOverdue: status === "RETURNED" ? 0 : daysOverdue(loan),
 			fine: status === "RETURNED" ? 0 : daysOverdue(loan) * FINE_PER_DAY,

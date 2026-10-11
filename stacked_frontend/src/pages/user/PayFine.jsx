@@ -9,17 +9,29 @@ import UserLayout from "../../components/UserLayout.jsx";
 import IconChip from "../../components/IconChip.jsx";
 import LibraryCardPanel from "../../components/loans/LibraryCardPanel.jsx";
 import CardPaymentForm from "../../components/loans/CardPaymentForm.jsx";
-import { SAMPLE_LOANS, formatDate, loanFine } from "./loanData.js";
+import { formatDate, loanFine } from "./loanData.js";
+import { fetchLoan } from "../../lib/loans.js";
+import useRequest from "../../hooks/useRequest.js";
 
 const BACK_LINK =
   "inline-flex items-center gap-2 text-sm font-medium text-teal hover:underline";
 
 function PayFine() {
   const { loanId } = useParams();
-  // TODO: Fetch the loan from the backend once the endpoint exists.
-  const loan = SAMPLE_LOANS.find((l) => String(l.id) === loanId);
+  // A loan that can't be loaded (wrong id or someone else's) is treated as not found
+  const { data: loan, isLoading } = useRequest(() => fetchLoan(loanId), loanId);
   const amount = loan ? loanFine(loan) : 0;
   const [paid, setPaid] = useState(false);
+
+  if (isLoading) {
+    return (
+      <UserLayout>
+        <div className="px-5 py-16 text-center sm:px-8 lg:px-10">
+          <h1 className="text-3xl xl:text-4xl">Loading fine...</h1>
+        </div>
+      </UserLayout>
+    );
+  }
 
   if (!loan || (amount === 0 && !paid)) {
     return (

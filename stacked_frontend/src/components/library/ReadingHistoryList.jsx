@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle2, ChevronRight } from "lucide-react";
 import Pill from "../Pill.jsx";
+import CoverImage from "../book/CoverImage.jsx";
 import { formatDate } from "../../pages/user/loanData.js";
 
 function ReadingHistoryList({ loans }) {
@@ -9,15 +10,10 @@ function ReadingHistoryList({ loans }) {
       {loans.map(({ id, book, returnedOn }) => (
         <li key={id}>
           <Link
-            to={`/books/${book.title}`}
+            to={book.id ? `/books/${book.id}` : "/books"}
             className="group flex items-center gap-4 py-3"
           >
-            <img
-              src={book.coverImage}
-              alt=""
-              loading="lazy"
-              className="aspect-2/3 w-12 shrink-0 rounded-sm object-cover shadow-card"
-            />
+            <CoverImage book={book} alt="" className="w-12" />
             <div className="min-w-0 flex-1">
               <p className="line-clamp-1 text-sm font-semibold text-teal group-hover:underline">
                 {book.title}
