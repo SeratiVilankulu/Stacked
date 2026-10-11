@@ -2,10 +2,22 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Pill from "../Pill.jsx";
 import CoverImage from "../book/CoverImage.jsx";
+import { toast } from "sonner";
 import { STATUS_DOTS, bookStatus, genreStyle } from "../../lib/books.js";
+import { saveBook } from "../../lib/library.js";
+import { apiErrorMessage } from "../../lib/api.js";
 
 function BrowseBookCard({ book }) {
   const status = bookStatus(book);
+
+  const save = async () => {
+    try {
+      await saveBook(book.id);
+      toast.success(`${book.title} saved to your library`);
+    } catch (err) {
+      toast.error(apiErrorMessage(err, "Could not save this book."));
+    }
+  };
 
   return (
     <article className="flex flex-col gap-4 rounded-md border border-border bg-surface p-4 shadow-card">
@@ -48,6 +60,7 @@ function BrowseBookCard({ book }) {
         </Link>
         <button
           type="button"
+          onClick={save}
           className="flex cursor-pointer items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-border-strong px-2 py-2.5 text-[13px] whitespace-nowrap font-semibold text-teal transition-colors duration-200 hover:bg-sky/30"
         >
           Add to Library

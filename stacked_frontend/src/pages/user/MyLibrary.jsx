@@ -26,7 +26,9 @@ import {
   formatDate,
   loanStatus,
 } from "./loanData.js";
-import { fetchSampleSaved } from "./libraryData.js";
+import { toast } from "sonner";
+import { fetchSavedBooks, removeFromLibrary } from "../../lib/library.js";
+import { apiErrorMessage } from "../../lib/api.js";
 import { fetchMyLoans } from "../../lib/loans.js";
 import useRequest from "../../hooks/useRequest.js";
 
@@ -89,12 +91,14 @@ function MyLibrary() {
   const { data: loanData } = useRequest(fetchMyLoans, "my-loans");
   const loans = useMemo(() => loanData ?? [], [loanData]);
 
-  // TODO: Load saved books from the backend once the endpoint exists.
-  const { data: savedData } = useRequest(fetchSampleSaved, "sample-saved");
-  // Removing a saved book only hides it on this page for now
+  const { data: savedData } = useRequest(fetchSavedBooks, "saved-books");
+  // Removed books are hidden straight away
   const [removedIds, setRemovedIds] = useState([]);
   const saved = useMemo(
-    () => (savedData ?? []).filter((b) => !removedIds.includes(b.id)),
+    () =>
+      (savedData ?? [])
+        .map((entry) => entry.book)
+        .filter((book) => book && !removedIds.includes(book.id)),
     [savedData, removedIds],
   );
   const [tab, setTab] = useState("borrowed");
@@ -118,8 +122,15 @@ function MyLibrary() {
  // Look the loan back up by book id
   const loanFor = (book) => borrowed.find((l) => l.book.id === book.id);
 
-  const removeSaved = (book) =>
-    setRemovedIds((prev) => [...prev, book.id]);
+  const removeSaved = async (book) => {
+    try {
+      await removeFromLibrary(book.id);
+      setRemovedIds((prev) => [...prev, book.id]);
+      toast.success(`${book.title} removed from saved books`);
+    } catch (err) {
+      toast.error(apiErrorMessage(err, "Could not remove this book."));
+    }
+  };
 
   const showTab = (key) => {
     setTab(key);

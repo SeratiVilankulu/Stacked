@@ -2,6 +2,48 @@ import { db } from "../prisma/db.ts";
 
 const READING_STATUSES = ["WANT_TO_READ", "READING", "COMPLETED", "ABANDONED"];
 
+async function getLibrary(req, res) {
+	try {
+		const userId = req.user.id;
+		const status = (req.query.status || "").trim().toUpperCase();
+
+		if (status && !READING_STATUSES.includes(status)) {
+			return res.status(400).json({
+				error: `Status must be one of: ${READING_STATUSES.join(", ")}`,
+			});
+		}
+
+		const entries = await db.orm.public.Library.where(
+			status ? { userId, status } : { userId },
+		)
+			.orderBy((entry) => entry.addedAt.desc())
+			.all();
+
+		// Attach the book details to each entry
+		const bookIds = [...new Set(entries.map((entry) => entry.bookId))];
+		const books =
+			bookIds.length > 0
+				? await db.orm.public.Book.where((book) => book.id.in(bookIds)).all()
+				: [];
+		const bookById = new Map(books.map((book) => [book.id, book]));
+
+		const data = entries.map((entry) => ({
+			id: entry.id,
+			status: entry.status,
+			// Change the for which Postgres send back
+			addedAt: new Date(
+				entry.addedAt.replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
+			).toISOString(),
+			book: bookById.get(entry.bookId),
+		}));
+
+		res.status(200).json({ status: "Success", data });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: "Could not fetch library" });
+	}
+}
+
 async function addToLibrary(req, res) {
 	try {
 		const { bookId, status } = req.body;
@@ -127,4 +169,4 @@ async function removeFromLibrary(req, res) {
 	}
 }
 
-export { addToLibrary, updateLibrary, removeFromLibrary };
+export { getLibrary, addToLibrary, updateLibrary, removeFromLibrary };

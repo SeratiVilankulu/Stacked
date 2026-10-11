@@ -1,5 +1,6 @@
 import express from "express";
 import {
+	getLibrary,
 	addToLibrary,
 	updateLibrary,
 	removeFromLibrary,
@@ -9,6 +10,8 @@ import { protect } from "../middleware/protect.js";
 const router = express.Router();
 
 // Define all routes for the library endpoints, protect added to ensure frontend sends the login cookie with this request
+router.get("/", protect, getLibrary);
+
 router.post("/", protect, addToLibrary);
 
 router.delete("/:id", protect, removeFromLibrary);

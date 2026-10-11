@@ -1,6 +1,9 @@
 import { ArrowRight, BookOpen, Calendar, ListPlus, Tag } from "lucide-react";
 import Pill from "../Pill.jsx";
+import { toast } from "sonner";
 import { bookStatus, genreStyle } from "../../lib/books.js";
+import { saveBook } from "../../lib/library.js";
+import { apiErrorMessage } from "../../lib/api.js";
 
 const STATUS_COLOURS = {
   Available: "text-success",
@@ -11,7 +14,16 @@ function BookSummary({ book }) {
   const status = bookStatus(book);
   const available = status === "Available";
 
-  // Only show facts the book actually has.
+  const save = async () => {
+    try {
+      await saveBook(book.id);
+      toast.success(`${book.title} saved to your library`);
+    } catch (err) {
+      toast.error(apiErrorMessage(err, "Could not save this book."));
+    }
+  };
+
+
   const facts = [
     book.pages && [BookOpen, "Pages", book.pages],
     book.published && [Calendar, "Published", book.published],
@@ -64,6 +76,7 @@ function BookSummary({ book }) {
         </button>
         <button
           type="button"
+          onClick={save}
           className="flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md border border-border-strong px-6 py-3 text-sm font-semibold text-teal transition-colors duration-200 hover:bg-sky/30"
         >
           <ListPlus size={18} aria-hidden="true" />
