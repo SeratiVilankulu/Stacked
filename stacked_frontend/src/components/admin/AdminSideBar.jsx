@@ -44,7 +44,7 @@ function AdminSideBar() {
           />
 
           <AdminSidebarLink
-            to="/fines"
+            to="/admin/fines"
             icon={<Database size={19} />}
             label="Manage Fines"
           />

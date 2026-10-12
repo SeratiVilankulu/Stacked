@@ -10,7 +10,6 @@ import FilterBar from "../../components/admin/FilterBar.jsx";
 import Pagination from "../../components/admin/Pagination.jsx";
 import UserFormModal from "../../components/admin/UserFormModal.jsx";
 import UserActivity from "./UserActivity.jsx";
-import QuickActions from "./QuickActions.jsx";
 import QuoteCard from "../../components/QuoteCard.jsx";
 import {
   AVATAR_COLOURS,
@@ -278,7 +277,6 @@ function ManageUsers() {
         {/* Right column */}
         <div className="space-y-6">
           <UserActivity stats={stats} />
-          <QuickActions />
           <QuoteCard quote="A library card is a passport to new worlds." />
         </div>
       </div>

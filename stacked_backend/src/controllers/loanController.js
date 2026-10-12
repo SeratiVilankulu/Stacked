@@ -16,7 +16,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 // "YYYY-MM-DD", the format the ReturnDate column stores
 const toDateString = (date) => date.toISOString().slice(0, 10);
 
-// Change the dat format which if sent from Postgres
+// Change the date format which if sent from Postgres
 const toIsoString = (value) =>
 	value &&
 	new Date(
