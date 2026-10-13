@@ -1,86 +1,72 @@
 import SidebarLink from "./SideBarLink.jsx";
 import Leaf from "@/assets/leaf_image.png";
 import {
-  LayoutDashboard,
-  BookOpen,
-  Bookmark,
-  Clock3,
-  House,
-  Bell,
-  LogOut,
+	LayoutDashboard,
+	BookOpen,
+	Bookmark,
+	Clock3,
+	House,
+	Bell,
+	LogOut,
 } from "lucide-react";
 
 function Sidebar() {
-  return (
-    <aside className="flex min-h-full w-full flex-col bg-mocha px-5 py-7 text-white">
-      {/* Navigation */}
-      <nav className="flex-1">
-        <div className="space-y-1.5">
-          <SidebarLink to="/" icon={<House size={19} />} label="Home" />
+	return (
+		<aside className="flex min-h-full w-full flex-col bg-mocha px-5 py-7 text-white">
+			{/* Navigation */}
+			<nav className="flex-1">
+				<div className="space-y-1.5">
+					<SidebarLink to="/" icon={<House size={19} />} label="Home" />
 
-          <SidebarLink
-            to="/dashboard"
-            icon={<LayoutDashboard size={19} />}
-            label="Dashboard"
-          />
+					<SidebarLink
+						to="/dashboard"
+						icon={<LayoutDashboard size={19} />}
+						label="Dashboard"
+					/>
 
-          <SidebarLink
-            to="/books"
-            icon={<BookOpen size={19} />}
-            label="Browse Books"
-          />
+					<SidebarLink
+						to="/books"
+						icon={<BookOpen size={19} />}
+						label="Browse Books"
+					/>
 
-          <SidebarLink
-            to="/my-library"
-            icon={<Bookmark size={19} />}
-            label="My Library"
-          />
+					<SidebarLink
+						to="/my-library"
+						icon={<Bookmark size={19} />}
+						label="My Library"
+					/>
 
-          <SidebarLink
-            to="/loans"
-            icon={<Clock3 size={19} />}
-            label="My Loans"
-          />
-        </div>
+					<SidebarLink
+						to="/loans"
+						icon={<Clock3 size={19} />}
+						label="My Loans"
+					/>
+				</div>
 
-        <div className="my-7 border-t border-cream/15" />
+				<div className="my-7 border-t border-cream/15" />
+			</nav>
 
-        <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream/40">
-          Notify
-        </p>
+			{/* Bottom section */}
+			<div className="mt-auto">
+				{/* Quote */}
+				<div className="mx-4 rounded-2xl">
+					<img
+						src={Leaf}
+						alt=""
+						aria-hidden="true"
+						className="pointer-events-none ml-12 mb-8 md:w-20"
+					/>
 
-        <div className="space-y-1.5">
-          <SidebarLink
-            to="/notifications"
-            icon={<Bell size={19} />}
-            label="Notifications"
-          />
-        </div>
-      </nav>
+					<p className="font-quote italic text-2xl leading-tight text-cream">
+						Books build <br />
+						better futures.
+					</p>
 
-      {/* Bottom section */}
-      <div className="mt-auto">
-        {/* Quote */}
-        <div className="mx-4 rounded-2xl pt-10">
-          <img
-            src={Leaf}
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none ml-12 mb-8 md:w-20"
-          />
-
-          <p className="font-quote italic text-2xl leading-tight text-cream">
-            Books build <br />
-            better futures.
-          </p>
-
-          <div className="mt-4 h-0.5 w-8 bg-orange" />
-        </div>
-
-        
-      </div>
-    </aside>
-  );
+					<div className="mt-4 h-0.5 w-8 bg-orange" />
+				</div>
+			</div>
+		</aside>
+	);
 }
 
 export default Sidebar;

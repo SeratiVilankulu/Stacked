@@ -17,6 +17,7 @@ import About from "./pages/public/About.jsx";
 import ManageBooks from "./pages/admin/ManageBooks.jsx";
 import ManageLoans from "./pages/admin/ManageLoans.jsx";
 import ManageFines from "./pages/admin/ManageFines.jsx";
+import ManageReservations from "./pages/admin/ManageReservations.jsx";
 import BrowseBooks from "./pages/user/BrowseBooks.jsx";
 import BookDetails from "./pages/user/BookDetails.jsx";
 import MyLoans from "./pages/user/MyLoans.jsx";
@@ -105,6 +106,14 @@ const router = createBrowserRouter([
     element: (
       <RequireRole role="ADMIN">
         <ManageLoans />
+      </RequireRole>
+    ),
+  },
+  {
+    path: "/admin/reservations",
+    element: (
+      <RequireRole role="ADMIN">
+        <ManageReservations />
       </RequireRole>
     ),
   },

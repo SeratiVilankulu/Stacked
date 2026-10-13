@@ -16,8 +16,8 @@ const ACTIONS = {
     cancelLabel: "Not Yet",
     save: collectReservation,
     failed: "Could not collect this reservation.",
-    note: (r) =>
-      `The book goes on loan to you now and is due back on ${formatDate(r.endDate)}.`,
+    note: (r, member) =>
+      `The book goes on loan to ${member ?? "you"} now and is due back on ${formatDate(r.endDate)}.`,
   },
   cancel: {
     title: "Cancel Reservation",
@@ -30,9 +30,16 @@ const ACTIONS = {
   },
 };
 
+// Admin lists include the member, so the details and message name them
+const memberName = (r) => r.user && `${r.user.name} ${r.user.surname}`;
+
 function ReservationModal({ reservation, action, onClose, onDone }) {
-  const { title, submitLabel, busyLabel, cancelLabel, save, failed, note } =
-    ACTIONS[action];
+  const { save, failed, note, ...labels } = ACTIONS[action];
+  // Admins check the book out to the member rather than collecting it themselves
+  const { title, submitLabel, busyLabel, cancelLabel } =
+    action === "collect" && reservation.user
+      ? { ...labels, title: "Check Out Book", submitLabel: "Check Out", busyLabel: "Checking out..." }
+      : labels;
   const [error, setError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
@@ -62,12 +69,13 @@ function ReservationModal({ reservation, action, onClose, onDone }) {
       <LoanDetails
         loan={reservation}
         facts={[
+          ...(reservation.user ? [["Member", memberName(reservation)]] : []),
           ["From", formatDate(reservation.startDate)],
           ["Until", formatDate(reservation.endDate)],
           ["Collect by", formatDate(reservation.collectBy)],
         ]}
       />
-      <p className="mt-5 text-sm text-muted">{note(reservation)}</p>
+      <p className="mt-5 text-sm text-muted">{note(reservation, memberName(reservation))}</p>
     </Modal>
   );
 }

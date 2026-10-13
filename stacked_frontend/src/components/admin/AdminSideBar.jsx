@@ -2,80 +2,84 @@ import AdminSidebarLink from "./AdminSidebarLinks.jsx";
 import AuthLogo from "../AuthLogo.jsx";
 import Leaf from "@/assets/leaf_image.png";
 import {
-  House,
-  LayoutDashboard,
-  BookOpen,
-  User,
-  Clock,
-  Database,
+	House,
+	LayoutDashboard,
+	BookOpen,
+	User,
+	Clock,
+	CalendarClock,
+	Database,
 } from "lucide-react";
 
 function AdminSideBar() {
-  return (
-    <>
-      <AuthLogo />
-      {/* Navigation */}
-      <nav className="flex-1">
-        <div className="space-y-1.5 pt-4 ">
-          <AdminSidebarLink to="/" icon={<House size={19} />} label="Home" />
+	return (
+		<>
+			<AuthLogo />
+			{/* Navigation */}
+			<nav className="flex-1">
+				<div className="space-y-1.5 pt-4 ">
+					<AdminSidebarLink to="/" icon={<House size={19} />} label="Home" />
 
-          <AdminSidebarLink
-            to="/admin/dashboard"
-            icon={<LayoutDashboard size={19} />}
-            label="Dashboard"
-          />
+					<AdminSidebarLink
+						to="/admin/dashboard"
+						icon={<LayoutDashboard size={19} />}
+						label="Dashboard"
+					/>
 
-          <AdminSidebarLink
-            to="/admin/books"
-            icon={<BookOpen size={19} />}
-            label="Manage Books"
-          />
+					<AdminSidebarLink
+						to="/admin/books"
+						icon={<BookOpen size={19} />}
+						label="Manage Books"
+					/>
 
-          <AdminSidebarLink
-            to="/admin/users"
-            icon={<User size={19} />}
-            label="Manage Users"
-          />
+					<AdminSidebarLink
+						to="/admin/users"
+						icon={<User size={19} />}
+						label="Manage Users"
+					/>
 
-          <AdminSidebarLink
-            to="/admin/loans"
-            icon={<Clock size={19} />}
-            label="Manage Loans"
-          />
+					<AdminSidebarLink
+						to="/admin/loans"
+						icon={<Clock size={19} />}
+						label="Manage Loans"
+					/>
 
-          <AdminSidebarLink
-            to="/admin/fines"
-            icon={<Database size={19} />}
-            label="Manage Fines"
-          />
-        </div>
+					<AdminSidebarLink
+						to="/admin/reservations"
+						icon={<CalendarClock size={19} />}
+						label="Manage Reservations"
+					/>
 
-        <div className="my-7 border-t border-cream/15" />
-      </nav>
+					<AdminSidebarLink
+						to="/admin/fines"
+						icon={<Database size={19} />}
+						label="Manage Fines"
+					/>
+				</div>
 
-      {/* Bottom section */}
-      <div className="mt-auto">
-        {/* Quote */}
-        <div className="mx-4 rounded-2xl">
-          <img
-            src={Leaf}
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none ml-12 mb-8 md:w-20"
-          />
+				<div className="my-7 border-t border-cream/15" />
+			</nav>
 
-          <p className="font-quote italic text-2xl leading-tight text-cream">
-            Books build <br />
-            better futures.
-          </p>
+			{/* Bottom section */}
+			<div className="mt-auto">
+				{/* Quote */}
+				<div className="mx-4 rounded-2xl">
+					<img
+						src={Leaf}
+						alt=""
+						aria-hidden="true"
+						className="pointer-events-none ml-12 mb-8 md:w-20"
+					/>
 
-          <div className="mt-4 h-0.5 w-8 bg-orange" />
-        </div>
+					<p className="font-quote italic text-2xl leading-tight text-cream">
+						Books build <br />
+						better futures.
+					</p>
 
-        {/* Logout */}
-        <div className="my-7 border-t border-cream/15" />
-      </div>
-    </>
-  );
+					<div className="mt-4 h-0.5 w-8 bg-orange" />
+				</div>
+			</div>
+		</>
+	);
 }
 export default AdminSideBar;
