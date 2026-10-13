@@ -23,6 +23,7 @@ import bookRoutes from "./routes/bookRoute.js";
 import libraryRoutes from "./routes/libraryRoute.js";
 import loanRoutes from "./routes/loanRoute.js";
 import fineRoutes from "./routes/fineRoute.js";
+import reservationRoutes from "./routes/reservationRoute.js";
 
 // Parse JSON request bodies into req.body (must run before the routes)
 app.use(express.json());
@@ -36,6 +37,7 @@ app.use("/api/books", bookRoutes);
 app.use("/api/library", libraryRoutes);
 app.use("/api/loans", loanRoutes);
 app.use("/api/fines", fineRoutes);
+app.use("/api/reservations", reservationRoutes);
 
 const PORT = process.env.PORT; // set the port to listen on
 const server = app.listen(PORT, () => {

@@ -17,7 +17,7 @@ async function syncCopiesAvailable(tx, bookId) {
 	});
 }
 
-// Finds the highest "Copy N" number so new copies carry on from it, even after some were removed
+// Returns the next copy number to use, one higher than the highest existing copy.
 const nextCopyNumber = (copies) =>
 	copies.reduce((highest, copy) => {
 		const number = parseInt(copy.name?.match(/^Copy (\d+)$/)?.[1]);
@@ -103,7 +103,6 @@ async function addBookCopies(req, res) {
 	}
 }
 
-// Removes one copy, e.g. when it is lost or damaged, but only if it is on the shelf and was never loaned
 async function removeBookCopy(req, res) {
 	try {
 		const { id: bookId, copyId } = req.params;

@@ -91,6 +91,8 @@ model Reservation {
   userId          Uuid               @map("User_Id")
   bookId          Uuid               @map("Book_Id")
   reservationDate TimestamptzString  @default(now()) @map("ReservationDate")
+  startDate       DateString         @map("StartDate")
+  endDate         DateString         @map("EndDate")
   status          ReservationStatus? @map("Status")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

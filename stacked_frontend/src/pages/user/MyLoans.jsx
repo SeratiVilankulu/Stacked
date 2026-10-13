@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   BookOpen,
   Bookmark,
+  CalendarClock,
   ChevronDown,
   Clock3,
   Compass,
@@ -20,7 +21,10 @@ import LoanStats from "../../components/loans/LoanStats.jsx";
 import { toast } from "sonner";
 import { LOAN_STATUS_LABELS, formatDate, loanStatus } from "./loanData.js";
 import RenewModal from "../../components/loans/RenewModal.jsx";
+import ReservationRow from "../../components/reservations/ReservationRow.jsx";
+import ReservationModal from "../../components/reservations/ReservationModal.jsx";
 import { fetchMyLoans } from "../../lib/loans.js";
+import { fetchMyReservations } from "../../lib/reservations.js";
 import { apiErrorMessage } from "../../lib/api.js";
 import useRequest from "../../hooks/useRequest.js";
 
@@ -39,6 +43,11 @@ const TABS = {
     match: (status) => status === "RETURNED",
     empty: "Books you return will show up here.",
   },
+  reservations: {
+    label: "Reservations",
+    icon: CalendarClock,
+    empty: "Reserve a book from its page to hold a copy for later dates.",
+  },
 };
 
 const STATUS_FILTERS = [
@@ -55,15 +64,38 @@ const byDueDate = (a, b) => new Date(a.dueDate) - new Date(b.dueDate);
 const byReturnedDesc = (a, b) =>
   new Date(b.returnedOn) - new Date(a.returnedOn);
 
+// Upcoming reservations first, soonest at the top; then past ones, newest first
+const isActive = (r) => r.status === "PENDING";
+const byStartDate = (a, b) => {
+  if (isActive(a) !== isActive(b)) return isActive(a) ? -1 : 1;
+  return isActive(a)
+    ? a.startDate.localeCompare(b.startDate)
+    : b.startDate.localeCompare(a.startDate);
+};
+
 function MyLoans() {
-  const { data, isLoading, error } = useRequest(fetchMyLoans, "my-loans");
+  const [reloadKey, setReloadKey] = useState(0);
+  const loansRequest = useRequest(fetchMyLoans, `my-loans-${reloadKey}`);
+  const reservationsRequest = useRequest(
+    fetchMyReservations,
+    `my-reservations-${reloadKey}`,
+  );
+  const { data } = loansRequest;
   // Renewed loans replace the loaded ones, so the page updates without fetching everything again
   const [renewed, setRenewed] = useState({});
   const loans = useMemo(
     () => (data ?? []).map((loan) => renewed[loan.id] ?? loan),
     [data, renewed],
   );
-  const [tab, setTab] = useState("current");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = TABS[searchParams.get("tab")] ? searchParams.get("tab") : "current";
+  const reservations = useMemo(
+    () => [...(reservationsRequest.data ?? [])].sort(byStartDate),
+    [reservationsRequest.data],
+  );
+  const activeReservations = reservations.filter(isActive).length;
+  const { isLoading, error } =
+    tab === "reservations" ? reservationsRequest : loansRequest;
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [page, setPage] = useState(1);
 
@@ -76,7 +108,9 @@ function MyLoans() {
 
   const filtered = useMemo(
     () =>
-      loans
+      tab === "reservations"
+        ? reservations
+        : loans
         .filter((loan) => {
           const status = loanStatus(loan);
           return (
@@ -87,7 +121,7 @@ function MyLoans() {
           );
         })
         .sort(tab === "current" ? byDueDate : byReturnedDesc),
-    [loans, tab, statusFilter],
+    [loans, reservations, tab, statusFilter],
   );
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -96,7 +130,7 @@ function MyLoans() {
   const pageLoans = filtered.slice(start, start + PAGE_SIZE);
 
   const changeTab = (key) => {
-    setTab(key);
+    setSearchParams(key === "current" ? {} : { tab: key }, { replace: true });
     setStatusFilter("ALL");
     setPage(1);
   };
@@ -110,7 +144,32 @@ function MyLoans() {
     setRenewing(null);
   };
 
-  const tabCounts = { current: currentCount, history: counts.RETURNED };
+  // The reservation in the collect or cancel modal, with which action
+  const [reservationAction, setReservationAction] = useState(null);
+  const closeReservation = useCallback(() => setReservationAction(null), []);
+
+  const handleReservationDone = (result) => {
+    const { action, reservation } = reservationAction;
+    toast.success(
+      action === "collect"
+        ? `${reservation.book.title} is on loan until ${formatDate(result.dueDate)}`
+        : `Reservation for ${reservation.book.title} cancelled`,
+    );
+    setReservationAction(null);
+    setReloadKey((k) => k + 1);
+  };
+
+  const tabCounts = {
+    current: currentCount,
+    history: counts.RETURNED,
+    reservations: activeReservations,
+  };
+
+  const subtitle = {
+    current: `${currentCount} book${currentCount === 1 ? "" : "s"} currently borrowed`,
+    history: `${counts.RETURNED} book${counts.RETURNED === 1 ? "" : "s"} returned`,
+    reservations: `${activeReservations} upcoming reservation${activeReservations === 1 ? "" : "s"}`,
+  }[tab];
 
   return (
     <UserLayout>
@@ -150,16 +209,14 @@ function MyLoans() {
               <div className="flex items-center gap-3">
                 {tab === "current" ? (
                   <Clock3 size={24} aria-hidden="true" className="text-teal" />
-                ) : (
+                ) : tab === "history" ? (
                   <History size={24} aria-hidden="true" className="text-teal" />
+                ) : (
+                  <CalendarClock size={24} aria-hidden="true" className="text-teal" />
                 )}
                 <div>
                   <h2 className="text-xl">{TABS[tab].label}</h2>
-                  <p className="text-sm text-muted">
-                    {tab === "current"
-                      ? `${currentCount} book${currentCount === 1 ? "" : "s"} currently borrowed`
-                      : `${counts.RETURNED} book${counts.RETURNED === 1 ? "" : "s"} returned`}
-                  </p>
+                  <p className="text-sm text-muted">{subtitle}</p>
                 </div>
               </div>
 
@@ -191,11 +248,14 @@ function MyLoans() {
 
             {isLoading ? (
               <p className="px-5 py-16 text-center text-muted">
-                Loading your loans...
+                Loading your {tab === "reservations" ? "reservations" : "loans"}...
               </p>
             ) : error ? (
               <p className="px-5 py-16 text-center text-alert">
-                {apiErrorMessage(error, "Could not load your loans.")}
+                {apiErrorMessage(
+                  error,
+                  `Could not load your ${tab === "reservations" ? "reservations" : "loans"}.`,
+                )}
               </p>
             ) : pageLoans.length === 0 ? (
               <p className="px-5 py-16 text-center text-muted">
@@ -205,13 +265,22 @@ function MyLoans() {
               </p>
             ) : (
               <ul className="divide-y divide-sky px-5">
-                {pageLoans.map((loan) => (
-                  <LoanRow
-                    key={loan.id}
-                    loan={loan}
-                    onRenew={setRenewing}
-                  />
-                ))}
+                {tab === "reservations"
+                  ? pageLoans.map((reservation) => (
+                      <ReservationRow
+                        key={reservation.id}
+                        reservation={reservation}
+                        onCollect={(r) =>
+                          setReservationAction({ action: "collect", reservation: r })
+                        }
+                        onCancel={(r) =>
+                          setReservationAction({ action: "cancel", reservation: r })
+                        }
+                      />
+                    ))
+                  : pageLoans.map((loan) => (
+                      <LoanRow key={loan.id} loan={loan} onRenew={setRenewing} />
+                    ))}
               </ul>
             )}
 
@@ -220,7 +289,7 @@ function MyLoans() {
               pageCount={pageCount}
               pageSize={PAGE_SIZE}
               total={filtered.length}
-              noun="loans"
+              noun={tab === "reservations" ? "reservations" : "loans"}
               onPageChange={setPage}
             />
           </section>
@@ -246,6 +315,15 @@ function MyLoans() {
           loan={renewing}
           onClose={closeRenew}
           onRenewed={handleRenewed}
+        />
+      )}
+
+      {reservationAction && (
+        <ReservationModal
+          reservation={reservationAction.reservation}
+          action={reservationAction.action}
+          onClose={closeReservation}
+          onDone={handleReservationDone}
         />
       )}
     </UserLayout>

@@ -801,6 +801,13 @@
                   "kind": "scalar"
                 }
               },
+              "endDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -812,6 +819,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "startDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
                   "kind": "scalar"
                 }
               },
@@ -875,11 +889,17 @@
                 "bookId": {
                   "column": "Book_Id"
                 },
+                "endDate": {
+                  "column": "EndDate"
+                },
                 "id": {
                   "column": "Id"
                 },
                 "reservationDate": {
                   "column": "ReservationDate"
+                },
+                "startDate": {
+                  "column": "StartDate"
                 },
                 "status": {
                   "column": "Status"
@@ -1647,6 +1667,11 @@
                   "nativeType": "uuid",
                   "nullable": false
                 },
+                "EndDate": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
                 "Id": {
                   "codecId": "pg/uuid@1",
                   "nativeType": "uuid",
@@ -1659,6 +1684,11 @@
                     "kind": "function"
                   },
                   "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "StartDate": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
                   "nullable": false
                 },
                 "Status": {
@@ -1882,7 +1912,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "ee3e80a90c06847c02dbabce1a479c4811c7bcb612f7e6fd5baa232a9b87db8f"
+    "storageHash": "1c086800c7193f3d2939d8e065e2bc9dbbe06d17601ea5e052385dedb051b7de"
   },
   "execution": {
     "executionHash": "1c1ea195c6fa32b307829cf2e8ef40e93f0c595222369a119536bd39ede6e514",

@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'ee3e80a90c06847c02dbabce1a479c4811c7bcb612f7e6fd5baa232a9b87db8f'>;
+  StorageHashBase<'1c086800c7193f3d2939d8e065e2bc9dbbe06d17601ea5e052385dedb051b7de'>;
 export type ExecutionHash =
   ExecutionHashBase<'1c1ea195c6fa32b307829cf2e8ef40e93f0c595222369a119536bd39ede6e514'>;
 export type ProfileHash =
@@ -291,6 +291,8 @@ export type FieldOutputTypes = {
       readonly userId: CodecTypes['pg/uuid@1']['output'];
       readonly bookId: CodecTypes['pg/uuid@1']['output'];
       readonly reservationDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly startDate: CodecTypes['pg/date-string@1']['output'];
+      readonly endDate: CodecTypes['pg/date-string@1']['output'];
       readonly status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     };
     readonly User: {
@@ -357,6 +359,8 @@ export type FieldInputTypes = {
       readonly userId: CodecTypes['pg/uuid@1']['input'];
       readonly bookId: CodecTypes['pg/uuid@1']['input'];
       readonly reservationDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly startDate: CodecTypes['pg/date-string@1']['input'];
+      readonly endDate: CodecTypes['pg/date-string@1']['input'];
       readonly status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     };
     readonly User: {
@@ -420,8 +424,10 @@ export type StorageColumnTypes = {
     };
     readonly reservations: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['output'];
+      readonly EndDate: CodecTypes['pg/date-string@1']['output'];
       readonly Id: CodecTypes['pg/uuid@1']['output'];
       readonly ReservationDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly StartDate: CodecTypes['pg/date-string@1']['output'];
       readonly Status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
       readonly User_Id: CodecTypes['pg/uuid@1']['output'];
     };
@@ -486,8 +492,10 @@ export type StorageColumnInputTypes = {
     };
     readonly reservations: {
       readonly Book_Id: CodecTypes['pg/uuid@1']['input'];
+      readonly EndDate: CodecTypes['pg/date-string@1']['input'];
       readonly Id: CodecTypes['pg/uuid@1']['input'];
       readonly ReservationDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly StartDate: CodecTypes['pg/date-string@1']['input'];
       readonly Status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
       readonly User_Id: CodecTypes['pg/uuid@1']['input'];
     };
@@ -583,6 +591,8 @@ export namespace Models {
     userId: CodecTypes['pg/uuid@1']['output'];
     bookId: CodecTypes['pg/uuid@1']['output'];
     reservationDate: CodecTypes['pg/timestamptz-string@1']['output'];
+    startDate: CodecTypes['pg/date-string@1']['output'];
+    endDate: CodecTypes['pg/date-string@1']['output'];
     status: 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED' | null;
     book: public_Book;
     user: public_User;
@@ -1040,6 +1050,16 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly StartDate: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly EndDate: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
                 };
                 readonly Status: {
                   readonly nativeType: 'text';
@@ -1604,6 +1624,14 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
+              readonly startDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly endDate: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
               readonly status: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -1637,6 +1665,8 @@ type ContractBase = Omit<
                 readonly userId: { readonly column: 'User_Id' };
                 readonly bookId: { readonly column: 'Book_Id' };
                 readonly reservationDate: { readonly column: 'ReservationDate' };
+                readonly startDate: { readonly column: 'StartDate' };
+                readonly endDate: { readonly column: 'EndDate' };
                 readonly status: { readonly column: 'Status' };
               };
             };

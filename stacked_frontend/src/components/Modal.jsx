@@ -16,6 +16,7 @@ function Modal({
   error = "",
   submitLabel = "Save",
   busyLabel = "Saving...",
+  cancelLabel = "Cancel",
   size = "lg",
   children,
 }) {
@@ -75,7 +76,7 @@ function Modal({
             disabled={busy}
             className="cursor-pointer rounded-md border border-border-strong px-6 py-3 text-sm font-semibold text-teal transition-colors hover:bg-sky/30"
           >
-            Cancel
+            {cancelLabel}
           </button>
           <button
             type="submit"

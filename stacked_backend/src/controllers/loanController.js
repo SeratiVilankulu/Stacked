@@ -1,37 +1,20 @@
 import { db } from "../prisma/db.ts";
 import { syncCopiesAvailable } from "./bookCopyController.js";
+import {
+	UUID_PATTERN,
+	toDateString,
+	toIsoString,
+	daysBetween,
+	addDays,
+	readyToCollect,
+	copiesFree,
+} from "../utils/bookSchedule.js";
 
 const LOAN_PERIOD_DAYS = 30;
 const MAX_RENEWALS = 2;
 const FINE_PER_DAY = 15; // R15
 
 const STATUSES = ["LOANED", "OVERDUE", "RETURNED"];
-
-// UUID format. Postgres throws an error for any other format
-const UUID_PATTERN =
-	/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-// "YYYY-MM-DD", the format the ReturnDate column stores
-const toDateString = (date) => date.toISOString().slice(0, 10);
-
-// Change the date format which if sent from Postgres
-const toIsoString = (value) =>
-	value &&
-	new Date(
-		value.replace(" ", "T").replace(/([+-]\d{2})$/, "$1:00"),
-	).toISOString();
-
-const daysBetween =(from, to) =>
-	Math.round(
-		(new Date(toDateString(new Date(to))) -
-			new Date(toDateString(new Date(from)))) /
-			DAY_MS,
-	);
-
-const addDays = (date, days) =>
-	new Date(new Date(date).getTime() + days * DAY_MS);
 
 // Days a loan is past its due date, days remain 0 while it is still on time
 const daysOverdue = (loan, on = new Date()) =>
@@ -184,6 +167,102 @@ async function getLoan(req, res) {
 	}
 }
 
+/* Lends a copy of the book to the user. If they have a reservation for it that has
+ started, the reservation is collected and the loan runs until its end date.
+ Returns { loan }, or { status, error } when the book can't be lent. */
+async function lendBook(bookId, userId) {
+	const [book, borrower] = await Promise.all([
+		db.orm.public.Book.where({ id: bookId }).first(),
+		db.orm.public.User.where({ id: userId }).first(),
+	]);
+
+	if (!book) return { status: 404, error: "Book not found" };
+
+	if (!borrower) return { status: 404, error: "User not found" };
+
+	if (borrower.status === "SUSPENDED") {
+		return { status: 403, error: "Suspended accounts cannot borrow books" };
+	}
+
+	const copies = await db.orm.public.BookCopy.where({ bookId }).all();
+
+	// A user can only hold one copy of the same book at a time
+	if (copies.length > 0) {
+		const activeLoan = await db.orm.public.LoanedBook.where((loan) =>
+			loan.bookCopyId.in(copies.map((copy) => copy.id)),
+		)
+			.where({ userId, returnedAt: null })
+			.first();
+
+		if (activeLoan) {
+			return { status: 400, error: "This book is already on loan to this user" };
+		}
+	}
+
+	const now = new Date();
+	const reservation = (
+		await db.orm.public.Reservation.where({
+			bookId,
+			userId,
+			status: "PENDING",
+		}).all()
+	).find(readyToCollect);
+	const dueDate = reservation
+		? reservation.endDate
+		: toDateString(addDays(now, LOAN_PERIOD_DAYS));
+
+	// Copies held for other members' reservations can't be lent out
+	const free = await copiesFree(db, bookId, toDateString(now), dueDate, {
+		ignoreReservationId: reservation?.id,
+	});
+
+	if (free < 1) {
+		return {
+			status: 400,
+			error: "All copies of this book are on loan or reserved for the next few weeks",
+		};
+	}
+
+	// The loan, the copy's status, the book's count and the reservation are saved together
+	const loan = await db.transaction(async (tx) => {
+		const copy = await tx.orm.public.BookCopy.where({
+			bookId,
+			status: "AVAILABLE",
+		}).first();
+
+		if (!copy) return null;
+
+		await tx.orm.public.BookCopy.where({ id: copy.id }).update({
+			status: "LOANED",
+		});
+
+		const loan = await tx.orm.public.LoanedBook.create({
+			bookCopyId: copy.id,
+			userId,
+			loanDate: now.toISOString(),
+			dueDate,
+			returnedAt: null,
+			status: "LOANED",
+			renewals: 0,
+		});
+
+		if (reservation) {
+			await tx.orm.public.Reservation.where({ id: reservation.id }).update({
+				status: "FULFILLED",
+			});
+		}
+
+		await syncCopiesAvailable(tx, bookId);
+		return loan;
+	});
+
+	if (!loan) {
+		return { status: 400, error: "No copies of this book are available right now" };
+	}
+
+	return { loan };
+}
+
 async function borrowBook(req, res) {
 	try {
 		const { bookId } = req.body;
@@ -200,76 +279,10 @@ async function borrowBook(req, res) {
 			return res.status(400).json({ error: "Invalid user id" });
 		}
 
-		const [book, borrower] = await Promise.all([
-			db.orm.public.Book.where({ id: bookId }).first(),
-			db.orm.public.User.where({ id: userId }).first(),
-		]);
-
-		if (!book) {
-			return res.status(404).json({ error: "Book not found" });
-		}
-
-		if (!borrower) {
-			return res.status(404).json({ error: "User not found" });
-		}
-
-		if (borrower.status === "SUSPENDED") {
-			return res
-				.status(403)
-				.json({ error: "Suspended accounts cannot borrow books" });
-		}
-
-		const copies = await db.orm.public.BookCopy.where({ bookId }).all();
-
-		// A user can only hold one copy of the same book at a time
-		if (copies.length > 0) {
-			const activeLoan = await db.orm.public.LoanedBook.where((loan) =>
-				loan.bookCopyId.in(copies.map((copy) => copy.id)),
-			)
-				.where({ userId, returnedAt: null })
-				.first();
-
-			if (activeLoan) {
-				return res
-					.status(400)
-					.json({ error: "This book is already on loan to this user" });
-			}
-		}
-
-		const now = new Date();
-
-		// The loan, the copy's status and the book's count are saved together
-		const loan = await db.transaction(async (tx) => {
-
-			const copy = await tx.orm.public.BookCopy.where({
-				bookId,
-				status: "AVAILABLE",
-			}).first();
-
-			if (!copy) return null;
-
-			await tx.orm.public.BookCopy.where({ id: copy.id }).update({
-				status: "LOANED",
-			});
-
-			const loan = await tx.orm.public.LoanedBook.create({
-				bookCopyId: copy.id,
-				userId,
-				loanDate: now.toISOString(),
-				dueDate: toDateString(addDays(now, LOAN_PERIOD_DAYS)),
-				returnedAt: null,
-				status: "LOANED",
-				renewals: 0,
-			});
-
-			await syncCopiesAvailable(tx, bookId);
-			return loan;
-		});
+		const { loan, status, error } = await lendBook(bookId, userId);
 
 		if (!loan) {
-			return res
-				.status(400)
-				.json({ error: "No copies of this book are available right now" });
+			return res.status(status).json({ error });
 		}
 
 		const [data] = await withBookDetails([loan]);
@@ -309,12 +322,17 @@ async function renewLoan(req, res) {
 		const copy = await db.orm.public.BookCopy.where({
 			id: loan.bookCopyId,
 		}).first();
-		const reservation = await db.orm.public.Reservation.where({
-			bookId: copy.bookId,
-			status: "PENDING",
-		}).first();
+		const newDueDate = toDateString(addDays(loan.dueDate, LOAN_PERIOD_DAYS));
 
-		if (reservation) {
+		// The extra days must not take a copy another member has reserved
+		const free = await copiesFree(
+			db,
+			copy.bookId,
+			toDateString(addDays(loan.dueDate, 1)),
+			newDueDate,
+		);
+
+		if (free < 1) {
 			return res.status(400).json({
 				error: "This book is reserved by another member and cannot be renewed",
 			});
@@ -323,7 +341,7 @@ async function renewLoan(req, res) {
 		const updated = await db.orm.public.LoanedBook.where({
 			id: loan.id,
 		}).update({
-			dueDate: toDateString(addDays(loan.dueDate, LOAN_PERIOD_DAYS)),
+			dueDate: newDueDate,
 			renewals: loan.renewals + 1,
 		});
 
@@ -392,4 +410,14 @@ async function returnLoan(req, res) {
 	}
 }
 
-export { getMyLoans, getAllLoans, getLoan, borrowBook, renewLoan, returnLoan };
+export {
+	LOAN_PERIOD_DAYS,
+	lendBook,
+	withBookDetails,
+	getMyLoans,
+	getAllLoans,
+	getLoan,
+	borrowBook,
+	renewLoan,
+	returnLoan,
+};

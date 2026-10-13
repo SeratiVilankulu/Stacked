@@ -1,9 +1,20 @@
-import { ArrowRight, BookOpen, Calendar, ListPlus, Tag } from "lucide-react";
+import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  CalendarClock,
+  ListPlus,
+  Tag,
+} from "lucide-react";
 import Pill from "../Pill.jsx";
 import { toast } from "sonner";
 import { bookStatus, genreStyle } from "../../lib/books.js";
 import { saveBook } from "../../lib/library.js";
 import { apiErrorMessage } from "../../lib/api.js";
+import ReserveModal from "../reservations/ReserveModal.jsx";
+import { formatDate } from "../../pages/user/loanData.js";
 
 const STATUS_COLOURS = {
   Available: "text-success",
@@ -13,6 +24,22 @@ const STATUS_COLOURS = {
 function BookSummary({ book }) {
   const status = bookStatus(book);
   const available = status === "Available";
+  const navigate = useNavigate();
+  const [reserving, setReserving] = useState(false);
+  const closeReserve = useCallback(() => setReserving(false), []);
+
+  const handleReserved = (reservation) => {
+    setReserving(false);
+    toast.success(
+      `${book.title} reserved from ${formatDate(reservation.startDate)}`,
+      {
+        action: {
+          label: "View",
+          onClick: () => navigate("/loans?tab=reservations"),
+        },
+      },
+    );
+  };
 
   const save = async () => {
     try {
@@ -76,6 +103,14 @@ function BookSummary({ book }) {
         </button>
         <button
           type="button"
+          onClick={() => setReserving(true)}
+          className="flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md border border-border-strong px-6 py-3 text-sm font-semibold text-teal transition-colors duration-200 hover:bg-sky/30"
+        >
+          <CalendarClock size={18} aria-hidden="true" />
+          Reserve for Later
+        </button>
+        <button
+          type="button"
           onClick={save}
           className="flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md border border-border-strong px-6 py-3 text-sm font-semibold text-teal transition-colors duration-200 hover:bg-sky/30"
         >
@@ -83,6 +118,14 @@ function BookSummary({ book }) {
           Save for Later
         </button>
       </div>
+
+      {reserving && (
+        <ReserveModal
+          book={book}
+          onClose={closeReserve}
+          onReserved={handleReserved}
+        />
+      )}
     </div>
   );
 }
