@@ -14,6 +14,7 @@ import { bookStatus, genreStyle } from "../../lib/books.js";
 import { saveBook } from "../../lib/library.js";
 import { apiErrorMessage } from "../../lib/api.js";
 import ReserveModal from "../reservations/ReserveModal.jsx";
+import BorrowModal from "../loans/BorrowModal.jsx";
 import { formatDate } from "../../pages/user/loanData.js";
 
 const STATUS_COLOURS = {
@@ -27,6 +28,14 @@ function BookSummary({ book }) {
   const navigate = useNavigate();
   const [reserving, setReserving] = useState(false);
   const closeReserve = useCallback(() => setReserving(false), []);
+  const [borrowing, setBorrowing] = useState(false);
+  const closeBorrow = useCallback(() => setBorrowing(false), []);
+
+  const handleBorrowed = (loan) => {
+    setBorrowing(false);
+    toast.success(`${book.title} is on loan until ${formatDate(loan.dueDate)}`);
+    navigate("/loans");
+  };
 
   const handleReserved = (reservation) => {
     setReserving(false);
@@ -95,6 +104,7 @@ function BookSummary({ book }) {
         <button
           type="button"
           disabled={!available}
+          onClick={() => setBorrowing(true)}
           className="flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md bg-teal px-6 py-3 text-sm font-semibold text-cream transition-colors duration-200 hover:bg-teal-deep disabled:cursor-not-allowed disabled:opacity-50"
         >
           <BookOpen size={18} aria-hidden="true" />
@@ -118,6 +128,14 @@ function BookSummary({ book }) {
           Save for Later
         </button>
       </div>
+
+      {borrowing && (
+        <BorrowModal
+          book={book}
+          onClose={closeBorrow}
+          onBorrowed={handleBorrowed}
+        />
+      )}
 
       {reserving && (
         <ReserveModal

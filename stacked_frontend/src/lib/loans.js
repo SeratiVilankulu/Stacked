@@ -12,6 +12,12 @@ export async function fetchLoan(id) {
   return res.data.data;
 }
 
+// Returns the new loan
+export async function borrowBook(bookId) {
+  const res = await api.post("/loans", { bookId });
+  return res.data.data;
+}
+
 export async function renewLoan(id) {
   const res = await api.patch(`/loans/${id}/renew`);
   return res.data.data;
