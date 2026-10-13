@@ -12,9 +12,9 @@ import {
 
 function Sidebar() {
 	return (
-		<aside className="flex min-h-full w-full flex-col bg-mocha px-5 py-7 text-white">
+		<aside className="flex min-h-full w-full flex-col bg-mocha px-5 py-7 text-white justify-center">
 			{/* Navigation */}
-			<nav className="flex-1">
+			<nav>
 				<div className="space-y-1.5">
 					<SidebarLink to="/" icon={<House size={19} />} label="Home" />
 
@@ -47,7 +47,7 @@ function Sidebar() {
 			</nav>
 
 			{/* Bottom section */}
-			<div className="mt-auto">
+			<div className="mt-20">
 				{/* Quote */}
 				<div className="mx-4 rounded-2xl">
 					<img
@@ -65,6 +65,13 @@ function Sidebar() {
 					<div className="mt-4 h-0.5 w-8 bg-orange" />
 				</div>
 			</div>
+			{/* Logout */}
+			{/* <div className="my-7 border-t border-cream/15" />
+			<SidebarLink
+				to="/books"
+				icon={<BookOpen size={19} />}
+				label="Browse Books"
+			/> */}
 		</aside>
 	);
 }
